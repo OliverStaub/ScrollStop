@@ -1,49 +1,145 @@
 // Listen for messages from background script
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "checkBlockedSite") {
-    browser.storage.local.get(["blockedSites"], function (result) {
-      const blockedSites = result.blockedSites || [];
-      const href = window.location.href;
-      const hostname = window.location.hostname;
-
-      // Check if current site is blocked
-      const isBlocked = blockedSites.some((site) => {
-        // Remove protocol if present
-        const cleanSite = site.replace(/^https?:\/\//, "");
-        return href.includes(cleanSite) || hostname.includes(cleanSite);
-      });
-
-      if (isBlocked) {
-        checkTimeBasedBlock().then((isTimeBlocked) => {
-          if (isTimeBlocked) {
-            showTimeBlockScreen();
-          } else {
-            initializeDoomscrollBlocker();
-          }
-        });
-      } else {
-        // Remove scroll listener if site is not blocked
-        if (initializeDoomscrollBlocker.scrollHandler) {
-          window.removeEventListener(
-            "scroll",
-            initializeDoomscrollBlocker.scrollHandler
-          );
-          initializeDoomscrollBlocker.scrollHandler = null;
-        }
-        // Remove any existing warning overlay
-        const existingWarning = document.getElementById("doomscroll-warning");
-        if (existingWarning) {
-          existingWarning.remove();
-        }
-      }
-
-      if (sendResponse) {
-        sendResponse({ isBlocked });
-      }
-    });
+    checkBlockedSite(message.url, sendResponse);
     return true; // Indicates we will send a response asynchronously
   }
+
+  // Handle notification from toolbar icon click
+  if (message.action === "showNotification") {
+    showStatusNotification(message.title, message.message);
+    return true;
+  }
 });
+
+// Function to show a status notification
+function showStatusNotification(title, message) {
+  // Create notification element
+  const notification = document.createElement("div");
+  notification.id = "scrollstop-notification";
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #1a1a1a;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    z-index: 2147483647;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 350px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+  `;
+
+  const titleElement = document.createElement("h3");
+  titleElement.style.cssText = `
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+  `;
+  titleElement.textContent = title;
+
+  const messageElement = document.createElement("p");
+  messageElement.style.cssText = `
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  `;
+  messageElement.textContent = message;
+
+  notification.appendChild(titleElement);
+  notification.appendChild(messageElement);
+
+  // Append to body
+  document.body.appendChild(notification);
+
+  // Animate in
+  setTimeout(() => {
+    notification.style.opacity = "1";
+    notification.style.transform = "translateY(0)";
+  }, 10);
+
+  // Remove after 5 seconds
+  setTimeout(() => {
+    notification.style.opacity = "0";
+    notification.style.transform = "translateY(-10px)";
+
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  }, 5000);
+}
+
+// Function to check if the current site is blocked
+function checkBlockedSite(url, sendResponse) {
+  browser.storage.local.get(["blockedSites"], function (result) {
+    // If blockedSites is not available, reload from sites.json
+    if (!result.blockedSites || result.blockedSites.length === 0) {
+      fetch(browser.runtime.getURL("sites.json"))
+        .then((response) => response.json())
+        .then((data) => {
+          browser.storage.local.set(
+            { blockedSites: data.blockedSites },
+            function () {
+              checkBlockedSiteInternal(data.blockedSites, sendResponse);
+            }
+          );
+        })
+        .catch((error) => {
+          console.error("Error loading sites.json:", error);
+          checkBlockedSiteInternal([], sendResponse);
+        });
+    } else {
+      checkBlockedSiteInternal(result.blockedSites, sendResponse);
+    }
+  });
+}
+
+// Internal function to handle site blocking logic
+function checkBlockedSiteInternal(blockedSites, sendResponse) {
+  const href = window.location.href;
+  const hostname = window.location.hostname;
+
+  // Check if current site is blocked
+  const isBlocked = blockedSites.some((site) => {
+    // Remove protocol if present
+    const cleanSite = site.replace(/^https?:\/\//, "");
+    return href.includes(cleanSite) || hostname.includes(cleanSite);
+  });
+
+  if (isBlocked) {
+    checkTimeBasedBlock().then((isTimeBlocked) => {
+      if (isTimeBlocked) {
+        showTimeBlockScreen();
+      } else {
+        initializeDoomscrollBlocker();
+      }
+    });
+  } else {
+    // Remove scroll listener if site is not blocked
+    if (initializeDoomscrollBlocker.scrollHandler) {
+      window.removeEventListener(
+        "scroll",
+        initializeDoomscrollBlocker.scrollHandler
+      );
+      initializeDoomscrollBlocker.scrollHandler = null;
+    }
+    // Remove any existing warning overlay
+    const existingWarning = document.getElementById("doomscroll-warning");
+    if (existingWarning) {
+      existingWarning.remove();
+    }
+  }
+
+  if (sendResponse) {
+    sendResponse({ isBlocked });
+  }
+}
 
 // Check if site is currently time-blocked (60 minutes after doomscroll)
 async function checkTimeBasedBlock() {

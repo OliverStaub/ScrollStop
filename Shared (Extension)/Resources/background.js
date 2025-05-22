@@ -1,19 +1,14 @@
-const defaultSites = [
-  "facebook.com",
-  "twitter.com",
-  "instagram.com",
-  "reddit.com",
-  "x.com",
-  "youtube.com",
-];
-
-// Initialize with default blocked sites on install
+// Load sites from sites.json file
 browser.runtime.onInstalled.addListener(() => {
-  browser.storage.local.get(["blockedSites"], function (result) {
-    if (!result.blockedSites) {
-      browser.storage.local.set({ blockedSites: defaultSites });
-    }
-  });
+  fetch(browser.runtime.getURL("sites.json"))
+    .then((response) => response.json())
+    .then((data) => {
+      browser.storage.local.set({ blockedSites: data.blockedSites });
+      console.log("Loaded blocked sites from sites.json");
+    })
+    .catch((error) => {
+      console.error("Error loading sites.json:", error);
+    });
 });
 
 // Listen for tab updates to check if site should be blocked
@@ -37,6 +32,45 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.greeting === "hello") {
     return Promise.resolve({ farewell: "goodbye" });
   }
+});
 
-  // Handle any custom background logic here
+// Handle toolbar icon click
+browser.action.onClicked.addListener(() => {
+  // Get the list of blocked sites
+  browser.storage.local.get(["blockedSites"], function (result) {
+    const sites = result.blockedSites || [];
+
+    // Create a notification/alert with the active sites
+    if (sites.length > 0) {
+      const message = `ScrollStop is actively blocking ${
+        sites.length
+      } social media sites, including: ${sites.slice(0, 5).join(", ")}${
+        sites.length > 5 ? ", and more..." : ""
+      }`;
+
+      // Try to use browser notifications if available
+      if (browser.notifications) {
+        browser.notifications.create({
+          type: "basic",
+          iconUrl: browser.runtime.getURL("images/icon-128.png"),
+          title: "ScrollStop Active",
+          message: message,
+        });
+      } else {
+        // Create a custom notification by sending a message to the current tab
+        browser.tabs.query(
+          { active: true, currentWindow: true },
+          function (tabs) {
+            if (tabs[0]) {
+              browser.tabs.sendMessage(tabs[0].id, {
+                action: "showNotification",
+                title: "ScrollStop Active",
+                message: message,
+              });
+            }
+          }
+        );
+      }
+    }
+  });
 });

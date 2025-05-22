@@ -29,9 +29,15 @@
   ],
 
   "action": {
-    "default_popup": "popup.html",
     "default_icon": "images/toolbar-icon.svg"
   },
 
-  "permissions": ["storage", "tabs"]
+  "permissions": ["storage", "tabs"],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["sites.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
