@@ -1,11 +1,35 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="popup.css">
-    <script type="module" src="popup.js"></script>
-</head>
-<body>
-    <strong>Hello World!</strong>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ScrollStop - Blocked Sites</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>ScrollStop</h2>
+      <p class="subtitle">Prevent endless scrolling</p>
+
+      <div class="input-section">
+        <input
+          type="text"
+          id="siteInput"
+          placeholder="Enter website (e.g., example.com)"
+        />
+        <button id="addSiteBtn">Add Site</button>
+      </div>
+
+      <div class="sites-section">
+        <h3>Blocked Sites</h3>
+        <ul id="siteList"></ul>
+      </div>
+
+      <div class="footer">
+        <small>ScrollStop will prevent doomscrolling on these sites</small>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
 </html>

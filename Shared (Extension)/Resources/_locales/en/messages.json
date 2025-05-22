@@ -1,10 +1,10 @@
 {
-    "extension_name": {
-        "message": "ScrollStop",
-        "description": "The display name for the extension."
-    },
-    "extension_description": {
-        "message": "This is ScrollStop. You should tell us what your extension does here.",
-        "description": "Description of what the extension does."
-    }
+  "extension_name": {
+    "message": "ScrollStop",
+    "description": "The display name for the extension."
+  },
+  "extension_description": {
+    "message": "Prevent endless scrolling and doomscrolling on social media sites. Block your access when you scroll too much!",
+    "description": "Description of what the extension does."
+  }
 }
