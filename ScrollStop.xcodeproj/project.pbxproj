@@ -114,6 +114,9 @@
 				Resources/content.js,
 				Resources/images,
 				Resources/manifest.json,
+				Resources/popup.css,
+				Resources/popup.html,
+				Resources/popup.js,
 				SafariWebExtensionHandler.swift,
 			);
 			target = 3DBE1C802DDB8900007A7E2A /* ScrollStop Extension (iOS) */;
@@ -126,6 +129,9 @@
 				Resources/content.js,
 				Resources/images,
 				Resources/manifest.json,
+				Resources/popup.css,
+				Resources/popup.html,
+				Resources/popup.js,
 				SafariWebExtensionHandler.swift,
 			);
 			target = 3DBE1C8A2DDB8900007A7E2A /* ScrollStop Extension (macOS) */;
