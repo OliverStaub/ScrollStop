@@ -111,21 +111,6 @@ class BlockingScreen {
           </div>
           
           ${this.getSuggestionsHTML()}
-          
-          <button onclick="window.close()" style="
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            color: white;
-            padding: 12px 24px;
-            font-size: 1.1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 2rem;
-            transition: all 0.3s ease;
-          " onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" 
-             onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
-            Close Tab
-          </button>
         </div>
       `;
   }
