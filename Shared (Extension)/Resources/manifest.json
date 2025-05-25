@@ -22,7 +22,15 @@
 
   "content_scripts": [
     {
-      "js": ["content.js"],
+      "js": [
+        "storage-helper.js",
+        "time-manager.js",
+        "doomscroll-detector.js",
+        "doomscroll-animation.js",
+        "transition-screen.js",
+        "blocking-screen.js",
+        "content.js"
+      ],
       "matches": ["<all_urls>"],
       "run_at": "document_end"
     }
@@ -37,7 +45,12 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["sites.json"],
+      "resources": [
+        "sites.json",
+        "doomscroll-animation.css",
+        "transition-screen.css",
+        "blocking-screen.css"
+      ],
       "matches": ["<all_urls>"]
     }
   ]

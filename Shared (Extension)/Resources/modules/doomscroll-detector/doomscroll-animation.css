@@ -1,0 +1,64 @@
+/* modules/doomscroll-detector/doomscroll-animation.css */
+/* Styles for the doomscroll warning animation */
+
+.doomscroll-warning {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #f94144;
+  font-weight: bolder;
+  text-align: center;
+  font-size: 7vw;
+  font-family: Arial, sans-serif;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.doomscroll-warning.flashing {
+  animation: doomscroll-flash 0.4s infinite;
+}
+
+@keyframes doomscroll-flash {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.doomscroll-warning.visible {
+  opacity: 1;
+}
+
+/* Content fade-out animation */
+.content-fade-out {
+  transition: opacity 7s ease;
+  opacity: 0;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .doomscroll-warning {
+    font-size: 12vw;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .doomscroll-warning {
+    font-size: 15vw;
+  }
+}
