@@ -28,55 +28,7 @@ browser.runtime.onInstalled.addListener(() => {
   loadBlockedSites();
 });
 
-// Listen for tab updates to check if site should be blocked
-browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  if (changeInfo.status === "complete" && tab.url) {
-    browser.tabs
-      .sendMessage(tabId, {
-        action: "checkBlockedSite",
-        url: tab.url,
-      })
-      .catch(() => {
-        // Inject content scripts in sequence
-        injectContentScripts(tabId, tab.url);
-      });
-  }
-});
-
-// Helper function to inject content scripts
-function injectContentScripts(tabId, url) {
-  const scripts = [
-    "storage-helper.js",
-    "time-manager.js",
-    "doomscroll-detector.js",
-    "doomscroll-animation.js",
-    "transition-screen.js",
-    "blocking-screen.js",
-    "content.js",
-  ];
-
-  // Inject scripts sequentially
-  scripts
-    .reduce((promise, script) => {
-      return promise.then(() =>
-        browser.tabs.executeScript(tabId, { file: script })
-      );
-    }, Promise.resolve())
-    .then(() => {
-      // Try sending the message again after all scripts are injected
-      return browser.tabs.sendMessage(tabId, {
-        action: "checkBlockedSite",
-        url: url,
-      });
-    })
-    .catch((error) => {
-      console.log(
-        `Could not inject scripts or send message to tab ${tabId}:`,
-        error
-      );
-    });
-}
-
+// Handle messages from content scripts
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log("Background received request:", request);
 
@@ -84,3 +36,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return Promise.resolve({ blockedSites: blockedSites });
   }
 });
+
+// Note: Removed tab monitoring since we only run on specific sites now
+// The content scripts will automatically run on the sites we specified

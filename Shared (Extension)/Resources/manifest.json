@@ -31,7 +31,20 @@
         "blocking-screen.js",
         "content.js"
       ],
-      "matches": ["<all_urls>"],
+      "matches": [
+        "*://*.facebook.com/*",
+        "*://*.twitter.com/*",
+        "*://*.instagram.com/*",
+        "*://*.reddit.com/*",
+        "*://*.x.com/*",
+        "*://*.tiktok.com/*",
+        "*://*.youtube.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.pinterest.com/*",
+        "*://*.snapchat.com/*",
+        "*://*.tumblr.com/*",
+        "*://*.quora.com/*"
+      ],
       "run_at": "document_end"
     }
   ],
@@ -41,7 +54,7 @@
     "default_icon": "images/toolbar-icon.svg"
   },
 
-  "permissions": ["storage", "tabs"],
+  "permissions": ["storage"],
 
   "web_accessible_resources": [
     {
@@ -51,7 +64,20 @@
         "transition-screen.css",
         "blocking-screen.css"
       ],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "*://*.facebook.com/*",
+        "*://*.twitter.com/*",
+        "*://*.instagram.com/*",
+        "*://*.reddit.com/*",
+        "*://*.x.com/*",
+        "*://*.tiktok.com/*",
+        "*://*.youtube.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.pinterest.com/*",
+        "*://*.snapchat.com/*",
+        "*://*.tumblr.com/*",
+        "*://*.quora.com/*"
+      ]
     }
   ]
 }

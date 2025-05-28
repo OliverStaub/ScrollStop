@@ -59,6 +59,40 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
 #endif
     }
 
+    // MARK: - Navigation Delegate (Fix for About link)
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.cancel)
+            return
+        }
+        
+        // Handle About.html link specifically
+        if url.absoluteString.contains("About.html") {
+            if let aboutURL = Bundle.main.url(forResource: "About", withExtension: "html") {
+                webView.loadFileURL(aboutURL, allowingReadAccessTo: Bundle.main.resourceURL!)
+            }
+            decisionHandler(.cancel)
+            return
+        }
+        
+        // For external links, open in default browser
+        if !url.isFileURL && (url.scheme == "http" || url.scheme == "https") {
+#if os(macOS)
+            NSWorkspace.shared.open(url)
+#elseif os(iOS)
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            }
+#endif
+            decisionHandler(.cancel)
+            return
+        }
+        
+        // Allow all other navigation
+        decisionHandler(.allow)
+    }
+
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
 #if os(macOS)
         if (message.body as! String != "open-preferences") {
@@ -77,5 +111,4 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
         }
 #endif
     }
-
 }

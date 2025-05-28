@@ -170,34 +170,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 ```
 - **iOS (Extension)/**
-  - Info.plist (426 bytes)
+  - Info.plist (631 bytes)
     - Content preview:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>NSExtension</key>
 	<dict>
-		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.Safari.web-extension</string>
-		<key>NSExtensionPrincipalClass</key>
-		<string>$(PRODUCT_MODULE_NAME).SafariWebExtensionHandler</string>
+		<key>NSExtension</key>
+		<dict>
+			<key>NSExtensionPointIdentifier</key>
+			<string>com.apple.Safari.web-extension</string>
+			<key>NSExtensionPrincipalClass</key>
+			<string>$(PRODUCT_MODULE_NAME).SafariWebExtensionHandler</string>
+			<key>CFBundleShortVersionString</key>
+			<string>1.0</string>
+			<key>CFBundleVersion</key>
+			<string>1</string>
+			<key>NSHumanReadableCopyright</key>
+			<string>© 2025 Oliver Staub</string>
+		</dict>
 	</dict>
-</dict>
 </plist>
-
 ```
 - **macOS (App)/**
   - **Base.lproj/**
-    - Main.storyboard (8380 bytes)
+    - Main.storyboard (8558 bytes)
       - Content preview:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19085" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19085"/>
-        <plugIn identifier="com.apple.WebKit2IBPlugin" version="19085"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
+        <plugIn identifier="com.apple.WebKit2IBPlugin" version="23727"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -262,7 +268,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="ScrollStop" customModuleProvider="target"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -275,8 +281,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     <window key="[REDACTED]" title="ScrollStop" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="[REDACTED]" restorable="NO" releasedWhenClosed="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="[REDACTED]" titled="YES" closable="YES"/>
                         <windowCollectionBehavior key="[REDACTED]" fullScreenNone="YES"/>
-                        <rect key="[REDACTED]" x="196" y="240" width="425" height="325"/>
+                        <rect key="[REDACTED]" x="196" y="240" width="600" height="600"/>
                         <rect key="[REDACTED]" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <value key="[REDACTED]" type="size" width="600" height="600"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
@@ -292,7 +299,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="ScrollStop" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="[REDACTED]" id="m2S-Jp-Qdl">
                         <rect key="[REDACTED]" x="0.0" y="0.0" width="425" height="325"/>
                         <autoresizingMask key="[REDACTED]"/>
@@ -363,23 +370,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 ```
 - **macOS (Extension)/**
-  - Info.plist (426 bytes)
+  - Info.plist (631 bytes)
     - Content preview:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>NSExtension</key>
 	<dict>
-		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.Safari.web-extension</string>
-		<key>NSExtensionPrincipalClass</key>
-		<string>$(PRODUCT_MODULE_NAME).SafariWebExtensionHandler</string>
+		<key>NSExtension</key>
+		<dict>
+			<key>NSExtensionPointIdentifier</key>
+			<string>com.apple.Safari.web-extension</string>
+			<key>NSExtensionPrincipalClass</key>
+			<string>$(PRODUCT_MODULE_NAME).SafariWebExtensionHandler</string>
+			<key>CFBundleShortVersionString</key>
+			<string>1.0</string>
+			<key>CFBundleVersion</key>
+			<string>1</string>
+			<key>NSHumanReadableCopyright</key>
+			<string>© 2025 Oliver Staub</string>
+		</dict>
 	</dict>
-</dict>
 </plist>
-
 ```
   - ScrollStop.entitlements (322 bytes)
     - Content preview:
@@ -1531,7 +1543,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 </html>
 
 ```
-    - About.html (2056 bytes)
+    - About.html (2414 bytes)
       - Content preview:
 ```
 <!DOCTYPE html>
@@ -1572,6 +1584,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         border-radius: 6px;
         cursor: pointer;
       }
+      .back-button:hover {
+        background: #238a7a;
+      }
     </style>
   </head>
   <body>
@@ -1579,13 +1594,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       <h2>About ScrollStop</h2>
 
       <p><strong>Version:</strong> 1.0</p>
-      <p><strong>Developer:</strong> [Your Name]</p>
+      <p><strong>Developer:</strong> Oliver Staub</p>
 
       <h3>Description</h3>
       <p>
         ScrollStop is a Safari extension that helps you break free from endless
         scrolling and doomscrolling habits on social media websites. When you
-        scroll too much, it blocks the site for 30 minutes and encourages you to
+        scroll too much, it blocks the site for 60 minutes and encourages you to
         do something more productive.
       </p>
 
@@ -1604,7 +1619,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       </p>
     </div>
 
-    <button class="back-button" onclick="history.back()">← Back</button>
+    <button class="back-button" onclick="goBack()">← Back</button>
+
+    <script>
+      function goBack() {
+        // Try to go back in history first
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          // If no history, load the main page
+          window.location.href = "Main.html";
+        }
+      }
+    </script>
   </body>
 </html>
 
@@ -1705,7 +1732,7 @@ button {
 }
 
 ```
-  - ViewController.swift (2372 bytes)
+  - ViewController.swift (3670 bytes)
     - Content preview:
 ```
 //
@@ -1769,6 +1796,43 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
 #endif
     }
 
+    // MARK: - Navigation Delegate (Fix for About link)
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.cancel)
+            return
+        }
+        
+        // Allow navigation to local HTML files
+        if url.isFileURL {
+            // Check if it's our About.html file
+            if url.lastPathComponent == "About.html" {
+                // Load the About.html file with proper access
+                if let aboutURL = Bundle.main.url(forResource: "About", withExtension: "html") {
+                    webView.loadFileURL(aboutURL, allowingReadAccessTo: Bundle.main.resourceURL!)
+                }
+                decisionHandler(.cancel)
+                return
+            }
+        }
+        
+        // For external links, open in default browser
+        if !url.isFileURL {
+#if os(macOS)
+            NSWorkspace.shared.open(url)
+#elseif os(iOS)
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            }
+#endif
+            decisionHandler(.cancel)
+            return
+        }
+        
+        decisionHandler(.allow)
+    }
+
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
 #if os(macOS)
         if (message.body as! String != "open-preferences") {
@@ -1787,15 +1851,13 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
         }
 #endif
     }
-
 }
-
 ```
 - **Shared (Extension)/**
   - **Resources/**
     - **_locales/**
       - **de/**
-        - messages.json (438 bytes)
+        - messages.json (439 bytes)
           - Content preview:
 ```
 {
@@ -1811,7 +1873,7 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
     "message": "Die App läuft im Hintergrund 🗣️🗣️🗣️",
     "description": "Mitteilung vom Popup."
   }
-}
+}w
 
 ```
       - **en/**
@@ -2087,71 +2149,72 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
 }
 
 ```
-        - blocking-screen.js (6754 bytes)
+        - blocking-screen.js (7128 bytes)
           - Content preview:
 ```
 // modules/blocking-screen/blocking-screen.js
 // Module for showing the full blocking screen with countdown
 
-class BlockingScreen {
-  constructor(config = {}) {
-    this.config = {
-      UPDATE_INTERVAL: config.updateInterval || 1000, // Update countdown every second
-      ...config,
-    };
+if (typeof window.BlockingScreen === "undefined") {
+  class BlockingScreen {
+    constructor(config = {}) {
+      this.config = {
+        UPDATE_INTERVAL: config.updateInterval || 1000, // Update countdown every second
+        ...config,
+      };
 
-    this.blockingElement = null;
-    this.countdownInterval = null;
-    this.hostname = window.location.hostname;
-  }
-
-  /**
-   * Show the blocking screen
-   */
-  async show() {
-    try {
-      // Clear existing content
-      this.clearPageContent();
-
-      // Create blocking screen
-      this.createBlockingElement();
-
-      // Start countdown updates
-      this.startCountdownUpdates();
-    } catch (error) {
-      console.error("Error showing blocking screen:", error);
-      this.cleanup();
+      this.blockingElement = null;
+      this.countdownInterval = null;
+      this.hostname = window.location.hostname;
     }
-  }
 
-  /**
-   * Clear all existing page content
-   */
-  clearPageContent() {
-    document.body.innerHTML = "";
-  }
+    /**
+     * Show the blocking screen
+     */
+    async show() {
+      try {
+        // Clear existing content
+        this.clearPageContent();
 
-  /**
-   * Create the blocking screen element
-   */
-  createBlockingElement() {
-    this.blockingElement = document.createElement("div");
-    this.blockingElement.id = "time-block-screen";
-    this.blockingElement.className = "blocking-screen";
+        // Create blocking screen
+        this.createBlockingElement();
 
-    this.applyBlockingStyles();
-    this.updateBlockingContent();
+        // Start countdown updates
+        this.startCountdownUpdates();
+      } catch (error) {
+        console.error("Error showing blocking screen:", error);
+        this.cleanup();
+      }
+    }
 
-    document.body.appendChild(this.blockingElement);
-  }
+    /**
+     * Clear all existing page content
+     */
+    clearPageContent() {
+      document.body.innerHTML = "";
+    }
 
-  /**
-   * Apply styles to blocking screen element
-   */
-  applyBlockingStyles() {
-    if (!this.blockingElement) return;
+    /**
+     * Create the blocking screen element
+     */
+    createBlockingElement() {
+      this.blockingElement = document.createElement("div");
+      this.blockingElement.id = "time-block-screen";
+      this.blockingElement.className = "blocking-screen";
 
-    this.blockingElement.style.cssText = `
+      this.applyBlockingStyles();
+      this.updateBlockingContent();
+
+      document.body.appendChild(this.blockingElement);
+    }
+
+    /**
+     * Apply styles to blocking screen element
+     */
+    applyBlockingStyles() {
+      if (!this.blockingElement) return;
+
+      this.blockingElement.style.cssText = `
         height: 100vh;
         width: 100vw;
         position: fixed;
@@ -2169,15 +2232,15 @@ class BlockingScreen {
         padding: 2rem;
         box-sizing: border-box;
       `;
-  }
+    }
 
-  /**
-   * Update blocking screen content
-   */
-  updateBlockingContent() {
-    if (!this.blockingElement) return;
+    /**
+     * Update blocking screen content
+     */
+    updateBlockingContent() {
+      if (!this.blockingElement) return;
 
-    this.blockingElement.innerHTML = `
+      this.blockingElement.innerHTML = `
         <div style="max-width: 600px; width: 100%;">
           <div style="font-size: 4rem; margin-bottom: 1rem;">🌱</div>
           <h1 style="font-size: 3rem; margin: 0 0 1rem 0; font-weight: 700;">
@@ -2205,34 +2268,34 @@ class BlockingScreen {
           ${this.getSuggestionsHTML()}
         </div>
       `;
-  }
+    }
 
-  /**
-   * Get HTML for activity suggestions
-   * @returns {string} HTML for suggestions section
-   */
-  getSuggestionsHTML() {
-    const suggestions = [
-      { emoji: "🚶‍♂️", text: "Take a walk outside" },
-      { emoji: "📚", text: "Read a book" },
-      { emoji: "🧘‍♀️", text: "Meditate" },
-      { emoji: "💪", text: "Exercise" },
-      { emoji: "👥", text: "Call a friend" },
-      { emoji: "🎨", text: "Be creative" },
-    ];
+    /**
+     * Get HTML for activity suggestions
+     * @returns {string} HTML for suggestions section
+     */
+    getSuggestionsHTML() {
+      const suggestions = [
+        { emoji: "🚶‍♂️", text: "Take a walk outside" },
+        { emoji: "📚", text: "Read a book" },
+        { emoji: "🧘‍♀️", text: "Meditate" },
+        { emoji: "💪", text: "Exercise" },
+        { emoji: "👥", text: "Call a friend" },
+        { emoji: "🎨", text: "Be creative" },
+      ];
 
-    const suggestionsGrid = suggestions
-      .map(
-        (suggestion) => `
+      const suggestionsGrid = suggestions
+        .map(
+          (suggestion) => `
         <div style="background: rgba(255, 255, 255, 0.15); padding: 1rem; border-radius: 10px;">
           <div style="font-size: 2rem; margin-bottom: 0.5rem;">${suggestion.emoji}</div>
           <div>${suggestion.text}</div>
         </div>
       `
-      )
-      .join("");
+        )
+        .join("");
 
-    return `
+      return `
         <div style="margin-top: 2rem;">
           <p style="font-size: 1.1rem; margin: 1rem 0; opacity: 0.8;">
             Here are some better things you could be doing:
@@ -2242,103 +2305,104 @@ class BlockingScreen {
           </div>
         </div>
       `;
-  }
+    }
 
-  /**
-   * Start countdown updates
-   */
-  startCountdownUpdates() {
-    // Update immediately
-    this.updateCountdown();
-
-    // Then update every second
-    this.countdownInterval = setInterval(() => {
+    /**
+     * Start countdown updates
+     */
+    startCountdownUpdates() {
+      // Update immediately
       this.updateCountdown();
-    }, this.config.UPDATE_INTERVAL);
-  }
 
-  /**
-   * Update the countdown display
-   */
-  async updateCountdown() {
-    try {
-      const remainingTime = await TimeManager.getRemainingTime(this.hostname);
+      // Then update every second
+      this.countdownInterval = setInterval(() => {
+        this.updateCountdown();
+      }, this.config.UPDATE_INTERVAL);
+    }
 
-      if (remainingTime <= 0) {
-        // Time's up! Remove block and reload
-        await TimeManager.removeTimeBlock(this.hostname);
-        window.location.reload();
-        return;
+    /**
+     * Update the countdown display
+     */
+    async updateCountdown() {
+      try {
+        const remainingTime = await TimeManager.getRemainingTime(this.hostname);
+
+        if (remainingTime <= 0) {
+          // Time's up! Remove block and reload
+          await TimeManager.removeTimeBlock(this.hostname);
+          window.location.reload();
+          return;
+        }
+
+        // Update display
+        const timeDisplay = TimeManager.formatTime(remainingTime);
+        const countdownElement = document.getElementById("time-remaining");
+
+        if (countdownElement) {
+          countdownElement.textContent = timeDisplay;
+        }
+      } catch (error) {
+        console.error("Error updating countdown:", error);
       }
+    }
 
-      // Update display
-      const timeDisplay = TimeManager.formatTime(remainingTime);
-      const countdownElement = document.getElementById("time-remaining");
-
-      if (countdownElement) {
-        countdownElement.textContent = timeDisplay;
+    /**
+     * Stop countdown updates
+     */
+    stopCountdownUpdates() {
+      if (this.countdownInterval) {
+        clearInterval(this.countdownInterval);
+        this.countdownInterval = null;
       }
-    } catch (error) {
-      console.error("Error updating countdown:", error);
+    }
+
+    /**
+     * Clean up the blocking screen
+     */
+    cleanup() {
+      this.stopCountdownUpdates();
+
+      if (this.blockingElement && this.blockingElement.parentNode) {
+        this.blockingElement.parentNode.removeChild(this.blockingElement);
+        this.blockingElement = null;
+      }
+    }
+
+    /**
+     * Check if blocking screen is currently showing
+     * @returns {boolean} True if blocking screen is active
+     */
+    isActive() {
+      return this.countdownInterval !== null;
+    }
+
+    /**
+     * Update the blocked site name in display
+     * @param {string} siteName - Name of the blocked site
+     */
+    updateSiteName(siteName) {
+      if (!this.blockingElement) return;
+
+      const titleElement = this.blockingElement.querySelector("p");
+      if (titleElement) {
+        titleElement.textContent = `You've been scrolling too much on ${siteName}. This site is blocked for 60 minutes.`;
+      }
+    }
+
+    /**
+     * Force refresh the countdown (useful for testing)
+     */
+    refreshCountdown() {
+      this.updateCountdown();
     }
   }
 
-  /**
-   * Stop countdown updates
-   */
-  stopCountdownUpdates() {
-    if (this.countdownInterval) {
-      clearInterval(this.countdownInterval);
-      this.countdownInterval = null;
-    }
+  // Export for use in other modules
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = BlockingScreen;
+  } else {
+    window.BlockingScreen = BlockingScreen;
   }
-
-  /**
-   * Clean up the blocking screen
-   */
-  cleanup() {
-    this.stopCountdownUpdates();
-
-    if (this.blockingElement && this.blockingElement.parentNode) {
-      this.blockingElement.parentNode.removeChild(this.blockingElement);
-      this.blockingElement = null;
-    }
-  }
-
-  /**
-   * Check if blocking screen is currently showing
-   * @returns {boolean} True if blocking screen is active
-   */
-  isActive() {
-    return this.countdownInterval !== null;
-  }
-
-  /**
-   * Update the blocked site name in display
-   * @param {string} siteName - Name of the blocked site
-   */
-  updateSiteName(siteName) {
-    if (!this.blockingElement) return;
-
-    const titleElement = this.blockingElement.querySelector("p");
-    if (titleElement) {
-      titleElement.textContent = `You've been scrolling too much on ${siteName}. This site is blocked for 60 minutes.`;
-    }
-  }
-
-  /**
-   * Force refresh the countdown (useful for testing)
-   */
-  refreshCountdown() {
-    this.updateCountdown();
-  }
-}
-
-// Export for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = BlockingScreen;
-} else {
-  window.BlockingScreen = BlockingScreen;
 }
 
 ```
@@ -2412,84 +2476,85 @@ if (typeof module !== "undefined" && module.exports) {
 }
 
 ```
-        - doomscroll-animation.js (5202 bytes)
+        - doomscroll-animation.js (5595 bytes)
           - Content preview:
 ```
 // modules/doomscroll-detector/doomscroll-animation.js
 // Module for handling the doomscroll warning animation
 
-class DoomscrollAnimation {
-  constructor(config = {}) {
-    this.config = {
-      FLASH_INTERVAL: config.flashInterval || 400, // Warning flash interval in ms
-      SCREEN_DECAY_TIME: config.screenDecayTime || 7, // Time in seconds for content to fade out
-      ...config,
-    };
+if (typeof window.DoomscrollAnimation === "undefined") {
+  class DoomscrollAnimation {
+    constructor(config = {}) {
+      this.config = {
+        FLASH_INTERVAL: config.flashInterval || 400, // Warning flash interval in ms
+        SCREEN_DECAY_TIME: config.screenDecayTime || 7, // Time in seconds for content to fade out
+        ...config,
+      };
 
-    this.warningElement = null;
-    this.flashIntervalId = null;
-    this.isWarningVisible = false;
-    this.originalContent = [];
-  }
-
-  /**
-   * Start the doomscroll warning animation
-   */
-  async startAnimation() {
-    try {
-      // Create and show warning element
-      this.createWarningElement();
-
-      // Store reference to original content
-      this.storeOriginalContent();
-
-      // Set up fade-out transition for existing content
-      this.setupContentTransition();
-
-      // Start flashing warning
-      this.startFlashing();
-
-      // Begin fade-out process
-      setTimeout(() => {
-        this.fadeOutContent();
-      }, 100);
-
-      // Complete animation after decay time
-      setTimeout(() => {
-        this.completeAnimation();
-      }, this.config.SCREEN_DECAY_TIME * 1000);
-    } catch (error) {
-      console.error("Error in doomscroll animation:", error);
-      this.cleanup();
-    }
-  }
-
-  /**
-   * Create the warning overlay element
-   */
-  createWarningElement() {
-    if (this.warningElement) {
-      return; // Already created
+      this.warningElement = null;
+      this.flashIntervalId = null;
+      this.isWarningVisible = false;
+      this.originalContent = [];
     }
 
-    this.warningElement = document.createElement("div");
-    this.warningElement.id = "doomscroll-warning";
-    this.warningElement.className = "doomscroll-warning";
-    this.warningElement.textContent = "DOOMSCROLL!";
+    /**
+     * Start the doomscroll warning animation
+     */
+    async startAnimation() {
+      try {
+        // Create and show warning element
+        this.createWarningElement();
 
-    // Apply styles
-    this.applyWarningStyles();
+        // Store reference to original content
+        this.storeOriginalContent();
 
-    document.body.appendChild(this.warningElement);
-  }
+        // Set up fade-out transition for existing content
+        this.setupContentTransition();
 
-  /**
-   * Apply styles to warning element
-   */
-  applyWarningStyles() {
-    if (!this.warningElement) return;
+        // Start flashing warning
+        this.startFlashing();
 
-    this.warningElement.style.cssText = `
+        // Begin fade-out process
+        setTimeout(() => {
+          this.fadeOutContent();
+        }, 100);
+
+        // Complete animation after decay time
+        setTimeout(() => {
+          this.completeAnimation();
+        }, this.config.SCREEN_DECAY_TIME * 1000);
+      } catch (error) {
+        console.error("Error in doomscroll animation:", error);
+        this.cleanup();
+      }
+    }
+
+    /**
+     * Create the warning overlay element
+     */
+    createWarningElement() {
+      if (this.warningElement) {
+        return; // Already created
+      }
+
+      this.warningElement = document.createElement("div");
+      this.warningElement.id = "doomscroll-warning";
+      this.warningElement.className = "doomscroll-warning";
+      this.warningElement.textContent = "DOOMSCROLL!";
+
+      // Apply styles
+      this.applyWarningStyles();
+
+      document.body.appendChild(this.warningElement);
+    }
+
+    /**
+     * Apply styles to warning element
+     */
+    applyWarningStyles() {
+      if (!this.warningElement) return;
+
+      this.warningElement.style.cssText = `
         height: 100vh;
         position: fixed;
         top: 0;
@@ -2510,254 +2575,257 @@ class DoomscrollAnimation {
         opacity: 0;
         pointer-events: none;
       `;
-  }
-
-  /**
-   * Store references to original page content
-   */
-  storeOriginalContent() {
-    this.originalContent = Array.from(document.body.children).filter(
-      (child) => child.id !== "doomscroll-warning"
-    );
-  }
-
-  /**
-   * Set up CSS transitions for content fade-out
-   */
-  setupContentTransition() {
-    this.originalContent.forEach((child) => {
-      child.style.transition = `opacity ${this.config.SCREEN_DECAY_TIME}s ease`;
-    });
-  }
-
-  /**
-   * Start the flashing warning animation
-   */
-  startFlashing() {
-    this.flashIntervalId = setInterval(() => {
-      this.toggleWarningVisibility();
-    }, this.config.FLASH_INTERVAL);
-  }
-
-  /**
-   * Toggle warning element visibility for flashing effect
-   */
-  toggleWarningVisibility() {
-    if (!this.warningElement) return;
-
-    if (!this.isWarningVisible) {
-      this.warningElement.style.opacity = "1";
-    } else {
-      this.warningElement.style.opacity = "0";
     }
-    this.isWarningVisible = !this.isWarningVisible;
-  }
 
-  /**
-   * Fade out the original page content
-   */
-  fadeOutContent() {
-    this.originalContent.forEach((child) => {
-      child.style.opacity = "0";
-    });
-  }
-
-  /**
-   * Complete the animation and dispatch event
-   */
-  completeAnimation() {
-    // Stop flashing
-    this.stopFlashing();
-
-    // Remove original content
-    this.removeOriginalContent();
-
-    // Dispatch completion event
-    window.dispatchEvent(
-      new CustomEvent("doomscroll-animation-complete", {
-        detail: {
-          hostname: window.location.hostname,
-        },
-      })
-    );
-  }
-
-  /**
-   * Stop the flashing animation
-   */
-  stopFlashing() {
-    if (this.flashIntervalId) {
-      clearInterval(this.flashIntervalId);
-      this.flashIntervalId = null;
+    /**
+     * Store references to original page content
+     */
+    storeOriginalContent() {
+      this.originalContent = Array.from(document.body.children).filter(
+        (child) => child.id !== "doomscroll-warning"
+      );
     }
-  }
 
-  /**
-   * Remove original page content
-   */
-  removeOriginalContent() {
-    this.originalContent.forEach((child) => {
-      if (child.parentNode) {
-        child.parentNode.removeChild(child);
+    /**
+     * Set up CSS transitions for content fade-out
+     */
+    setupContentTransition() {
+      this.originalContent.forEach((child) => {
+        child.style.transition = `opacity ${this.config.SCREEN_DECAY_TIME}s ease`;
+      });
+    }
+
+    /**
+     * Start the flashing warning animation
+     */
+    startFlashing() {
+      this.flashIntervalId = setInterval(() => {
+        this.toggleWarningVisibility();
+      }, this.config.FLASH_INTERVAL);
+    }
+
+    /**
+     * Toggle warning element visibility for flashing effect
+     */
+    toggleWarningVisibility() {
+      if (!this.warningElement) return;
+
+      if (!this.isWarningVisible) {
+        this.warningElement.style.opacity = "1";
+      } else {
+        this.warningElement.style.opacity = "0";
       }
-    });
-    this.originalContent = [];
-  }
-
-  /**
-   * Clean up the animation and remove warning element
-   */
-  cleanup() {
-    this.stopFlashing();
-
-    if (this.warningElement && this.warningElement.parentNode) {
-      this.warningElement.parentNode.removeChild(this.warningElement);
-      this.warningElement = null;
+      this.isWarningVisible = !this.isWarningVisible;
     }
 
-    this.isWarningVisible = false;
-    this.originalContent = [];
+    /**
+     * Fade out the original page content
+     */
+    fadeOutContent() {
+      this.originalContent.forEach((child) => {
+        child.style.opacity = "0";
+      });
+    }
+
+    /**
+     * Complete the animation and dispatch event
+     */
+    completeAnimation() {
+      // Stop flashing
+      this.stopFlashing();
+
+      // Remove original content
+      this.removeOriginalContent();
+
+      // Dispatch completion event
+      window.dispatchEvent(
+        new CustomEvent("doomscroll-animation-complete", {
+          detail: {
+            hostname: window.location.hostname,
+          },
+        })
+      );
+    }
+
+    /**
+     * Stop the flashing animation
+     */
+    stopFlashing() {
+      if (this.flashIntervalId) {
+        clearInterval(this.flashIntervalId);
+        this.flashIntervalId = null;
+      }
+    }
+
+    /**
+     * Remove original page content
+     */
+    removeOriginalContent() {
+      this.originalContent.forEach((child) => {
+        if (child.parentNode) {
+          child.parentNode.removeChild(child);
+        }
+      });
+      this.originalContent = [];
+    }
+
+    /**
+     * Clean up the animation and remove warning element
+     */
+    cleanup() {
+      this.stopFlashing();
+
+      if (this.warningElement && this.warningElement.parentNode) {
+        this.warningElement.parentNode.removeChild(this.warningElement);
+        this.warningElement = null;
+      }
+
+      this.isWarningVisible = false;
+      this.originalContent = [];
+    }
+
+    /**
+     * Check if animation is currently running
+     * @returns {boolean} True if animation is active
+     */
+    isActive() {
+      return this.flashIntervalId !== null;
+    }
   }
 
-  /**
-   * Check if animation is currently running
-   * @returns {boolean} True if animation is active
-   */
-  isActive() {
-    return this.flashIntervalId !== null;
+  // Export for use in other modules
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = DoomscrollAnimation;
+  } else {
+    window.DoomscrollAnimation = DoomscrollAnimation;
   }
-}
-
-// Export for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = DoomscrollAnimation;
-} else {
-  window.DoomscrollAnimation = DoomscrollAnimation;
 }
 
 ```
-        - doomscroll-detector.js (2871 bytes)
+        - doomscroll-detector.js (3135 bytes)
           - Content preview:
 ```
 // modules/doomscroll-detector/doomscroll-detector.js
 // Module for detecting excessive scrolling behavior
 
-class DoomscrollDetector {
-  constructor(config = {}) {
-    this.config = {
-      SCROLL_LIMIT: config.scrollLimit || 4000, // Pixels scrolled before triggering
-      ...config,
-    };
+if (typeof window.DoomscrollDetector === "undefined") {
+  class DoomscrollDetector {
+    constructor(config = {}) {
+      this.config = {
+        SCROLL_LIMIT: config.scrollLimit || 4000, // Pixels scrolled before triggering
+        ...config,
+      };
 
-    this.scrollDistance = 0;
-    this.isInitialized = false;
-    this.scrollHandler = null;
-  }
-
-  /**
-   * Initialize the doomscroll detector
-   */
-  initialize() {
-    if (this.isInitialized) {
-      return;
-    }
-
-    this.scrollHandler = this.handleScroll.bind(this);
-    window.addEventListener("scroll", this.scrollHandler, { passive: true });
-    this.isInitialized = true;
-
-    console.log(
-      "DoomscrollDetector initialized with scroll limit:",
-      this.config.SCROLL_LIMIT
-    );
-  }
-
-  /**
-   * Destroy the detector and clean up event listeners
-   */
-  destroy() {
-    if (this.scrollHandler) {
-      window.removeEventListener("scroll", this.scrollHandler);
+      this.scrollDistance = 0;
+      this.isInitialized = false;
       this.scrollHandler = null;
     }
-    this.isInitialized = false;
-    this.scrollDistance = 0;
-  }
 
-  /**
-   * Handle scroll events and detect doomscrolling
-   */
-  handleScroll() {
-    const currentScrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
-    const scrollDelta = currentScrollTop - this.scrollDistance;
-    this.scrollDistance = currentScrollTop;
+    /**
+     * Initialize the doomscroll detector
+     */
+    initialize() {
+      if (this.isInitialized) {
+        return;
+      }
 
-    // Only trigger on downward scrolling
-    if (scrollDelta > 0 && this.scrollDistance > this.config.SCROLL_LIMIT) {
-      this.triggerDoomscrollDetected();
+      this.scrollHandler = this.handleScroll.bind(this);
+      window.addEventListener("scroll", this.scrollHandler, { passive: true });
+      this.isInitialized = true;
+
+      console.log(
+        "DoomscrollDetector initialized with scroll limit:",
+        this.config.SCROLL_LIMIT
+      );
+    }
+
+    /**
+     * Destroy the detector and clean up event listeners
+     */
+    destroy() {
+      if (this.scrollHandler) {
+        window.removeEventListener("scroll", this.scrollHandler);
+        this.scrollHandler = null;
+      }
+      this.isInitialized = false;
+      this.scrollDistance = 0;
+    }
+
+    /**
+     * Handle scroll events and detect doomscrolling
+     */
+    handleScroll() {
+      const currentScrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollDelta = currentScrollTop - this.scrollDistance;
+      this.scrollDistance = currentScrollTop;
+
+      // Only trigger on downward scrolling
+      if (scrollDelta > 0 && this.scrollDistance > this.config.SCROLL_LIMIT) {
+        this.triggerDoomscrollDetected();
+      }
+    }
+
+    /**
+     * Trigger doomscroll detection event and cleanup
+     */
+    triggerDoomscrollDetected() {
+      // Dispatch custom event that other modules can listen to
+      window.dispatchEvent(
+        new CustomEvent("doomscroll-detected", {
+          detail: {
+            scrollDistance: this.scrollDistance,
+            scrollLimit: this.config.SCROLL_LIMIT,
+            hostname: window.location.hostname,
+          },
+        })
+      );
+
+      // Clean up after detection
+      this.destroy();
+    }
+
+    /**
+     * Reset scroll distance counter
+     */
+    resetScrollDistance() {
+      this.scrollDistance = 0;
+    }
+
+    /**
+     * Get current scroll distance
+     * @returns {number} Current scroll distance in pixels
+     */
+    getCurrentScrollDistance() {
+      return this.scrollDistance;
+    }
+
+    /**
+     * Get scroll progress as percentage
+     * @returns {number} Progress from 0 to 100
+     */
+    getScrollProgress() {
+      return Math.min(
+        100,
+        (this.scrollDistance / this.config.SCROLL_LIMIT) * 100
+      );
+    }
+
+    /**
+     * Check if detector is active
+     * @returns {boolean} True if detector is initialized and listening
+     */
+    isActive() {
+      return this.isInitialized;
     }
   }
 
-  /**
-   * Trigger doomscroll detection event and cleanup
-   */
-  triggerDoomscrollDetected() {
-    // Dispatch custom event that other modules can listen to
-    window.dispatchEvent(
-      new CustomEvent("doomscroll-detected", {
-        detail: {
-          scrollDistance: this.scrollDistance,
-          scrollLimit: this.config.SCROLL_LIMIT,
-          hostname: window.location.hostname,
-        },
-      })
-    );
-
-    // Clean up after detection
-    this.destroy();
+  // Export for use in other modules
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = DoomscrollDetector;
+  } else {
+    window.DoomscrollDetector = DoomscrollDetector;
   }
-
-  /**
-   * Reset scroll distance counter
-   */
-  resetScrollDistance() {
-    this.scrollDistance = 0;
-  }
-
-  /**
-   * Get current scroll distance
-   * @returns {number} Current scroll distance in pixels
-   */
-  getCurrentScrollDistance() {
-    return this.scrollDistance;
-  }
-
-  /**
-   * Get scroll progress as percentage
-   * @returns {number} Progress from 0 to 100
-   */
-  getScrollProgress() {
-    return Math.min(
-      100,
-      (this.scrollDistance / this.config.SCROLL_LIMIT) * 100
-    );
-  }
-
-  /**
-   * Check if detector is active
-   * @returns {boolean} True if detector is initialized and listening
-   */
-  isActive() {
-    return this.isInitialized;
-  }
-}
-
-// Export for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = DoomscrollDetector;
-} else {
-  window.DoomscrollDetector = DoomscrollDetector;
 }
 
 ```
@@ -2879,70 +2947,71 @@ if (typeof module !== "undefined" && module.exports) {
 }
 
 ```
-        - transition-screen.js (4976 bytes)
+        - transition-screen.js (5308 bytes)
           - Content preview:
 ```
 // modules/transition-screen/transition-screen.js
 // Module for showing the transition screen between animation and blocking
 
-class TransitionScreen {
-  constructor(config = {}) {
-    this.config = {
-      TRANSITION_DURATION: config.transitionDuration || 3000, // 3 seconds
-      ...config,
-    };
+if (typeof window.TransitionScreen === "undefined") {
+  class TransitionScreen {
+    constructor(config = {}) {
+      this.config = {
+        TRANSITION_DURATION: config.transitionDuration || 3000, // 3 seconds
+        ...config,
+      };
 
-    this.transitionElement = null;
-    this.countdownInterval = null;
-    this.remainingSeconds = 3;
-  }
-
-  /**
-   * Show the transition screen
-   */
-  async show() {
-    try {
-      this.createTransitionElement();
-      this.startCountdown();
-
-      // Auto-complete after duration
-      setTimeout(() => {
-        this.complete();
-      }, this.config.TRANSITION_DURATION);
-    } catch (error) {
-      console.error("Error showing transition screen:", error);
-      this.cleanup();
-    }
-  }
-
-  /**
-   * Create the transition screen element
-   */
-  createTransitionElement() {
-    if (this.transitionElement) {
-      return; // Already created
+      this.transitionElement = null;
+      this.countdownInterval = null;
+      this.remainingSeconds = 3;
     }
 
-    // Find and update existing warning element, or create new one
-    this.transitionElement = document.getElementById("doomscroll-warning");
+    /**
+     * Show the transition screen
+     */
+    async show() {
+      try {
+        this.createTransitionElement();
+        this.startCountdown();
 
-    if (!this.transitionElement) {
-      this.transitionElement = document.createElement("div");
-      this.transitionElement.id = "transition-screen";
-      document.body.appendChild(this.transitionElement);
+        // Auto-complete after duration
+        setTimeout(() => {
+          this.complete();
+        }, this.config.TRANSITION_DURATION);
+      } catch (error) {
+        console.error("Error showing transition screen:", error);
+        this.cleanup();
+      }
     }
 
-    this.applyTransitionStyles();
-    this.updateTransitionContent();
-  }
+    /**
+     * Create the transition screen element
+     */
+    createTransitionElement() {
+      if (this.transitionElement) {
+        return; // Already created
+      }
 
-  /**
-   * Apply styles to transition element
-   */
-  applyTransitionStyles() {
-    if (!this.transitionElement) return;
+      // Find and update existing warning element, or create new one
+      this.transitionElement = document.getElementById("doomscroll-warning");
 
-    this.transitionElement.style.cssText = `
+      if (!this.transitionElement) {
+        this.transitionElement = document.createElement("div");
+        this.transitionElement.id = "transition-screen";
+        document.body.appendChild(this.transitionElement);
+      }
+
+      this.applyTransitionStyles();
+      this.updateTransitionContent();
+    }
+
+    /**
+     * Apply styles to transition element
+     */
+    applyTransitionStyles() {
+      if (!this.transitionElement) return;
+
+      this.transitionElement.style.cssText = `
         height: 100vh;
         position: fixed;
         top: 0;
@@ -2960,15 +3029,15 @@ class TransitionScreen {
         opacity: 1;
         pointer-events: all;
       `;
-  }
+    }
 
-  /**
-   * Update transition screen content
-   */
-  updateTransitionContent() {
-    if (!this.transitionElement) return;
+    /**
+     * Update transition screen content
+     */
+    updateTransitionContent() {
+      if (!this.transitionElement) return;
 
-    this.transitionElement.innerHTML = `
+      this.transitionElement.innerHTML = `
         <div style="max-width: 600px; width: 100%; padding: 2rem;">
           <div style="font-size: 5rem; margin-bottom: 2rem;">🌱</div>
           <div style="font-size: 4rem; margin-bottom: 2rem; font-weight: bold;">
@@ -2982,304 +3051,252 @@ class TransitionScreen {
           </div>
         </div>
       `;
-  }
+    }
 
-  /**
-   * Start the countdown timer
-   */
-  startCountdown() {
-    this.countdownInterval = setInterval(() => {
-      this.remainingSeconds--;
-      this.updateCountdownDisplay();
+    /**
+     * Start the countdown timer
+     */
+    startCountdown() {
+      this.countdownInterval = setInterval(() => {
+        this.remainingSeconds--;
+        this.updateCountdownDisplay();
 
-      if (this.remainingSeconds <= 0) {
-        this.stopCountdown();
+        if (this.remainingSeconds <= 0) {
+          this.stopCountdown();
+        }
+      }, 1000);
+    }
+
+    /**
+     * Update countdown display
+     */
+    updateCountdownDisplay() {
+      const countdownElement = document.getElementById("countdown-number");
+      if (countdownElement) {
+        countdownElement.textContent = this.remainingSeconds;
       }
-    }, 1000);
-  }
+    }
 
-  /**
-   * Update countdown display
-   */
-  updateCountdownDisplay() {
-    const countdownElement = document.getElementById("countdown-number");
-    if (countdownElement) {
-      countdownElement.textContent = this.remainingSeconds;
+    /**
+     * Stop the countdown timer
+     */
+    stopCountdown() {
+      if (this.countdownInterval) {
+        clearInterval(this.countdownInterval);
+        this.countdownInterval = null;
+      }
+    }
+
+    /**
+     * Complete the transition and dispatch event
+     */
+    complete() {
+      this.stopCountdown();
+
+      // Dispatch completion event
+      window.dispatchEvent(
+        new CustomEvent("transition-screen-complete", {
+          detail: {
+            hostname: window.location.hostname,
+          },
+        })
+      );
+    }
+
+    /**
+     * Clean up the transition screen
+     */
+    cleanup() {
+      this.stopCountdown();
+
+      if (this.transitionElement && this.transitionElement.parentNode) {
+        this.transitionElement.parentNode.removeChild(this.transitionElement);
+        this.transitionElement = null;
+      }
+
+      this.remainingSeconds = 3;
+    }
+
+    /**
+     * Check if transition screen is currently showing
+     * @returns {boolean} True if transition is active
+     */
+    isActive() {
+      return this.countdownInterval !== null;
+    }
+
+    /**
+     * Update transition message
+     * @param {string} message - Custom message to display
+     */
+    updateMessage(message) {
+      if (!this.transitionElement) return;
+
+      const messageElement =
+        this.transitionElement.querySelector("div:nth-child(3)");
+      if (messageElement) {
+        messageElement.textContent = message;
+      }
     }
   }
 
-  /**
-   * Stop the countdown timer
-   */
-  stopCountdown() {
-    if (this.countdownInterval) {
-      clearInterval(this.countdownInterval);
-      this.countdownInterval = null;
-    }
+  // Export for use in other modules
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = TransitionScreen;
+  } else {
+    window.TransitionScreen = TransitionScreen;
   }
-
-  /**
-   * Complete the transition and dispatch event
-   */
-  complete() {
-    this.stopCountdown();
-
-    // Dispatch completion event
-    window.dispatchEvent(
-      new CustomEvent("transition-screen-complete", {
-        detail: {
-          hostname: window.location.hostname,
-        },
-      })
-    );
-  }
-
-  /**
-   * Clean up the transition screen
-   */
-  cleanup() {
-    this.stopCountdown();
-
-    if (this.transitionElement && this.transitionElement.parentNode) {
-      this.transitionElement.parentNode.removeChild(this.transitionElement);
-      this.transitionElement = null;
-    }
-
-    this.remainingSeconds = 3;
-  }
-
-  /**
-   * Check if transition screen is currently showing
-   * @returns {boolean} True if transition is active
-   */
-  isActive() {
-    return this.countdownInterval !== null;
-  }
-
-  /**
-   * Update transition message
-   * @param {string} message - Custom message to display
-   */
-  updateMessage(message) {
-    if (!this.transitionElement) return;
-
-    const messageElement =
-      this.transitionElement.querySelector("div:nth-child(3)");
-    if (messageElement) {
-      messageElement.textContent = message;
-    }
-  }
-}
-
-// Export for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = TransitionScreen;
-} else {
-  window.TransitionScreen = TransitionScreen;
 }
 
 ```
       - **utils/**
-        - storage-helper.js (2014 bytes)
+        - storage-helper.js (2200 bytes)
           - Content preview:
 ```
-class StorageHelper {
-  /**
-   * Get blocked sites from storage
-   * @returns {Promise<string[]>} Array of blocked site domains
-   */
-  static async getBlockedSites() {
-    return new Promise((resolve) => {
-      browser.storage.local.get(["blockedSites"], (result) => {
-        resolve(result.blockedSites || []);
+if (typeof window.StorageHelper === "undefined") {
+  class StorageHelper {
+    /**
+     * Get blocked sites from storage
+     * @returns {Promise<string[]>} Array of blocked site domains
+     */
+    static async getBlockedSites() {
+      return new Promise((resolve) => {
+        browser.storage.local.get(["blockedSites"], (result) => {
+          resolve(result.blockedSites || []);
+        });
       });
-    });
-  }
+    }
 
-  /**
-   * Set blocked sites in storage
-   * @param {string[]} sites - Array of site domains to block
-   * @returns {Promise<void>}
-   */
-  static async setBlockedSites(sites) {
-    return new Promise((resolve) => {
-      browser.storage.local.set({ blockedSites: sites }, () => {
-        resolve();
+    /**
+     * Set blocked sites in storage
+     * @param {string[]} sites - Array of site domains to block
+     * @returns {Promise<void>}
+     */
+    static async setBlockedSites(sites) {
+      return new Promise((resolve) => {
+        browser.storage.local.set({ blockedSites: sites }, () => {
+          resolve();
+        });
       });
-    });
-  }
+    }
 
-  /**
-   * Get time blocks from storage
-   * @returns {Promise<Object>} Object with hostname keys and block info values
-   */
-  static async getTimeBlocks() {
-    return new Promise((resolve) => {
-      browser.storage.local.get(["timeBlocks"], (result) => {
-        resolve(result.timeBlocks || {});
+    /**
+     * Get time blocks from storage
+     * @returns {Promise<Object>} Object with hostname keys and block info values
+     */
+    static async getTimeBlocks() {
+      return new Promise((resolve) => {
+        browser.storage.local.get(["timeBlocks"], (result) => {
+          resolve(result.timeBlocks || {});
+        });
       });
-    });
-  }
+    }
 
-  /**
-   * Set time blocks in storage
-   * @param {Object} timeBlocks - Object with hostname keys and block info values
-   * @returns {Promise<void>}
-   */
-  static async setTimeBlocks(timeBlocks) {
-    return new Promise((resolve) => {
-      browser.storage.local.set({ timeBlocks }, () => {
-        resolve();
+    /**
+     * Set time blocks in storage
+     * @param {Object} timeBlocks - Object with hostname keys and block info values
+     * @returns {Promise<void>}
+     */
+    static async setTimeBlocks(timeBlocks) {
+      return new Promise((resolve) => {
+        browser.storage.local.set({ timeBlocks }, () => {
+          resolve();
+        });
       });
-    });
+    }
+
+    /**
+     * Check if current site is in blocked sites list
+     * @param {string} url - Current page URL
+     * @param {string} hostname - Current page hostname
+     * @returns {Promise<boolean>} True if site should be blocked
+     */
+    static async isCurrentSiteBlocked(url, hostname) {
+      const blockedSites = await this.getBlockedSites();
+
+      return blockedSites.some((site) => {
+        const cleanSite = site.replace(/^https?:\/\//, "");
+        return url.includes(cleanSite) || hostname.includes(cleanSite);
+      });
+    }
   }
-
-  /**
-   * Check if current site is in blocked sites list
-   * @param {string} url - Current page URL
-   * @param {string} hostname - Current page hostname
-   * @returns {Promise<boolean>} True if site should be blocked
-   */
-  static async isCurrentSiteBlocked(url, hostname) {
-    const blockedSites = await this.getBlockedSites();
-
-    return blockedSites.some((site) => {
-      const cleanSite = site.replace(/^https?:\/\//, "");
-      return url.includes(cleanSite) || hostname.includes(cleanSite);
-    });
+  // Export for use in other modules
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = StorageHelper;
+  } else {
+    window.StorageHelper = StorageHelper;
   }
 }
 
-// Export for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = StorageHelper;
-} else {
-  window.StorageHelper = StorageHelper;
-}
-
 ```
-        - time-manager.js (3777 bytes)
+        - time-manager.js (4061 bytes)
           - Content preview:
 ```
-class TimeManager {
-  static BLOCK_DURATION = 60 * 60 * 1000; // 60 minutes in milliseconds
+if (typeof window.TimeManager === "undefined") {
+  class TimeManager {
+    static BLOCK_DURATION = 60 * 60 * 1000; // 60 minutes in milliseconds
 
-  /**
-   * Check if a site is currently time-blocked
-   * @param {string} hostname - The hostname to check
-   * @returns {Promise<boolean>} True if site is currently blocked
-   */
-  static async isTimeBlocked(hostname) {
-    const timeBlocks = await StorageHelper.getTimeBlocks();
-    const blockInfo = timeBlocks[hostname];
+    /**
+     * Check if a site is currently time-blocked
+     * @param {string} hostname - The hostname to check
+     * @returns {Promise<boolean>} True if site is currently blocked
+     */
+    static async isTimeBlocked(hostname) {
+      const timeBlocks = await StorageHelper.getTimeBlocks();
+      const blockInfo = timeBlocks[hostname];
 
-    if (!blockInfo) {
-      return false;
+      if (!blockInfo) {
+        return false;
+      }
+
+      const now = Date.now();
+      const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
+
+      if (timeRemaining > 0) {
+        return true;
+      } else {
+        // Block expired, remove it
+        await this.removeTimeBlock(hostname);
+        return false;
+      }
     }
 
-    const now = Date.now();
-    const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
+    /**
+     * Create a new time block for a site
+     * @param {string} hostname - The hostname to block
+     * @returns {Promise<void>}
+     */
+    static async createTimeBlock(hostname) {
+      const timeBlocks = await StorageHelper.getTimeBlocks();
 
-    if (timeRemaining > 0) {
-      return true;
-    } else {
-      // Block expired, remove it
-      await this.removeTimeBlock(hostname);
-      return false;
-    }
-  }
+      timeBlocks[hostname] = {
+        timestamp: Date.now(),
+        siteName: hostname,
+      };
 
-  /**
-   * Create a new time block for a site
-   * @param {string} hostname - The hostname to block
-   * @returns {Promise<void>}
-   */
-  static async createTimeBlock(hostname) {
-    const timeBlocks = await StorageHelper.getTimeBlocks();
-
-    timeBlocks[hostname] = {
-      timestamp: Date.now(),
-      siteName: hostname,
-    };
-
-    await StorageHelper.setTimeBlocks(timeBlocks);
-
-    // Dispatch event for other modules to listen to
-    window.dispatchEvent(
-      new CustomEvent("time-block-created", {
-        detail: { hostname, timestamp: timeBlocks[hostname].timestamp },
-      })
-    );
-  }
-
-  /**
-   * Remove a time block (when expired or manually cleared)
-   * @param {string} hostname - The hostname to unblock
-   * @returns {Promise<void>}
-   */
-  static async removeTimeBlock(hostname) {
-    const timeBlocks = await StorageHelper.getTimeBlocks();
-
-    if (timeBlocks[hostname]) {
-      delete timeBlocks[hostname];
       await StorageHelper.setTimeBlocks(timeBlocks);
 
       // Dispatch event for other modules to listen to
       window.dispatchEvent(
-        new CustomEvent("time-block-removed", {
-          detail: { hostname },
+        new CustomEvent("time-block-created", {
+          detail: { hostname, timestamp: timeBlocks[hostname].timestamp },
         })
       );
     }
-  }
 
-  /**
-   * Get remaining time for a blocked site
-   * @param {string} hostname - The hostname to check
-   * @returns {Promise<number>} Remaining time in milliseconds, or 0 if not blocked
-   */
-  static async getRemainingTime(hostname) {
-    const timeBlocks = await StorageHelper.getTimeBlocks();
-    const blockInfo = timeBlocks[hostname];
+    /**
+     * Remove a time block (when expired or manually cleared)
+     * @param {string} hostname - The hostname to unblock
+     * @returns {Promise<void>}
+     */
+    static async removeTimeBlock(hostname) {
+      const timeBlocks = await StorageHelper.getTimeBlocks();
 
-    if (!blockInfo) {
-      return 0;
-    }
-
-    const now = Date.now();
-    const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
-
-    return Math.max(0, timeRemaining);
-  }
-
-  /**
-   * Format remaining time as MM:SS string
-   * @param {number} milliseconds - Time in milliseconds
-   * @returns {string} Formatted time string
-   */
-  static formatTime(milliseconds) {
-    const minutes = Math.floor(milliseconds / 60000);
-    const seconds = Math.floor((milliseconds % 60000) / 1000);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  }
-
-  /**
-   * Clean up all expired time blocks
-   * @returns {Promise<void>}
-   */
-  static async cleanupExpiredBlocks() {
-    const timeBlocks = await StorageHelper.getTimeBlocks();
-    const now = Date.now();
-    let hasChanges = false;
-
-    for (const [hostname, blockInfo] of Object.entries(timeBlocks)) {
-      const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
-
-      if (timeRemaining <= 0) {
+      if (timeBlocks[hostname]) {
         delete timeBlocks[hostname];
-        hasChanges = true;
+        await StorageHelper.setTimeBlocks(timeBlocks);
 
-        // Dispatch event for each removed block
+        // Dispatch event for other modules to listen to
         window.dispatchEvent(
           new CustomEvent("time-block-removed", {
             detail: { hostname },
@@ -3288,17 +3305,72 @@ class TimeManager {
       }
     }
 
-    if (hasChanges) {
-      await StorageHelper.setTimeBlocks(timeBlocks);
+    /**
+     * Get remaining time for a blocked site
+     * @param {string} hostname - The hostname to check
+     * @returns {Promise<number>} Remaining time in milliseconds, or 0 if not blocked
+     */
+    static async getRemainingTime(hostname) {
+      const timeBlocks = await StorageHelper.getTimeBlocks();
+      const blockInfo = timeBlocks[hostname];
+
+      if (!blockInfo) {
+        return 0;
+      }
+
+      const now = Date.now();
+      const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
+
+      return Math.max(0, timeRemaining);
+    }
+
+    /**
+     * Format remaining time as MM:SS string
+     * @param {number} milliseconds - Time in milliseconds
+     * @returns {string} Formatted time string
+     */
+    static formatTime(milliseconds) {
+      const minutes = Math.floor(milliseconds / 60000);
+      const seconds = Math.floor((milliseconds % 60000) / 1000);
+      return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    }
+
+    /**
+     * Clean up all expired time blocks
+     * @returns {Promise<void>}
+     */
+    static async cleanupExpiredBlocks() {
+      const timeBlocks = await StorageHelper.getTimeBlocks();
+      const now = Date.now();
+      let hasChanges = false;
+
+      for (const [hostname, blockInfo] of Object.entries(timeBlocks)) {
+        const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
+
+        if (timeRemaining <= 0) {
+          delete timeBlocks[hostname];
+          hasChanges = true;
+
+          // Dispatch event for each removed block
+          window.dispatchEvent(
+            new CustomEvent("time-block-removed", {
+              detail: { hostname },
+            })
+          );
+        }
+      }
+
+      if (hasChanges) {
+        await StorageHelper.setTimeBlocks(timeBlocks);
+      }
     }
   }
-}
-
-// Export for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = TimeManager;
-} else {
-  window.TimeManager = TimeManager;
+  // Export for use in other modules
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = TimeManager;
+  } else {
+    window.TimeManager = TimeManager;
+  }
 }
 
 ```
@@ -3714,7 +3786,7 @@ scrollStopCoordinator.initialize();
 }
 
 ```
-    - popup.html (322 bytes)
+    - popup.html (397 bytes)
       - Content preview:
 ```
 <!DOCTYPE html>
@@ -3723,11 +3795,12 @@ scrollStopCoordinator.initialize();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ScrollStop - Blocked Sites</title>
+    <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <div class="container">
       <h2>ScrollStop</h2>
-      <p>"__MSG_popup_message__"</p>
+      <p>Die App läuft im Hintergrund 🗣️🗣️🗣️</p>
   </body>
 </html>
 
