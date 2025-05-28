@@ -1,65 +1,66 @@
 // modules/blocking-screen/blocking-screen.js
 // Module for showing the full blocking screen with countdown
 
-class BlockingScreen {
-  constructor(config = {}) {
-    this.config = {
-      UPDATE_INTERVAL: config.updateInterval || 1000, // Update countdown every second
-      ...config,
-    };
+if (typeof window.BlockingScreen === "undefined") {
+  class BlockingScreen {
+    constructor(config = {}) {
+      this.config = {
+        UPDATE_INTERVAL: config.updateInterval || 1000, // Update countdown every second
+        ...config,
+      };
 
-    this.blockingElement = null;
-    this.countdownInterval = null;
-    this.hostname = window.location.hostname;
-  }
-
-  /**
-   * Show the blocking screen
-   */
-  async show() {
-    try {
-      // Clear existing content
-      this.clearPageContent();
-
-      // Create blocking screen
-      this.createBlockingElement();
-
-      // Start countdown updates
-      this.startCountdownUpdates();
-    } catch (error) {
-      console.error("Error showing blocking screen:", error);
-      this.cleanup();
+      this.blockingElement = null;
+      this.countdownInterval = null;
+      this.hostname = window.location.hostname;
     }
-  }
 
-  /**
-   * Clear all existing page content
-   */
-  clearPageContent() {
-    document.body.innerHTML = "";
-  }
+    /**
+     * Show the blocking screen
+     */
+    async show() {
+      try {
+        // Clear existing content
+        this.clearPageContent();
 
-  /**
-   * Create the blocking screen element
-   */
-  createBlockingElement() {
-    this.blockingElement = document.createElement("div");
-    this.blockingElement.id = "time-block-screen";
-    this.blockingElement.className = "blocking-screen";
+        // Create blocking screen
+        this.createBlockingElement();
 
-    this.applyBlockingStyles();
-    this.updateBlockingContent();
+        // Start countdown updates
+        this.startCountdownUpdates();
+      } catch (error) {
+        console.error("Error showing blocking screen:", error);
+        this.cleanup();
+      }
+    }
 
-    document.body.appendChild(this.blockingElement);
-  }
+    /**
+     * Clear all existing page content
+     */
+    clearPageContent() {
+      document.body.innerHTML = "";
+    }
 
-  /**
-   * Apply styles to blocking screen element
-   */
-  applyBlockingStyles() {
-    if (!this.blockingElement) return;
+    /**
+     * Create the blocking screen element
+     */
+    createBlockingElement() {
+      this.blockingElement = document.createElement("div");
+      this.blockingElement.id = "time-block-screen";
+      this.blockingElement.className = "blocking-screen";
 
-    this.blockingElement.style.cssText = `
+      this.applyBlockingStyles();
+      this.updateBlockingContent();
+
+      document.body.appendChild(this.blockingElement);
+    }
+
+    /**
+     * Apply styles to blocking screen element
+     */
+    applyBlockingStyles() {
+      if (!this.blockingElement) return;
+
+      this.blockingElement.style.cssText = `
         height: 100vh;
         width: 100vw;
         position: fixed;
@@ -77,15 +78,15 @@ class BlockingScreen {
         padding: 2rem;
         box-sizing: border-box;
       `;
-  }
+    }
 
-  /**
-   * Update blocking screen content
-   */
-  updateBlockingContent() {
-    if (!this.blockingElement) return;
+    /**
+     * Update blocking screen content
+     */
+    updateBlockingContent() {
+      if (!this.blockingElement) return;
 
-    this.blockingElement.innerHTML = `
+      this.blockingElement.innerHTML = `
         <div style="max-width: 600px; width: 100%;">
           <div style="font-size: 4rem; margin-bottom: 1rem;">🌱</div>
           <h1 style="font-size: 3rem; margin: 0 0 1rem 0; font-weight: 700;">
@@ -113,34 +114,34 @@ class BlockingScreen {
           ${this.getSuggestionsHTML()}
         </div>
       `;
-  }
+    }
 
-  /**
-   * Get HTML for activity suggestions
-   * @returns {string} HTML for suggestions section
-   */
-  getSuggestionsHTML() {
-    const suggestions = [
-      { emoji: "🚶‍♂️", text: "Take a walk outside" },
-      { emoji: "📚", text: "Read a book" },
-      { emoji: "🧘‍♀️", text: "Meditate" },
-      { emoji: "💪", text: "Exercise" },
-      { emoji: "👥", text: "Call a friend" },
-      { emoji: "🎨", text: "Be creative" },
-    ];
+    /**
+     * Get HTML for activity suggestions
+     * @returns {string} HTML for suggestions section
+     */
+    getSuggestionsHTML() {
+      const suggestions = [
+        { emoji: "🚶‍♂️", text: "Take a walk outside" },
+        { emoji: "📚", text: "Read a book" },
+        { emoji: "🧘‍♀️", text: "Meditate" },
+        { emoji: "💪", text: "Exercise" },
+        { emoji: "👥", text: "Call a friend" },
+        { emoji: "🎨", text: "Be creative" },
+      ];
 
-    const suggestionsGrid = suggestions
-      .map(
-        (suggestion) => `
+      const suggestionsGrid = suggestions
+        .map(
+          (suggestion) => `
         <div style="background: rgba(255, 255, 255, 0.15); padding: 1rem; border-radius: 10px;">
           <div style="font-size: 2rem; margin-bottom: 0.5rem;">${suggestion.emoji}</div>
           <div>${suggestion.text}</div>
         </div>
       `
-      )
-      .join("");
+        )
+        .join("");
 
-    return `
+      return `
         <div style="margin-top: 2rem;">
           <p style="font-size: 1.1rem; margin: 1rem 0; opacity: 0.8;">
             Here are some better things you could be doing:
@@ -150,101 +151,102 @@ class BlockingScreen {
           </div>
         </div>
       `;
-  }
+    }
 
-  /**
-   * Start countdown updates
-   */
-  startCountdownUpdates() {
-    // Update immediately
-    this.updateCountdown();
-
-    // Then update every second
-    this.countdownInterval = setInterval(() => {
+    /**
+     * Start countdown updates
+     */
+    startCountdownUpdates() {
+      // Update immediately
       this.updateCountdown();
-    }, this.config.UPDATE_INTERVAL);
-  }
 
-  /**
-   * Update the countdown display
-   */
-  async updateCountdown() {
-    try {
-      const remainingTime = await TimeManager.getRemainingTime(this.hostname);
+      // Then update every second
+      this.countdownInterval = setInterval(() => {
+        this.updateCountdown();
+      }, this.config.UPDATE_INTERVAL);
+    }
 
-      if (remainingTime <= 0) {
-        // Time's up! Remove block and reload
-        await TimeManager.removeTimeBlock(this.hostname);
-        window.location.reload();
-        return;
+    /**
+     * Update the countdown display
+     */
+    async updateCountdown() {
+      try {
+        const remainingTime = await TimeManager.getRemainingTime(this.hostname);
+
+        if (remainingTime <= 0) {
+          // Time's up! Remove block and reload
+          await TimeManager.removeTimeBlock(this.hostname);
+          window.location.reload();
+          return;
+        }
+
+        // Update display
+        const timeDisplay = TimeManager.formatTime(remainingTime);
+        const countdownElement = document.getElementById("time-remaining");
+
+        if (countdownElement) {
+          countdownElement.textContent = timeDisplay;
+        }
+      } catch (error) {
+        console.error("Error updating countdown:", error);
       }
+    }
 
-      // Update display
-      const timeDisplay = TimeManager.formatTime(remainingTime);
-      const countdownElement = document.getElementById("time-remaining");
-
-      if (countdownElement) {
-        countdownElement.textContent = timeDisplay;
+    /**
+     * Stop countdown updates
+     */
+    stopCountdownUpdates() {
+      if (this.countdownInterval) {
+        clearInterval(this.countdownInterval);
+        this.countdownInterval = null;
       }
-    } catch (error) {
-      console.error("Error updating countdown:", error);
+    }
+
+    /**
+     * Clean up the blocking screen
+     */
+    cleanup() {
+      this.stopCountdownUpdates();
+
+      if (this.blockingElement && this.blockingElement.parentNode) {
+        this.blockingElement.parentNode.removeChild(this.blockingElement);
+        this.blockingElement = null;
+      }
+    }
+
+    /**
+     * Check if blocking screen is currently showing
+     * @returns {boolean} True if blocking screen is active
+     */
+    isActive() {
+      return this.countdownInterval !== null;
+    }
+
+    /**
+     * Update the blocked site name in display
+     * @param {string} siteName - Name of the blocked site
+     */
+    updateSiteName(siteName) {
+      if (!this.blockingElement) return;
+
+      const titleElement = this.blockingElement.querySelector("p");
+      if (titleElement) {
+        titleElement.textContent = `You've been scrolling too much on ${siteName}. This site is blocked for 60 minutes.`;
+      }
+    }
+
+    /**
+     * Force refresh the countdown (useful for testing)
+     */
+    refreshCountdown() {
+      this.updateCountdown();
     }
   }
 
-  /**
-   * Stop countdown updates
-   */
-  stopCountdownUpdates() {
-    if (this.countdownInterval) {
-      clearInterval(this.countdownInterval);
-      this.countdownInterval = null;
-    }
+  // Export for use in other modules
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = BlockingScreen;
+  } else {
+    window.BlockingScreen = BlockingScreen;
   }
-
-  /**
-   * Clean up the blocking screen
-   */
-  cleanup() {
-    this.stopCountdownUpdates();
-
-    if (this.blockingElement && this.blockingElement.parentNode) {
-      this.blockingElement.parentNode.removeChild(this.blockingElement);
-      this.blockingElement = null;
-    }
-  }
-
-  /**
-   * Check if blocking screen is currently showing
-   * @returns {boolean} True if blocking screen is active
-   */
-  isActive() {
-    return this.countdownInterval !== null;
-  }
-
-  /**
-   * Update the blocked site name in display
-   * @param {string} siteName - Name of the blocked site
-   */
-  updateSiteName(siteName) {
-    if (!this.blockingElement) return;
-
-    const titleElement = this.blockingElement.querySelector("p");
-    if (titleElement) {
-      titleElement.textContent = `You've been scrolling too much on ${siteName}. This site is blocked for 60 minutes.`;
-    }
-  }
-
-  /**
-   * Force refresh the countdown (useful for testing)
-   */
-  refreshCountdown() {
-    this.updateCountdown();
-  }
-}
-
-// Export for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = BlockingScreen;
-} else {
-  window.BlockingScreen = BlockingScreen;
 }
