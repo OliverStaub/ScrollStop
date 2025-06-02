@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About ScrollStop</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #1a1a1a;
+                color: #e0e0e0;
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #2a9d8f 0%, #264653 100%);
+            color: white;
+            border-radius: 12px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+        
+        .version {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .content {
+                background: #2d2d2d;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            }
+        }
+        
+        .content h2 {
+            color: #2a9d8f;
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+        
+        .content h3 {
+            color: #2a9d8f;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2a9d8f;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .feature {
+                background: #1a1a1a;
+            }
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature h4 {
+            margin: 0 0 0.5rem 0;
+            color: #2a9d8f;
+        }
+        
+        .credits {
+            background: #e9f7ef;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #2a9d8f;
+            margin: 2rem 0;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .credits {
+                background: #1a2f1a;
+                border-color: #2a9d8f;
+            }
+        }
+        
+        .credits strong {
+            color: #2a9d8f;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        a {
+            color: #2a9d8f;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #2a9d8f;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            margin-top: 2rem;
+        }
+        
+        .back-button:hover {
+            background: #238a7a;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌱 ScrollStop</h1>
+        <div class="version">Version 1.0</div>
+    </div>
+
+    <div class="content">
+        <h2>Break Free from Endless Scrolling</h2>
+        <p>ScrollStop is a Safari extension designed to help you reclaim your time and mental well-being by preventing endless scrolling and doomscrolling habits on social media websites.</p>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h4>Smart Detection</h4>
+                <p>Automatically detects excessive scrolling behavior on popular social media sites.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⏰</div>
+                <h4>60-Minute Block</h4>
+                <p>Blocks access to the site for 60 minutes when doomscrolling is detected.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌱</div>
+                <h4>Mindful Suggestions</h4>
+                <p>Provides alternative activities to help you spend your time more productively.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <h4>Privacy First</h4>
+                <p>All blocking happens locally on your device. No data is sent to external servers.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <h3>How It Works</h3>
+        <ol>
+            <li><strong>Monitor:</strong> ScrollStop monitors your scrolling behavior on blocked sites</li>
+            <li><strong>Detect:</strong> When excessive scrolling is detected, a warning animation appears</li>
+            <li><strong>Block:</strong> The site is blocked for 60 minutes with a countdown timer</li>
+            <li><strong>Redirect:</strong> You're encouraged to do something more productive instead</li>
+        </ol>
+        
+        <h3>Supported Sites</h3>
+        <p>ScrollStop currently blocks doomscrolling on these popular social media platforms:</p>
+        <ul>
+            <li>Facebook</li>
+            <li>Twitter/X</li>
+            <li>Instagram</li>
+            <li>Reddit</li>
+            <li>TikTok</li>
+            <li>YouTube</li>
+            <li>LinkedIn</li>
+            <li>Pinterest</li>
+            <li>And more...</li>
+        </ul>
+    </div>
+
+    <div class="credits">
+        <h3>Credits & Attribution</h3>
+        <p>This Safari extension is based on the Chrome extension <strong>"Doomscroll Blocker"</strong> by <strong>Jason Zhang</strong>, originally released in 2024 under the Apache License 2.0.</p>
+        
+        <p><strong>Original Chrome Extension:</strong><br>
+        Author: Jason Zhang<br>
+        License: Apache License 2.0<br>
+        Year: 2024</p>
+        
+        <p><strong>Safari Extension Adaptation:</strong><br>
+        Developer: Oliver Staub<br>
+        Year: 2025</p>
+    </div>
+
+    <div class="footer">
+        <p>Made with 💚 to help you touch grass</p>
+        <p>&copy; 2025 Oliver Staub</p>
+    </div>
+</body>
+</html>
