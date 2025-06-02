@@ -16,11 +16,88 @@
     <script src="../Script.js" defer></script>
   </head>
   <body>
-    <img src="../Icon.png" width="128" height="128" alt="ScrollStop Icon" />
-    <h1>ScrollStop</h1>
-    <p class="platform-ios">
-      You can turn on ScrollStop's Safari extension in Settings.
-    </p>
+    <!-- iOS Welcome Walkthrough -->
+    <div class="platform-ios walkthrough-container">
+      <!-- Step 1: Welcome -->
+      <div class="walkthrough-step active" id="step-1">
+        <img src="../Icon.png" width="128" height="128" alt="ScrollStop Icon" />
+        <h1>Welcome to ScrollStop</h1>
+        <p class="intro">ScrollStop helps you break free from endless scrolling on social media. Let's set it up in just 2 simple steps!</p>
+        <button class="primary-button" onclick="nextStep()">Get Started</button>
+      </div>
+      
+      <!-- Step 2: Enable Safari Extension -->
+      <div class="walkthrough-step" id="step-2">
+        <div class="step-icon">⚙️</div>
+        <h2>Step 1: Enable Safari Extension</h2>
+        <p>ScrollStop works as a Safari extension. You need to enable it in your iPhone Settings:</p>
+        <ol class="setup-steps">
+          <li>Open <strong>Settings</strong> app</li>
+          <li>Scroll down and tap <strong>Safari</strong></li>
+          <li>Tap <strong>Extensions</strong></li>
+          <li>Find <strong>ScrollStop Extension</strong></li>
+          <li>Toggle it <strong>ON</strong></li>
+          <li>Make sure all websites are allowed</li>
+        </ol>
+        <div class="button-row">
+          <button class="secondary-button" onclick="prevStep()">Back</button>
+          <button class="primary-button" onclick="nextStep()">Next</button>
+        </div>
+      </div>
+      
+      <!-- Step 3: iOS Shortcuts Setup -->
+      <div class="walkthrough-step" id="step-3">
+        <div class="step-icon">🔗</div>
+        <h2>Step 2: Set Up iOS Shortcuts</h2>
+        <p>For ScrollStop to work effectively, redirect social media apps to Safari:</p>
+        <div class="shortcuts-info">
+          <p><strong>Why this matters:</strong> ScrollStop only works in Safari, not in native apps like Instagram or Twitter.</p>
+          <p>Set up iOS Shortcuts so these apps open in Safari instead:</p>
+          <ul class="app-list">
+            <li>📘 Instagram</li>
+            <li>🐦 Twitter/X</li>
+            <li>📱 TikTok</li>
+            <li>🔴 YouTube</li>
+            <li>And more...</li>
+          </ul>
+        </div>
+        <div class="video-section">
+          <p><strong>📹 Watch our setup video:</strong></p>
+          <a href="https://youtube.com/watch?v=YOUR_VIDEO_ID" target="_blank" class="video-link">
+            📺 iOS Shortcuts Setup Tutorial
+          </a>
+          <p class="video-note">This opens in your default browser</p>
+        </div>
+        <div class="button-row">
+          <button class="secondary-button" onclick="prevStep()">Back</button>
+          <button class="primary-button" onclick="nextStep()">Complete Setup</button>
+        </div>
+      </div>
+      
+      <!-- Step 4: Setup Complete -->
+      <div class="walkthrough-step" id="step-4">
+        <div class="step-icon">✅</div>
+        <h2>Setup Complete!</h2>
+        <p>You're all set! ScrollStop will now help prevent doomscrolling when you browse social media in Safari.</p>
+        <div class="completion-info">
+          <h3>How it works:</h3>
+          <ul>
+            <li>📏 Monitors your scroll distance</li>
+            <li>⚠️ Shows warning when you scroll too much</li>
+            <li>🚫 Blocks access for a short time</li>
+            <li>🔄 Helps you take healthy breaks</li>
+          </ul>
+        </div>
+        <button class="primary-button" onclick="restartWalkthrough()">Restart Walkthrough</button>
+      </div>
+    </div>
+    
+    <!-- Original iOS simple version (hidden by default) -->
+    <div class="platform-ios simple-version" style="display: none;">
+      <img src="../Icon.png" width="128" height="128" alt="ScrollStop Icon" />
+      <h1>ScrollStop</h1>
+      <p>You can turn on ScrollStop's Safari extension in Settings.</p>
+    </div>
     <p class="platform-mac state-unknown">
       You can turn on ScrollStop's extension in Safari Extensions preferences.
     </p>

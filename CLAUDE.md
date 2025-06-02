@@ -54,7 +54,24 @@ The extension uses a modular event-driven architecture:
 - **Shared configuration** through `sites.json` for blocked domains
 - **Time-based blocking** with automatic removal and page reload
 
+### iOS Welcome Walkthrough
+The iOS app includes an interactive setup walkthrough that guides users through:
+1. **Welcome screen** - Explains ScrollStop's purpose
+2. **Safari extension setup** - Step-by-step instructions for enabling in Settings
+3. **iOS Shortcuts guidance** - Explains why/how to redirect social media apps to Safari
+4. **Completion screen** - Confirms setup and explains how ScrollStop works
+
+**Key Features:**
+- Remembers completion state using localStorage
+- Shows simplified version after walkthrough is completed
+- Includes placeholder for YouTube tutorial link
+- Responsive design with dark mode support
+
 ### File Structure Notes
 - Extension resources live in `Shared (Extension)/Resources/`
 - Content scripts are loaded in order per `manifest.json`: storage-helper → time-manager → detectors → animation → screens → content coordinator
 - Sites configuration in `sites.json` defines which domains trigger the extension
+- iOS app uses WebView to display HTML-based walkthrough UI
+
+## Memories
+- mesmorize

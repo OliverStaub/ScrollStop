@@ -39,7 +39,10 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
     // MARK: - WKNavigationDelegate
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
 #if os(iOS)
-        webView.evaluateJavaScript("show('ios')")
+        webView.evaluateJavaScript("show('ios')") { [weak self] _, _ in
+            // Initialize walkthrough after platform is set
+            self?.webView.evaluateJavaScript("initializeWalkthrough()")
+        }
 #elseif os(macOS)
         webView.evaluateJavaScript("show('mac')")
 

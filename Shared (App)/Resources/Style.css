@@ -59,3 +59,191 @@ body.state-off :is(.state-on, .state-unknown) {
 button {
     font-size: 1em;
 }
+
+/* iOS Walkthrough Styles */
+.platform-ios .walkthrough-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 0 var(--spacing);
+}
+
+.walkthrough-step {
+    display: none;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.walkthrough-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.step-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.intro {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin: 1.5rem 0;
+    color: #666;
+}
+
+.primary-button {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0.5rem;
+    transition: background 0.2s ease;
+}
+
+.primary-button:hover {
+    background: #238a7a;
+}
+
+.secondary-button {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0.5rem;
+    transition: background 0.2s ease;
+}
+
+.secondary-button:hover {
+    background: #e9ecef;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.setup-steps {
+    text-align: left;
+    max-width: 300px;
+    margin: 1.5rem auto;
+    padding-left: 1rem;
+}
+
+.setup-steps li {
+    margin: 0.5rem 0;
+    line-height: 1.4;
+}
+
+.shortcuts-info {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.app-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+.app-list li {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+}
+
+.video-section {
+    background: #e8f5e8;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.video-link {
+    display: inline-block;
+    background: #dc3545;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin: 0.5rem 0;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.video-link:hover {
+    background: #c82333;
+}
+
+.video-note {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0.5rem 0 0 0;
+}
+
+.completion-info {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.completion-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+}
+
+.completion-info ul {
+    margin: 0;
+    padding-left: 1rem;
+}
+
+.completion-info li {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .intro {
+        color: #aaa;
+    }
+    
+    .shortcuts-info,
+    .completion-info {
+        background: #2a2a2a;
+        color: #fff;
+    }
+    
+    .video-section {
+        background: #1a3d1a;
+    }
+    
+    .secondary-button {
+        background: #3a3a3a;
+        color: #fff;
+        border-color: #5a5a5a;
+    }
+    
+    .secondary-button:hover {
+        background: #4a4a4a;
+    }
+    
+    .video-note {
+        color: #aaa;
+    }
+}
