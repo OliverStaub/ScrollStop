@@ -96,7 +96,7 @@ button {
     padding: var(--spacing) 0;
 }
 
-.walkthrough-step {
+.walkthrough-screen {
     display: none;
     text-align: center;
     animation: fadeIn 0.3s ease-in-out;
@@ -105,7 +105,7 @@ button {
     -webkit-overflow-scrolling: touch;
 }
 
-.walkthrough-step.active {
+.walkthrough-screen.active {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -124,18 +124,18 @@ button {
 }
 
 /* Responsive image sizing */
-.walkthrough-step img {
+.walkthrough-screen img {
     max-width: 100px;
     height: auto;
 }
 
 /* Responsive typography */
-.walkthrough-step h1 {
+.walkthrough-screen h1 {
     font-size: 1.5rem;
     margin: 0.5rem 0;
 }
 
-.walkthrough-step h2 {
+.walkthrough-screen h2 {
     font-size: 1.3rem;
     margin: 0.5rem 0;
 }
@@ -336,7 +336,7 @@ button {
 
 /* Mobile responsiveness */
 @media (max-height: 700px) {
-    .walkthrough-step img {
+    .walkthrough-screen img {
         max-width: 80px;
     }
     
@@ -345,11 +345,11 @@ button {
         margin-bottom: 0.5rem;
     }
     
-    .walkthrough-step h1 {
+    .walkthrough-screen h1 {
         font-size: 1.3rem;
     }
     
-    .walkthrough-step h2 {
+    .walkthrough-screen h2 {
         font-size: 1.2rem;
     }
     
@@ -368,7 +368,7 @@ button {
 }
 
 @media (max-height: 600px) {
-    .walkthrough-step img {
+    .walkthrough-screen img {
         max-width: 60px;
     }
     
@@ -377,11 +377,11 @@ button {
         margin-bottom: 0.5rem;
     }
     
-    .walkthrough-step h1 {
+    .walkthrough-screen h1 {
         font-size: 1.2rem;
     }
     
-    .walkthrough-step h2 {
+    .walkthrough-screen h2 {
         font-size: 1.1rem;
     }
     

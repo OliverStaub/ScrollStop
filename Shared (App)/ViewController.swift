@@ -73,11 +73,19 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
             return
         }
         
-        // Handle app-settings URL scheme to open iOS Settings
-        if url.scheme == "app-settings" {
+        // Handle settings URL scheme to open main iOS Settings
+        if url.scheme == "settings" {
 #if os(iOS)
-            if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-                UIApplication.shared.open(settingsURL)
+            if let settingsURL = URL(string: "App-Prefs:root=SAFARI") {
+                // Try to open Safari settings directly
+                UIApplication.shared.open(settingsURL) { success in
+                    if !success {
+                        // Fall back to main Settings app if Safari direct link fails
+                        if let mainSettingsURL = URL(string: "App-Prefs:") {
+                            UIApplication.shared.open(mainSettingsURL)
+                        }
+                    }
+                }
             }
 #endif
             decisionHandler(.cancel)
