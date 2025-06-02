@@ -16,16 +16,18 @@ html {
 
 body {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-
-    gap: var(--spacing);
-    margin: 0 calc(var(--spacing) * 2);
-    height: 100%;
-
+    min-height: 100vh;
+    
+    margin: 0;
+    padding: var(--spacing);
+    
     font: -apple-system-short-body;
     text-align: center;
+    
+    /* Enable scrolling */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 body:not(.platform-mac, .platform-ios) :is(.platform-mac, .platform-ios) {
@@ -37,10 +39,6 @@ body.platform-ios .platform-mac {
 }
 
 body.platform-mac .platform-ios {
-    display: none;
-}
-
-body.platform-ios .platform-mac {
     display: none;
 }
 
@@ -64,17 +62,55 @@ button {
 .platform-ios .walkthrough-container {
     width: 100%;
     max-width: 400px;
-    padding: 0 var(--spacing);
+    margin: 0 auto;
+    padding: var(--spacing) 0;
+    display: block; /* Ensure it's visible by default */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 2 * var(--spacing));
+}
+
+.platform-ios .simple-version {
+    /* Hidden by default, shown by JS when needed */
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 2 * var(--spacing));
+    margin: 0 auto;
+    max-width: 400px;
+    padding: var(--spacing) 0;
+}
+
+.platform-mac {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 2 * var(--spacing));
+    margin: 0 auto;
+    max-width: 400px;
+    padding: var(--spacing) 0;
 }
 
 .walkthrough-step {
     display: none;
     text-align: center;
     animation: fadeIn 0.3s ease-in-out;
+    padding: var(--spacing) 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .walkthrough-step.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
 }
 
 @keyframes fadeIn {
@@ -85,6 +121,23 @@ button {
 .step-icon {
     font-size: 3rem;
     margin-bottom: 1rem;
+}
+
+/* Responsive image sizing */
+.walkthrough-step img {
+    max-width: 100px;
+    height: auto;
+}
+
+/* Responsive typography */
+.walkthrough-step h1 {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+}
+
+.walkthrough-step h2 {
+    font-size: 1.3rem;
+    margin: 0.5rem 0;
 }
 
 .intro {
@@ -125,6 +178,35 @@ button {
 
 .secondary-button:hover {
     background: #e9ecef;
+}
+
+.settings-button-container {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.settings-button {
+    background: #007AFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    transition: background 0.2s ease;
+}
+
+.settings-button:hover {
+    background: #0056CC;
+}
+
+.settings-note {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0.5rem 0 0 0;
+    line-height: 1.3;
 }
 
 .button-row {
@@ -245,5 +327,77 @@ button {
     
     .video-note {
         color: #aaa;
+    }
+    
+    .settings-note {
+        color: #aaa;
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-height: 700px) {
+    .walkthrough-step img {
+        max-width: 80px;
+    }
+    
+    .step-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .walkthrough-step h1 {
+        font-size: 1.3rem;
+    }
+    
+    .walkthrough-step h2 {
+        font-size: 1.2rem;
+    }
+    
+    .intro {
+        font-size: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .button-row {
+        margin-top: 1.5rem;
+    }
+    
+    .settings-button-container {
+        margin: 1rem 0;
+    }
+}
+
+@media (max-height: 600px) {
+    .walkthrough-step img {
+        max-width: 60px;
+    }
+    
+    .step-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .walkthrough-step h1 {
+        font-size: 1.2rem;
+    }
+    
+    .walkthrough-step h2 {
+        font-size: 1.1rem;
+    }
+    
+    .intro {
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+    }
+    
+    .setup-steps {
+        margin: 1rem auto;
+    }
+    
+    .completion-info,
+    .shortcuts-info,
+    .video-section {
+        padding: 0.5rem;
+        margin: 0.5rem 0;
     }
 }

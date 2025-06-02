@@ -28,7 +28,9 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
         self.webView.navigationDelegate = self
 
 #if os(iOS)
-        self.webView.scrollView.isScrollEnabled = false
+        self.webView.scrollView.isScrollEnabled = true
+        self.webView.scrollView.bounces = true
+        self.webView.scrollView.showsVerticalScrollIndicator = true
 #endif
 
         self.webView.configuration.userContentController.add(self, name: "controller")
@@ -40,8 +42,8 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
 #if os(iOS)
         webView.evaluateJavaScript("show('ios')") { [weak self] _, _ in
-            // Initialize walkthrough after platform is set
-            self?.webView.evaluateJavaScript("initializeWalkthrough()")
+            // Initialize app after platform is set
+            self?.webView.evaluateJavaScript("initializeApp()")
         }
 #elseif os(macOS)
         webView.evaluateJavaScript("show('mac')")
@@ -67,6 +69,17 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         
         guard let url = navigationAction.request.url else {
+            decisionHandler(.cancel)
+            return
+        }
+        
+        // Handle app-settings URL scheme to open iOS Settings
+        if url.scheme == "app-settings" {
+#if os(iOS)
+            if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(settingsURL)
+            }
+#endif
             decisionHandler(.cancel)
             return
         }

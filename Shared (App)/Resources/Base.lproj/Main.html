@@ -17,13 +17,13 @@
   </head>
   <body>
     <!-- iOS Welcome Walkthrough -->
-    <div class="platform-ios walkthrough-container">
+    <div class="platform-ios walkthrough-container" id="walkthrough-container">
       <!-- Step 1: Welcome -->
       <div class="walkthrough-step active" id="step-1">
         <img src="../Icon.png" width="128" height="128" alt="ScrollStop Icon" />
         <h1>Welcome to ScrollStop</h1>
         <p class="intro">ScrollStop helps you break free from endless scrolling on social media. Let's set it up in just 2 simple steps!</p>
-        <button class="primary-button" onclick="nextStep()">Get Started</button>
+        <button class="primary-button" id="get-started-btn">Get Started</button>
       </div>
       
       <!-- Step 2: Enable Safari Extension -->
@@ -39,9 +39,13 @@
           <li>Toggle it <strong>ON</strong></li>
           <li>Make sure all websites are allowed</li>
         </ol>
+        <div class="settings-button-container">
+          <button class="settings-button" id="open-settings-btn">📱 Open Settings App</button>
+          <p class="settings-note">Opens Settings app - navigate to Safari → Extensions</p>
+        </div>
         <div class="button-row">
-          <button class="secondary-button" onclick="prevStep()">Back</button>
-          <button class="primary-button" onclick="nextStep()">Next</button>
+          <button class="secondary-button" id="step2-back-btn">Back</button>
+          <button class="primary-button" id="step2-next-btn">Next</button>
         </div>
       </div>
       
@@ -69,8 +73,8 @@
           <p class="video-note">This opens in your default browser</p>
         </div>
         <div class="button-row">
-          <button class="secondary-button" onclick="prevStep()">Back</button>
-          <button class="primary-button" onclick="nextStep()">Complete Setup</button>
+          <button class="secondary-button" id="step3-back-btn">Back</button>
+          <button class="primary-button" id="step3-next-btn">Complete Setup</button>
         </div>
       </div>
       
@@ -88,12 +92,12 @@
             <li>🔄 Helps you take healthy breaks</li>
           </ul>
         </div>
-        <button class="primary-button" onclick="restartWalkthrough()">Restart Walkthrough</button>
+        <button class="primary-button" id="restart-btn">Restart Walkthrough</button>
       </div>
     </div>
     
     <!-- Original iOS simple version (hidden by default) -->
-    <div class="platform-ios simple-version" style="display: none;">
+    <div class="platform-ios simple-version" id="simple-version" style="display: none;">
       <img src="../Icon.png" width="128" height="128" alt="ScrollStop Icon" />
       <h1>ScrollStop</h1>
       <p>You can turn on ScrollStop's Safari extension in Settings.</p>
