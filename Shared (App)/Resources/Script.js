@@ -57,20 +57,13 @@ function initializeWalkthrough() {
         return;
     }
     
-    const hasCompleted = localStorage.getItem('scrollstop-walkthrough-completed');
     const walkthroughContainer = document.getElementById('walkthrough-container');
     const simpleVersion = document.getElementById('simple-version');
     
-    if (hasCompleted) {
-        // Show simple version
-        if (walkthroughContainer) walkthroughContainer.style.display = 'none';
-        if (simpleVersion) simpleVersion.style.display = 'flex';
-    } else {
-        // Show walkthrough starting with welcome screen
-        if (walkthroughContainer) walkthroughContainer.style.display = 'flex';
-        if (simpleVersion) simpleVersion.style.display = 'none';
-        showScreen('welcome');
-    }
+    // Always show walkthrough starting with welcome screen
+    if (walkthroughContainer) walkthroughContainer.style.display = 'flex';
+    if (simpleVersion) simpleVersion.style.display = 'none';
+    showScreen('welcome');
 }
 
 function completeWalkthrough() {
