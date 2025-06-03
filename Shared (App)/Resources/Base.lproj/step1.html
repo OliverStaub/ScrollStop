@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src https://oliverstaub.github.io"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="../Style.css" />
+    <script src="../Script.js" defer></script>
+  </head>
+  <body class="platform-ios">
+    <div class="walkthrough-container">
+      <div class="walkthrough-screen active" id="step1">
+        <div class="step-icon">⚙️</div>
+        <h2>Step 1: Enable Safari Extension</h2>
+        <p>ScrollStop works as a Safari extension. You need to enable it in your iPhone Settings:</p>
+        <ol class="setup-steps">
+          <li>Open <strong>Settings</strong> app</li>
+          <li>Scroll down and tap <strong>Safari</strong></li>
+          <li>Tap <strong>Extensions</strong></li>
+          <li>Find <strong>ScrollStop Extension</strong></li>
+          <li>Toggle it <strong>ON</strong></li>
+          <li>Make sure all websites are allowed</li>
+        </ol>
+        <div class="settings-button-container">
+          <button class="settings-button" id="open-settings-btn">📱 Open Settings App</button>
+          <p class="settings-note">Opens Settings app - navigate to Safari → Extensions</p>
+        </div>
+        <div class="button-row">
+          <button class="secondary-button" id="back-to-welcome">Back</button>
+          <button class="primary-button" id="go-to-step2">Next</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -35,16 +35,31 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
 
         self.webView.configuration.userContentController.add(self, name: "controller")
 
+#if os(iOS)
+        loadInitialScreen()
+#else
         self.webView.loadFileURL(Bundle.main.url(forResource: "Main", withExtension: "html")!, allowingReadAccessTo: Bundle.main.resourceURL!)
+#endif
     }
+    
+#if os(iOS)
+    private func loadInitialScreen() {
+        loadScreen("welcome")
+    }
+    
+    private func loadScreen(_ screenName: String) {
+        guard let url = Bundle.main.url(forResource: screenName, withExtension: "html") else {
+            print("Could not find \(screenName).html")
+            return
+        }
+        self.webView.loadFileURL(url, allowingReadAccessTo: Bundle.main.resourceURL!)
+    }
+#endif
 
     // MARK: - WKNavigationDelegate
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
 #if os(iOS)
-        webView.evaluateJavaScript("show('ios')") { [weak self] _, _ in
-            // Initialize app after platform is set
-            self?.webView.evaluateJavaScript("initializeApp()")
-        }
+        webView.evaluateJavaScript("initializeApp()")
 #elseif os(macOS)
         webView.evaluateJavaScript("show('mac')")
 
@@ -111,19 +126,33 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
 
     // MARK: - WKScriptMessageHandler
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-#if os(macOS)
-        if (message.body as! String != "open-preferences") {
-            return
+        guard let messageBody = message.body as? String else { return }
+        
+#if os(iOS)
+        switch messageBody {
+        case "navigate-to-step1":
+            loadScreen("step1")
+        case "navigate-to-step2":
+            loadScreen("step2")
+        case "navigate-to-complete":
+            loadScreen("complete")
+        case "navigate-to-welcome":
+            loadScreen("welcome")
+        case "restart-walkthrough":
+            loadScreen("welcome")
+        default:
+            break
         }
+#elseif os(macOS)
+        if messageBody == "open-preferences" {
+            SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier) { error in
+                guard error == nil else {
+                    return
+                }
 
-        SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier) { error in
-            guard error == nil else {
-                // Insert code to inform the user that something went wrong.
-                return
-            }
-
-            DispatchQueue.main.async {
-                NSApp.terminate(self)
+                DispatchQueue.main.async {
+                    NSApp.terminate(self)
+                }
             }
         }
 #endif

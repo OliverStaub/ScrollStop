@@ -2,10 +2,15 @@ function show(platform, enabled, useSettingsInsteadOfPreferences) {
     document.body.classList.add(`platform-${platform}`);
 
     if (useSettingsInsteadOfPreferences) {
-        document.getElementsByClassName('platform-mac state-on')[0].innerText = "ScrollStop's extension is currently on. You can turn it off in the Extensions section of Safari Settings.";
-        document.getElementsByClassName('platform-mac state-off')[0].innerText = "ScrollStop's extension is currently off. You can turn it on in the Extensions section of Safari Settings.";
-        document.getElementsByClassName('platform-mac state-unknown')[0].innerText = "You can turn on ScrollStop's extension in the Extensions section of Safari Settings.";
-        document.getElementsByClassName('platform-mac open-preferences')[0].innerText = "Quit and Open Safari Settings…";
+        const stateOnElement = document.querySelector('.platform-mac .state-on');
+        const stateOffElement = document.querySelector('.platform-mac .state-off');
+        const stateUnknownElement = document.querySelector('.platform-mac .state-unknown');
+        const openPreferencesElement = document.querySelector('.platform-mac .open-preferences');
+        
+        if (stateOnElement) stateOnElement.innerText = "ScrollStop's extension is currently on. You can turn it off in the Extensions section of Safari Settings.";
+        if (stateOffElement) stateOffElement.innerText = "ScrollStop's extension is currently off. You can turn it on in the Extensions section of Safari Settings.";
+        if (stateUnknownElement) stateUnknownElement.innerText = "You can turn on ScrollStop's extension in the Extensions section of Safari Settings.";
+        if (openPreferencesElement) openPreferencesElement.innerText = "Quit and Open Safari Settings…";
     }
 
     if (typeof enabled === "boolean") {
@@ -23,17 +28,9 @@ function openPreferences() {
 
 document.querySelector("button.open-preferences")?.addEventListener("click", openPreferences);
 
-// Simple walkthrough navigation
-function showScreen(screenId) {
-    // Hide all screens
-    document.querySelectorAll('.walkthrough-screen').forEach(screen => {
-        screen.classList.remove('active');
-    });
-    
-    // Show target screen
-    const targetScreen = document.getElementById(screenId);
-    if (targetScreen) {
-        targetScreen.classList.add('active');
+function navigateToScreen(screenName) {
+    if (typeof webkit !== 'undefined' && webkit.messageHandlers && webkit.messageHandlers.controller) {
+        webkit.messageHandlers.controller.postMessage(`navigate-to-${screenName}`);
     }
 }
 
@@ -46,58 +43,37 @@ function openSettingsApp() {
     document.body.removeChild(link);
 }
 
-function resetWalkthrough() {
-    localStorage.removeItem('scrollstop-walkthrough-completed');
-    location.reload();
-}
-
-function initializeWalkthrough() {
-    // Check if we're on iOS
-    if (!document.body.classList.contains('platform-ios')) {
-        return;
+function restartWalkthrough() {
+    if (typeof webkit !== 'undefined' && webkit.messageHandlers && webkit.messageHandlers.controller) {
+        webkit.messageHandlers.controller.postMessage('restart-walkthrough');
     }
-    
-    const walkthroughContainer = document.getElementById('walkthrough-container');
-    const simpleVersion = document.getElementById('simple-version');
-    
-    // Always show walkthrough starting with welcome screen
-    if (walkthroughContainer) walkthroughContainer.style.display = 'flex';
-    if (simpleVersion) simpleVersion.style.display = 'none';
-    showScreen('welcome');
-}
-
-function completeWalkthrough() {
-    localStorage.setItem('scrollstop-walkthrough-completed', 'true');
 }
 
 function setupEventListeners() {
     // Welcome screen
     const getStartedBtn = document.getElementById('get-started-btn');
     if (getStartedBtn) {
-        getStartedBtn.addEventListener('click', () => showScreen('step1'));
+        getStartedBtn.addEventListener('click', () => navigateToScreen('step1'));
     }
     
     // Step 1 navigation
     const backToWelcome = document.getElementById('back-to-welcome');
     const goToStep2 = document.getElementById('go-to-step2');
-    if (backToWelcome) backToWelcome.addEventListener('click', () => showScreen('welcome'));
-    if (goToStep2) goToStep2.addEventListener('click', () => showScreen('step2'));
+    if (backToWelcome) backToWelcome.addEventListener('click', () => navigateToScreen('welcome'));
+    if (goToStep2) goToStep2.addEventListener('click', () => navigateToScreen('step2'));
     
     // Step 2 navigation
     const backToStep1 = document.getElementById('back-to-step1');
     const goToComplete = document.getElementById('go-to-complete');
-    if (backToStep1) backToStep1.addEventListener('click', () => showScreen('step1'));
+    if (backToStep1) backToStep1.addEventListener('click', () => navigateToScreen('step1'));
     if (goToComplete) {
-        goToComplete.addEventListener('click', () => {
-            completeWalkthrough();
-            showScreen('complete');
-        });
+        goToComplete.addEventListener('click', () => navigateToScreen('complete'));
     }
     
     // Complete screen
-    const restartWalkthrough = document.getElementById('restart-walkthrough');
-    if (restartWalkthrough) {
-        restartWalkthrough.addEventListener('click', () => showScreen('welcome'));
+    const restartWalkthroughBtn = document.getElementById('restart-walkthrough');
+    if (restartWalkthroughBtn) {
+        restartWalkthroughBtn.addEventListener('click', restartWalkthrough);
     }
     
     // Settings button
@@ -109,7 +85,6 @@ function setupEventListeners() {
 
 // Initialize when ready
 function initializeApp() {
-    initializeWalkthrough();
     setupEventListeners();
 }
 

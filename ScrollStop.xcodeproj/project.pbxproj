@@ -64,7 +64,11 @@
 		3DBE1CB02DDB8900007A7E2A /* Exceptions for "Shared (App)" folder in "ScrollStop (iOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"/Localized: Resources/complete.html",
 				"/Localized: Resources/Main.html",
+				"/Localized: Resources/step1.html",
+				"/Localized: Resources/step2.html",
+				"/Localized: Resources/welcome.html",
 				Assets.xcassets,
 				Resources/Icon.png,
 				Resources/Script.js,
@@ -90,7 +94,11 @@
 		3DBE1CBA2DDB8900007A7E2A /* Exceptions for "Shared (App)" folder in "ScrollStop (macOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"/Localized: Resources/complete.html",
 				"/Localized: Resources/Main.html",
+				"/Localized: Resources/step1.html",
+				"/Localized: Resources/step2.html",
+				"/Localized: Resources/welcome.html",
 				Assets.xcassets,
 				Resources/Icon.png,
 				Resources/Script.js,
@@ -502,6 +510,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z66Q4BXFN7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ScrollStop Extension";
@@ -532,6 +541,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z66Q4BXFN7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ScrollStop Extension";
@@ -565,6 +575,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z66Q4BXFN7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = ScrollStop;
@@ -601,6 +612,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z66Q4BXFN7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = ScrollStop;
