@@ -152,6 +152,20 @@
 			);
 			target = 3DBE1C8A2DDB8900007A7E2A /* ScrollStop Extension (macOS) */;
 		};
+		3DE67D872DEEFC4600A0E49E /* Exceptions for "Shared (App)" folder in "ScrollStop Extension (iOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Icon.png,
+			);
+			target = 3DBE1C802DDB8900007A7E2A /* ScrollStop Extension (iOS) */;
+		};
+		3DE67D892DEEFC4A00A0E49E /* Exceptions for "Shared (App)" folder in "ScrollStop Extension (macOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Icon.png,
+			);
+			target = 3DBE1C8A2DDB8900007A7E2A /* ScrollStop Extension (macOS) */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -160,6 +174,8 @@
 			exceptions = (
 				3DBE1CB02DDB8900007A7E2A /* Exceptions for "Shared (App)" folder in "ScrollStop (iOS)" target */,
 				3DBE1CBA2DDB8900007A7E2A /* Exceptions for "Shared (App)" folder in "ScrollStop (macOS)" target */,
+				3DE67D872DEEFC4600A0E49E /* Exceptions for "Shared (App)" folder in "ScrollStop Extension (iOS)" target */,
+				3DE67D892DEEFC4A00A0E49E /* Exceptions for "Shared (App)" folder in "ScrollStop Extension (macOS)" target */,
 			);
 			path = "Shared (App)";
 			sourceTree = "<group>";
