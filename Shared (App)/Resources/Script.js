@@ -26,7 +26,78 @@ function openPreferences() {
     webkit.messageHandlers.controller.postMessage("open-preferences");
 }
 
-document.querySelector("button.open-preferences")?.addEventListener("click", openPreferences);
+// Create HeadlessButton components
+function createButtons() {
+    // Main.html - macOS preferences button
+    const preferencesContainer = document.getElementById('preferences-button-container');
+    if (preferencesContainer) {
+        new HeadlessButton('Quit and Open Safari Extensions Preferences…', {
+            color: 'blue',
+            onClick: openPreferences
+        }).render(preferencesContainer);
+    }
+
+    // Welcome screen - Get Started button
+    const getStartedContainer = document.getElementById('get-started-button');
+    if (getStartedContainer) {
+        new HeadlessButton('Get Started', {
+            color: 'blue',
+            onClick: () => navigateToScreen('step1')
+        }).render(getStartedContainer);
+    }
+
+    // Step 1 - Settings button
+    const openSettingsContainer = document.getElementById('open-settings-button');
+    if (openSettingsContainer) {
+        new HeadlessButton('📱 Open Settings App', {
+            color: 'blue',
+            onClick: openSettingsApp
+        }).render(openSettingsContainer);
+    }
+
+    // Step 1 - Navigation buttons
+    const step1ButtonsContainer = document.getElementById('step1-buttons');
+    if (step1ButtonsContainer) {
+        step1ButtonsContainer.style.display = 'flex';
+        step1ButtonsContainer.style.gap = '0.5rem';
+        
+        new HeadlessButton('Back', {
+            outline: true,
+            onClick: () => navigateToScreen('welcome')
+        }).render(step1ButtonsContainer);
+        
+        new HeadlessButton('Next', {
+            color: 'blue',
+            onClick: () => navigateToScreen('step2')
+        }).render(step1ButtonsContainer);
+    }
+
+    // Step 2 - Navigation buttons
+    const step2ButtonsContainer = document.getElementById('step2-buttons');
+    if (step2ButtonsContainer) {
+        step2ButtonsContainer.style.display = 'flex';
+        step2ButtonsContainer.style.gap = '0.5rem';
+        
+        new HeadlessButton('Back', {
+            outline: true,
+            onClick: () => navigateToScreen('step1')
+        }).render(step2ButtonsContainer);
+        
+        new HeadlessButton('Complete Setup', {
+            color: 'blue',
+            onClick: () => navigateToScreen('complete')
+        }).render(step2ButtonsContainer);
+    }
+
+    // Complete screen - Restart walkthrough button
+    const restartContainer = document.getElementById('restart-walkthrough-button');
+    if (restartContainer) {
+        new HeadlessButton('Restart Walkthrough', {
+            color: 'blue',
+            onClick: restartWalkthrough
+        }).render(restartContainer);
+    }
+}
 
 function navigateToScreen(screenName) {
     if (typeof webkit !== 'undefined' && webkit.messageHandlers && webkit.messageHandlers.controller) {
@@ -49,43 +120,10 @@ function restartWalkthrough() {
     }
 }
 
-function setupEventListeners() {
-    // Welcome screen
-    const getStartedBtn = document.getElementById('get-started-btn');
-    if (getStartedBtn) {
-        getStartedBtn.addEventListener('click', () => navigateToScreen('step1'));
-    }
-    
-    // Step 1 navigation
-    const backToWelcome = document.getElementById('back-to-welcome');
-    const goToStep2 = document.getElementById('go-to-step2');
-    if (backToWelcome) backToWelcome.addEventListener('click', () => navigateToScreen('welcome'));
-    if (goToStep2) goToStep2.addEventListener('click', () => navigateToScreen('step2'));
-    
-    // Step 2 navigation
-    const backToStep1 = document.getElementById('back-to-step1');
-    const goToComplete = document.getElementById('go-to-complete');
-    if (backToStep1) backToStep1.addEventListener('click', () => navigateToScreen('step1'));
-    if (goToComplete) {
-        goToComplete.addEventListener('click', () => navigateToScreen('complete'));
-    }
-    
-    // Complete screen
-    const restartWalkthroughBtn = document.getElementById('restart-walkthrough');
-    if (restartWalkthroughBtn) {
-        restartWalkthroughBtn.addEventListener('click', restartWalkthrough);
-    }
-    
-    // Settings button
-    const openSettingsBtn = document.getElementById('open-settings-btn');
-    if (openSettingsBtn) {
-        openSettingsBtn.addEventListener('click', openSettingsApp);
-    }
-}
 
 // Initialize when ready
 function initializeApp() {
-    setupEventListeners();
+    createButtons();
 }
 
 if (document.readyState === 'loading') {
