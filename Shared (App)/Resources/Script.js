@@ -31,10 +31,29 @@ function createButtons() {
     // Main.html - macOS preferences button
     const preferencesContainer = document.getElementById('preferences-button-container');
     if (preferencesContainer) {
-        new HeadlessButton('Quit and Open Safari Extensions Preferences…', {
-            color: 'blue',
-            onClick: openPreferences
-        }).render(preferencesContainer);
+        if (typeof HeadlessButton !== 'undefined') {
+            new HeadlessButton('Quit and Open Safari Extensions Preferences…', {
+                color: 'blue',
+                onClick: openPreferences
+            }).render(preferencesContainer);
+        } else {
+            // Fallback: create simple button
+            const button = document.createElement('button');
+            button.textContent = 'Quit and Open Safari Extensions Preferences…';
+            button.className = 'open-preferences';
+            button.style.cssText = `
+                background: #007AFF;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 14px;
+                cursor: pointer;
+                font-weight: 500;
+            `;
+            button.addEventListener('click', openPreferences);
+            preferencesContainer.appendChild(button);
+        }
     }
 
     // Welcome screen - Get Started button

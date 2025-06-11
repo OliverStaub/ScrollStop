@@ -7,6 +7,7 @@ class ScrollStopCoordinator {
     this.doomscrollAnimation = null;
     this.transitionScreen = null;
     this.blockingScreen = null;
+    this.timerTracker = null;
 
     this.isInitialized = false;
     this.currentHostname = window.location.hostname;
@@ -30,6 +31,9 @@ class ScrollStopCoordinator {
       // Set up event listeners for module communication
       this.setupEventListeners();
 
+      // Initialize timer tracker first (for all tracked sites)
+      await this.initializeTimerTracker();
+
       // Check if current site should be monitored
       await this.checkCurrentSite();
 
@@ -37,6 +41,26 @@ class ScrollStopCoordinator {
       console.log("ScrollStop coordinator initialized");
     } catch (error) {
       console.error("Error initializing ScrollStop coordinator:", error);
+    }
+  }
+
+  /**
+   * Initialize timer tracker for all social media sites
+   */
+  async initializeTimerTracker() {
+    try {
+      // Check if current site is a tracked social media site
+      const url = window.location.href;
+      const hostname = window.location.hostname;
+      const isTrackedSite = await StorageHelper.isCurrentSiteBlocked(url, hostname);
+      
+      if (isTrackedSite) {
+        this.timerTracker = new TimerTracker();
+        await this.timerTracker.initialize();
+        console.log("Timer tracker initialized for:", hostname);
+      }
+    } catch (error) {
+      console.error("Error initializing timer tracker:", error);
     }
   }
 
@@ -194,6 +218,11 @@ class ScrollStopCoordinator {
     if (this.blockingScreen) {
       this.blockingScreen.cleanup();
       this.blockingScreen = null;
+    }
+
+    if (this.timerTracker) {
+      this.timerTracker.cleanup();
+      this.timerTracker = null;
     }
 
     // Remove event listeners

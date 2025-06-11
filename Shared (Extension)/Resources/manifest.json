@@ -23,8 +23,10 @@
   "content_scripts": [
     {
       "js": [
+        "timer.js",
         "storage-helper.js",
         "time-manager.js",
+        "timer-tracker.js",
         "doomscroll-detector.js",
         "doomscroll-animation.js",
         "transition-screen.js",
