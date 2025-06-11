@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var currentView: AppView = .home
-    @State private var walkthroughStep: WalkthroughStep = .welcome
+    @State private var walkthroughStep: WalkthroughStep = .setupStepOne
     
     enum AppView {
         case home
@@ -18,7 +18,6 @@ struct ContentView: View {
     }
     
     enum WalkthroughStep {
-        case welcome
         case setupStepOne
         case setupStepTwo
         case completion
@@ -37,7 +36,7 @@ struct ContentView: View {
                             onStartWalkthrough: {
                                 withAnimation(.easeInOut) {
                                     currentView = .walkthrough
-                                    walkthroughStep = .welcome
+                                    walkthroughStep = .setupStepOne
                                 }
                             },
                             onSetupProfile: {
@@ -49,7 +48,7 @@ struct ContentView: View {
                     case .walkthrough:
                         walkthroughView
                     case .profile:
-                        ProfileSetupView(
+                        QuestionnaireView(
                             onComplete: {
                                 withAnimation(.easeInOut) {
                                     currentView = .home
@@ -66,17 +65,12 @@ struct ContentView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .preferredColorScheme(.light) // Force light mode
     }
     
     @ViewBuilder
     private var walkthroughView: some View {
         switch walkthroughStep {
-        case .welcome:
-            WelcomeView(onGetStarted: {
-                withAnimation(.easeInOut) {
-                    walkthroughStep = .setupStepOne
-                }
-            })
         case .setupStepOne:
             SetupStepOneView(
                 onNext: {
@@ -86,7 +80,7 @@ struct ContentView: View {
                 },
                 onBack: {
                     withAnimation(.easeInOut) {
-                        walkthroughStep = .welcome
+                        currentView = .home
                     }
                 }
             )
@@ -106,7 +100,6 @@ struct ContentView: View {
         case .completion:
             CompletionView(onRestart: {
                 withAnimation(.easeInOut) {
-                    walkthroughStep = .welcome
                     currentView = .home
                 }
             })

@@ -83,6 +83,84 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 - **UI Components Policy**: Only use UIComponentsJS components for all web UI elements. No other UI frameworks or plain HTML/CSS elements. iOS app uses SwiftUI natively.
 - **Choice Dialog Feature**: When accessing blocked sites, users see a dialog with 3 options: Continue with ScrollStop (full functionality), Timer Only (no blocking), or Block Now (immediate block). Appears on every page reload.
 
+### iOS App Personalization Features Implementation (Session Summary)
+
+**What We Built Today:**
+- **Comprehensive Questionnaire System**: Created QuestionnaireView with 5 detailed categories for personalized recommendations
+- **Bilingual Support**: Full German/English language support with LanguageManager
+- **Personalized Blocking Screen**: Updated blocking screen to show user-specific suggestions based on questionnaire data
+- **iOS UI Improvements**: Removed welcome screen and disabled dark mode for better UX
+
+**Key Features Implemented:**
+
+**1. QuestionnaireView System:**
+- **5 Categories**: Household tasks, hobbies, current tasks, friends, goals, books
+- **Smart Data Management**: Auto-deletion of current tasks after 2 weeks
+- **Progress Tracking**: Visual progress indicator with step-by-step navigation
+- **Real-time Persistence**: Data saved immediately as user adds items
+- **Bilingual Interface**: Complete German/English support throughout
+
+**2. Personalized Blocking Screen:**
+- **Smart Recommendations**: Shows actual user tasks instead of generic suggestions
+- **Priority System**: Current tasks → household → friends → hobbies → books → goals
+- **Randomization**: Picks random items from each category for variety
+- **Fallback System**: Default suggestions when no personal data available
+- **Cross-Platform Data**: Bridge between iOS app and Safari extension storage
+
+**3. Bilingual Support (LanguageManager):**
+- **Complete Translation**: All UI elements, placeholders, descriptions in German/English
+- **Auto-Detection**: Detects system language preference
+- **Manual Override**: Users can switch languages in questionnaire
+- **Consistent Keys**: Standardized localization key system
+
+**4. iOS App UX Improvements:**
+- **Streamlined Walkthrough**: Removed welcome screen, starts directly with extension setup
+- **Light Mode Only**: Disabled dark mode for consistent appearance
+- **Integrated Questionnaire**: Replaced simple ProfileSetupView with comprehensive QuestionnaireView
+
+**Technical Architecture:**
+- **Data Bridge**: iOS app stores questionnaire data with `scrollstop_` prefixes for extension access
+- **Storage Strategy**: UserDefaults for iOS, browser.storage.local for extension with localStorage fallback
+- **Async Blocking Screen**: Updated blocking screen to handle async data loading
+- **Smart Suggestions**: Algorithm that prioritizes current tasks and mixes categories
+
+**User Experience Flow:**
+1. **Setup Extension**: User enables Safari extension
+2. **Setup Shortcuts**: User configures iOS shortcuts for social media redirection  
+3. **Personal Questionnaire**: User fills out 5 categories of personal data
+4. **Personalized Blocking**: When blocked, sees specific tasks from their questionnaire
+5. **Meaningful Alternatives**: Easy transition from scrolling to productive activities
+
+**Data Categories & Examples:**
+- **Household Tasks**: "Do laundry", "Clean table", "Empty dishwasher"
+- **Hobbies**: "Cycling", "Gym", "Programming", "Guitar"
+- **Current Tasks**: "Study for exam", "Buy groceries" (auto-deleted after 2 weeks)
+- **Friends**: "Sister", "Flavio", "Samu" → becomes "Call Sister"
+- **Goals**: "Be more patient", "Exercise daily" → becomes "Work on: Be more patient"
+- **Books**: "Atomic Habits", "The Lean Startup" → becomes "Read 'Atomic Habits'"
+
+**Implementation Benefits:**
+- **Higher Engagement**: Personal tasks more motivating than generic suggestions
+- **Cultural Support**: German users get native language experience
+- **Smart Prioritization**: Current tasks appear first when user is blocked
+- **Reduced Friction**: Easier to leave social media when you see specific alternatives
+- **Data Persistence**: Questionnaire data survives app updates and device changes
+
+**Technical Lessons:**
+- **Async Patterns**: Updated blocking screen methods to handle async suggestion generation
+- **Cross-Platform Storage**: Used consistent key prefixes for data sharing between app and extension
+- **Language Management**: Centralized translation system with fallback to keys
+- **State Management**: Proper state handling for multi-step questionnaire flow
+
+**Code Quality Improvements:**
+- **Comprehensive Error Handling**: Graceful fallbacks when personal data unavailable
+- **Memory Management**: Proper cleanup of old current tasks
+- **Type Safety**: Strong typing throughout Swift components
+- **Modular Design**: Separate concerns for data management, UI, and storage
+
+**User Impact:**
+The app now transforms from a simple blocking tool into a personalized productivity assistant that knows the user's specific goals, tasks, and relationships, making it much easier to break the scrolling habit by providing meaningful, actionable alternatives.
+
 ## Design System
 
 ### Glassmorphism Color Scheme

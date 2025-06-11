@@ -59,7 +59,7 @@ struct SetupStepOneView: View {
                 }
                 .padding(.horizontal, 20)
                 
-                Text("Opens Settings app - navigate to Safari > Extensions")
+                Text("Opens directly to Safari Extensions settings")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -97,11 +97,20 @@ struct SetupStepOneView: View {
     }
     
     private func openSettings() {
-        if let settingsURL = URL(string: "App-Prefs:root=SAFARI") {
-            UIApplication.shared.open(settingsURL) { success in
+        // Try to open directly to Safari Extensions settings
+        if let extensionsURL = URL(string: "App-Prefs:root=SAFARI&path=EXTENSIONS") {
+            UIApplication.shared.open(extensionsURL) { success in
                 if !success {
-                    if let mainSettingsURL = URL(string: "App-Prefs:") {
-                        UIApplication.shared.open(mainSettingsURL)
+                    // Fallback to Safari settings
+                    if let safariURL = URL(string: "App-Prefs:root=SAFARI") {
+                        UIApplication.shared.open(safariURL) { success in
+                            if !success {
+                                // Final fallback to main Settings
+                                if let mainSettingsURL = URL(string: "App-Prefs:") {
+                                    UIApplication.shared.open(mainSettingsURL)
+                                }
+                            }
+                        }
                     }
                 }
             }

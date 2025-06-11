@@ -23,7 +23,7 @@ if (typeof window.BlockingScreen === "undefined") {
         this.clearPageContent();
 
         // Create blocking screen
-        this.createBlockingElement();
+        await this.createBlockingElement();
 
         // Start countdown updates
         this.startCountdownUpdates();
@@ -43,13 +43,13 @@ if (typeof window.BlockingScreen === "undefined") {
     /**
      * Create the blocking screen element
      */
-    createBlockingElement() {
+    async createBlockingElement() {
       this.blockingElement = document.createElement("div");
       this.blockingElement.id = "time-block-screen";
       this.blockingElement.className = "blocking-screen";
 
       this.applyBlockingStyles();
-      this.updateBlockingContent();
+      await this.updateBlockingContent();
 
       document.body.appendChild(this.blockingElement);
     }
@@ -83,8 +83,10 @@ if (typeof window.BlockingScreen === "undefined") {
     /**
      * Update blocking screen content
      */
-    updateBlockingContent() {
+    async updateBlockingContent() {
       if (!this.blockingElement) return;
+
+      const suggestionsHTML = await this.getSuggestionsHTML();
 
       this.blockingElement.innerHTML = `
         <div style="max-width: 600px; width: 100%;">
@@ -111,7 +113,7 @@ if (typeof window.BlockingScreen === "undefined") {
             </div>
           </div>
           
-          ${this.getSuggestionsHTML()}
+          ${suggestionsHTML}
         </div>
       `;
     }
@@ -120,16 +122,180 @@ if (typeof window.BlockingScreen === "undefined") {
      * Get HTML for activity suggestions
      * @returns {string} HTML for suggestions section
      */
-    getSuggestionsHTML() {
-      const suggestions = [
+    async getSuggestionsHTML() {
+      try {
+        const personalData = await this.getPersonalData();
+        const suggestions = this.generatePersonalizedSuggestions(personalData);
+        
+        const suggestionsGrid = suggestions
+          .map(
+            (suggestion) => `
+          <div style="background: rgba(255, 255, 255, 0.15); padding: 1rem; border-radius: 10px;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">${suggestion.emoji}</div>
+            <div>${suggestion.text}</div>
+          </div>
+        `
+          )
+          .join("");
+
+        return `
+          <div style="margin-top: 2rem;">
+            <p style="font-size: 1.1rem; margin: 1rem 0; opacity: 0.8;">
+              ${personalData.hasData ? "Here are some personalized suggestions for you:" : "Here are some better things you could be doing:"}
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+              ${suggestionsGrid}
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        console.error("Error generating suggestions:", error);
+        return this.getDefaultSuggestionsHTML();
+      }
+    }
+
+    /**
+     * Get personal data from storage
+     * @returns {Object} Personal data from questionnaire
+     */
+    async getPersonalData() {
+      try {
+        const data = {
+          householdTasks: [],
+          hobbies: [],
+          currentTasks: [],
+          friends: [],
+          goals: [],
+          books: [],
+          hasData: false
+        };
+
+        // Try to get data from browser storage (shared with iOS app)
+        if (typeof browser !== 'undefined' && browser.storage && browser.storage.local) {
+          const result = await browser.storage.local.get([
+            'scrollstop_householdTasks',
+            'scrollstop_hobbies', 
+            'scrollstop_currentTasks',
+            'scrollstop_friends',
+            'scrollstop_goals',
+            'scrollstop_books'
+          ]);
+          
+          data.householdTasks = result.scrollstop_householdTasks || [];
+          data.hobbies = result.scrollstop_hobbies || [];
+          data.currentTasks = result.scrollstop_currentTasks || [];
+          data.friends = result.scrollstop_friends || [];
+          data.goals = result.scrollstop_goals || [];
+          data.books = result.scrollstop_books || [];
+        } else {
+          // Fallback to localStorage
+          data.householdTasks = JSON.parse(localStorage.getItem('scrollstop_householdTasks') || '[]');
+          data.hobbies = JSON.parse(localStorage.getItem('scrollstop_hobbies') || '[]');
+          data.currentTasks = JSON.parse(localStorage.getItem('scrollstop_currentTasks') || '[]');
+          data.friends = JSON.parse(localStorage.getItem('scrollstop_friends') || '[]');
+          data.goals = JSON.parse(localStorage.getItem('scrollstop_goals') || '[]');
+          data.books = JSON.parse(localStorage.getItem('scrollstop_books') || '[]');
+        }
+
+        // Check if we have any personal data
+        data.hasData = data.householdTasks.length > 0 || data.hobbies.length > 0 || 
+                       data.currentTasks.length > 0 || data.friends.length > 0 || 
+                       data.goals.length > 0 || data.books.length > 0;
+
+        return data;
+      } catch (error) {
+        console.error("Error loading personal data:", error);
+        return { hasData: false };
+      }
+    }
+
+    /**
+     * Generate personalized suggestions based on user data
+     * @param {Object} personalData - User's personal data
+     * @returns {Array} Array of suggestion objects
+     */
+    generatePersonalizedSuggestions(personalData) {
+      const suggestions = [];
+      
+      if (!personalData.hasData) {
+        return this.getDefaultSuggestions();
+      }
+
+      // Add current tasks (highest priority)
+      if (personalData.currentTasks && personalData.currentTasks.length > 0) {
+        const randomTask = this.getRandomItem(personalData.currentTasks);
+        suggestions.push({ emoji: "✅", text: randomTask });
+      }
+
+      // Add household tasks
+      if (personalData.householdTasks && personalData.householdTasks.length > 0) {
+        const randomTask = this.getRandomItem(personalData.householdTasks);
+        suggestions.push({ emoji: "🏠", text: randomTask });
+      }
+
+      // Add friends to contact
+      if (personalData.friends && personalData.friends.length > 0) {
+        const randomFriend = this.getRandomItem(personalData.friends);
+        suggestions.push({ emoji: "📞", text: `Call ${randomFriend}` });
+      }
+
+      // Add hobbies
+      if (personalData.hobbies && personalData.hobbies.length > 0) {
+        const randomHobby = this.getRandomItem(personalData.hobbies);
+        suggestions.push({ emoji: "🎯", text: randomHobby });
+      }
+
+      // Add books
+      if (personalData.books && personalData.books.length > 0) {
+        const randomBook = this.getRandomItem(personalData.books);
+        suggestions.push({ emoji: "📚", text: `Read "${randomBook}"` });
+      }
+
+      // Add goals (if space allows)
+      if (personalData.goals && personalData.goals.length > 0 && suggestions.length < 6) {
+        const randomGoal = this.getRandomItem(personalData.goals);
+        suggestions.push({ emoji: "🎯", text: `Work on: ${randomGoal}` });
+      }
+
+      // Fill with default suggestions if we don't have enough
+      const defaultSuggestions = this.getDefaultSuggestions();
+      while (suggestions.length < 4) {
+        const randomDefault = this.getRandomItem(defaultSuggestions);
+        if (!suggestions.some(s => s.text === randomDefault.text)) {
+          suggestions.push(randomDefault);
+        }
+      }
+
+      // Return maximum 6 suggestions
+      return suggestions.slice(0, 6);
+    }
+
+    /**
+     * Get default suggestions when no personal data is available
+     * @returns {Array} Array of default suggestion objects
+     */
+    getDefaultSuggestions() {
+      return [
         { emoji: "🚶‍♂️", text: "Take a walk outside" },
         { emoji: "📚", text: "Read a book" },
         { emoji: "🧘‍♀️", text: "Meditate" },
         { emoji: "💪", text: "Exercise" },
         { emoji: "👥", text: "Call a friend" },
         { emoji: "🎨", text: "Be creative" },
+        { emoji: "🧹", text: "Tidy up your space" },
+        { emoji: "💧", text: "Drink some water" },
+        { emoji: "🌱", text: "Do some stretching" },
+        { emoji: "📝", text: "Write in a journal" }
       ];
+    }
 
+    /**
+     * Get default suggestions HTML (fallback)
+     * @returns {string} HTML for default suggestions
+     */
+    getDefaultSuggestionsHTML() {
+      const suggestions = this.getDefaultSuggestions().slice(0, 6);
+      
       const suggestionsGrid = suggestions
         .map(
           (suggestion) => `
@@ -151,6 +317,15 @@ if (typeof window.BlockingScreen === "undefined") {
           </div>
         </div>
       `;
+    }
+
+    /**
+     * Get random item from array
+     * @param {Array} array - Array to pick from
+     * @returns {*} Random item from array
+     */
+    getRandomItem(array) {
+      return array[Math.floor(Math.random() * array.length)];
     }
 
     /**
