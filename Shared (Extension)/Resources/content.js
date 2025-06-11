@@ -8,15 +8,18 @@ class ScrollStopCoordinator {
     this.transitionScreen = null;
     this.blockingScreen = null;
     this.timerTracker = null;
+    this.choiceDialog = null;
 
     this.isInitialized = false;
     this.currentHostname = window.location.hostname;
+    this.userChoice = null; // 'continue', 'timer-only', 'block'
 
     // Bind event handlers
     this.handleDoomscrollDetected = this.handleDoomscrollDetected.bind(this);
     this.handleAnimationComplete = this.handleAnimationComplete.bind(this);
     this.handleTransitionComplete = this.handleTransitionComplete.bind(this);
     this.handleTimeBlockRemoved = this.handleTimeBlockRemoved.bind(this);
+    this.handleChoiceComplete = this.handleChoiceComplete.bind(this);
   }
 
   /**
@@ -24,22 +27,24 @@ class ScrollStopCoordinator {
    */
   async initialize() {
     if (this.isInitialized) {
+      console.log('ScrollStop: Already initialized, skipping');
       return;
     }
+
+    console.log('ScrollStop: Starting initialization...');
+    this.isInitialized = true; // Set immediately to prevent race conditions
 
     try {
       // Set up event listeners for module communication
       this.setupEventListeners();
 
-      // Initialize timer tracker first (for all tracked sites)
-      await this.initializeTimerTracker();
-
-      // Check if current site should be monitored
+      // Check if current site should be monitored FIRST (shows choice dialog)
       await this.checkCurrentSite();
 
-      this.isInitialized = true;
+      console.log('ScrollStop: Initialization completed successfully');
     } catch (error) {
       console.error("Error initializing ScrollStop coordinator:", error);
+      this.isInitialized = false; // Reset on failure
     }
   }
 
@@ -79,6 +84,7 @@ class ScrollStopCoordinator {
       this.handleTransitionComplete
     );
     window.addEventListener("time-block-removed", this.handleTimeBlockRemoved);
+    window.addEventListener("choice-dialog-complete", this.handleChoiceComplete);
   }
 
   /**
@@ -89,21 +95,33 @@ class ScrollStopCoordinator {
     const hostname = window.location.hostname;
 
     try {
+      console.log('ScrollStop: Checking current site:', hostname);
+      
       // Check if site is in blocked list
       const isBlocked = await StorageHelper.isCurrentSiteBlocked(url, hostname);
+      console.log('ScrollStop: Site is blocked:', isBlocked);
 
       if (!isBlocked) {
         this.cleanup();
         return;
       }
 
+      // Always show choice dialog on every page load (no session persistence)
+      console.log('ScrollStop: No session persistence - will show choice dialog');
+      
+      // Clear any existing stored choice to ensure dialog always shows
+      await ChoiceDialog.clearSessionChoice(hostname);
+
       // Check if site is currently time-blocked
       const isTimeBlocked = await TimeManager.isTimeBlocked(hostname);
+      console.log('ScrollStop: Site is time-blocked:', isTimeBlocked);
 
       if (isTimeBlocked) {
         this.showBlockingScreen();
       } else {
-        this.startDoomscrollDetection();
+        // Show choice dialog before proceeding
+        console.log('ScrollStop: Showing choice dialog');
+        this.showChoiceDialog();
       }
     } catch (error) {
       console.error("Error checking current site:", error);
@@ -190,6 +208,98 @@ class ScrollStopCoordinator {
   }
 
   /**
+   * Show choice dialog to user
+   */
+  showChoiceDialog() {
+    // Prevent showing dialog multiple times
+    if (this.choiceDialog && this.choiceDialog.isShown) {
+      console.log('ScrollStop: Choice dialog already shown, skipping');
+      return;
+    }
+    
+    try {
+      console.log('ScrollStop: Creating choice dialog for:', this.currentHostname);
+      
+      this.choiceDialog = new ChoiceDialog({
+        siteTitle: this.currentHostname,
+        onChoiceMade: (choice) => {
+          console.log('ScrollStop: User chose:', choice);
+          this.userChoice = choice;
+          this.proceedWithChoice(choice);
+        }
+      });
+
+      console.log('ScrollStop: Showing choice dialog');
+      this.choiceDialog.show();
+    } catch (error) {
+      console.error('ScrollStop: Error showing choice dialog:', error);
+      // Fallback to continue mode if dialog fails
+      this.proceedWithChoice('continue');
+    }
+  }
+
+  /**
+   * Handle choice dialog completion
+   */
+  handleChoiceComplete(event) {
+    const choice = event.detail.choice;
+    this.userChoice = choice;
+    this.proceedWithChoice(choice);
+  }
+
+  /**
+   * Proceed based on user's choice
+   */
+  async proceedWithChoice(choice) {
+    switch (choice) {
+      case 'continue':
+        // Full ScrollStop functionality - initialize timer then start detection
+        await this.initializeTimerTracker();
+        this.startDoomscrollDetection();
+        break;
+      
+      case 'timer-only':
+        // Only show timer, no blocking
+        await this.initializeTimerOnly();
+        break;
+      
+      case 'block':
+        // Initialize timer first, then immediately block the site
+        await this.initializeTimerTracker();
+        await TimeManager.createTimeBlock(this.currentHostname);
+        this.showBlockingScreen();
+        break;
+      
+      default:
+        console.warn('Unknown choice:', choice);
+        // Default to continue
+        await this.initializeTimerTracker();
+        this.startDoomscrollDetection();
+        break;
+    }
+  }
+
+  /**
+   * Initialize timer-only mode
+   */
+  async initializeTimerOnly() {
+    try {
+      // Initialize timer but not doomscroll detection
+      if (!this.timerTracker) {
+        this.timerTracker = new TimerTracker();
+        await this.timerTracker.initialize();
+      }
+      
+      // Set timer to timer-only mode to prevent hiding
+      if (this.timerTracker.setTimerOnlyMode) {
+        this.timerTracker.setTimerOnlyMode(true);
+      }
+    } catch (error) {
+      console.error("Error initializing timer-only mode:", error);
+    }
+  }
+
+  /**
    * Clean up all modules and event listeners
    */
   cleanup() {
@@ -219,6 +329,11 @@ class ScrollStopCoordinator {
       this.timerTracker = null;
     }
 
+    if (this.choiceDialog) {
+      this.choiceDialog.cleanup();
+      this.choiceDialog = null;
+    }
+
     // Remove event listeners
     window.removeEventListener(
       "doomscroll-detected",
@@ -235,6 +350,10 @@ class ScrollStopCoordinator {
     window.removeEventListener(
       "time-block-removed",
       this.handleTimeBlockRemoved
+    );
+    window.removeEventListener(
+      "choice-dialog-complete",
+      this.handleChoiceComplete
     );
 
     this.isInitialized = false;
@@ -263,15 +382,15 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return scrollStopCoordinator.handleMessage(message, sender, sendResponse);
 });
 
-// Initialize when DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    scrollStopCoordinator.initialize();
-  });
-} else {
-  // DOM already loaded
+// Initialize when DOM is ready (single initialization point)
+function initializeScrollStop() {
+  console.log('ScrollStop: Attempting initialization, readyState:', document.readyState);
   scrollStopCoordinator.initialize();
 }
 
-// Also initialize immediately for faster response
-scrollStopCoordinator.initialize();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeScrollStop);
+} else {
+  // DOM already loaded, initialize immediately
+  initializeScrollStop();
+}

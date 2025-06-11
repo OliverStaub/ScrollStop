@@ -80,7 +80,30 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 - Even though files are organized in subdirectories during development, manifest must reference them by filename only
 
 ## Memories
-- mesmorize
+- **UI Components Policy**: Only use UIComponentsJS components for all web UI elements. No other UI frameworks or plain HTML/CSS elements. iOS app uses SwiftUI natively.
+- **Choice Dialog Feature**: When accessing blocked sites, users see a dialog with 3 options: Continue with ScrollStop (full functionality), Timer Only (no blocking), or Block Now (immediate block). Appears on every page reload.
+
+## Design System
+
+### Glassmorphism Color Scheme
+All extension UI elements use consistent glassmorphism styling:
+
+**Background:**
+- Main: `rgba(0, 0, 0, 0.25)` with `backdrop-filter: blur(12px) saturate(150%)`
+- Border: `1.5px solid rgba(255, 255, 255, 0.22)`
+- Shadow: `0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), inset 0px 1px 0px rgba(255, 255, 255, 0.27)`
+
+**Colors:**
+- Primary accent: `#34c759` (green, matches iOS system green)
+- Primary text: `white` with `text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8)`
+- Secondary text: `rgba(255, 255, 255, 0.8)` with subtle shadow
+- Primary button: `rgba(52, 199, 89, 0.9)` background
+- Secondary buttons: `rgba(255, 255, 255, 0.1)` background with `rgba(255, 255, 255, 0.3)` border
+
+**Interactions:**
+- Hover: `scale(1.02)` with `box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3)`
+- Border radius: `20px` for dialogs, `12px` for buttons
+- Transitions: `all 0.2s ease`
 
 ### Timer Tracker Feature Implementation (Session Summary)
 
@@ -127,68 +150,3 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 - **Benefits**: More reliable, better iOS integration, proper native styling, no script loading issues
 - **Implementation**: Create SwiftUI views for welcome, setup steps, and completion screens
 
-## Native UI Migration Plan
-
-### iOS App SwiftUI Migration:
-
-**1. Create SwiftUI Views:**
-```swift
-// ContentView.swift - Main walkthrough container
-// WelcomeView.swift - Welcome screen with app intro
-// SetupStepOneView.swift - Safari extension setup instructions
-// SetupStepTwoView.swift - iOS Shortcuts guidance  
-// CompletionView.swift - Setup completion confirmation
-```
-
-**2. Replace WKWebView with SwiftUI:**
-- Remove HTML files (welcome.html, step1.html, step2.html, complete.html)
-- Replace ViewController.swift WebView with SwiftUI hosting
-- Use NavigationView for step transitions
-- Implement native iOS design patterns
-
-**3. Key SwiftUI Components Needed:**
-- NavigationView for step flow
-- Button with .buttonStyle(.borderedProminent)
-- Text with proper typography scales
-- Image for app icon
-- List for setup instructions
-- Link for external URLs
-- @State for navigation flow
-
-**4. Benefits:**
-- Native iOS appearance and animations
-- Proper accessibility support
-- No JavaScript loading issues
-- Better performance
-- Easier maintenance
-
-### macOS App AppKit/SwiftUI Migration:
-
-**1. Replace WKWebView with native views:**
-- Create NSViewController or SwiftUI views
-- Use NSButton for preferences action
-- Implement proper macOS styling
-- Add proper window management
-
-**2. Recommended Components:**
-- NSButton with system styling
-- NSTextField for status text
-- NSImageView for app icon
-- Proper spacing using Auto Layout or SwiftUI
-
-**3. Integration Points:**
-- Keep SafariWebExtensionHandler.swift unchanged
-- Update ViewController.swift to use native UI
-- Maintain existing message passing to extension
-
-### Implementation Priority:
-1. **iOS First**: More critical due to touch/button issues
-2. **macOS Second**: Less critical but would improve consistency
-3. **Preserve Extension**: Keep all web extension code unchanged
-
-### Migration Steps:
-1. Create new SwiftUI files alongside existing HTML
-2. Update ViewControllers to host SwiftUI instead of WebView
-3. Test thoroughly on both platforms
-4. Remove HTML/CSS/JS files once SwiftUI is working
-5. Update build targets to exclude web resources

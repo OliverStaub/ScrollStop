@@ -51,21 +51,15 @@ struct CompletionView: View {
             
             Spacer()
             
-            // Restart Button
-            Button(action: {
-                UserDefaults.standard.set(false, forKey: "walkthroughCompleted")
-                onRestart()
-            }) {
-                Text("Restart Walkthrough")
+            // Home Button
+            Button(action: onRestart) {
+                Text("Home")
                     .font(.headline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.clear)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.secondary, lineWidth: 2)
-                    )
+                    .background(Color.green)
+                    .cornerRadius(12)
             }
             .padding(.horizontal, 20)
             

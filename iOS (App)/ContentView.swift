@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var currentStep: WalkthroughStep = .welcome
-    @State private var isWalkthroughCompleted = false
+    @State private var currentView: AppView = .home
+    @State private var walkthroughStep: WalkthroughStep = .welcome
+    
+    enum AppView {
+        case home
+        case walkthrough
+        case profile
+    }
     
     enum WalkthroughStep {
         case welcome
@@ -25,59 +31,85 @@ struct ContentView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    switch currentStep {
-                    case .welcome:
-                        WelcomeView(onGetStarted: {
-                            withAnimation(.easeInOut) {
-                                currentStep = .setupStepOne
-                            }
-                        })
-                    case .setupStepOne:
-                        SetupStepOneView(
-                            onNext: {
+                    switch currentView {
+                    case .home:
+                        HomeMenuView(
+                            onStartWalkthrough: {
                                 withAnimation(.easeInOut) {
-                                    currentStep = .setupStepTwo
+                                    currentView = .walkthrough
+                                    walkthroughStep = .welcome
+                                }
+                            },
+                            onSetupProfile: {
+                                withAnimation(.easeInOut) {
+                                    currentView = .profile
+                                }
+                            }
+                        )
+                    case .walkthrough:
+                        walkthroughView
+                    case .profile:
+                        ProfileSetupView(
+                            onComplete: {
+                                withAnimation(.easeInOut) {
+                                    currentView = .home
                                 }
                             },
                             onBack: {
                                 withAnimation(.easeInOut) {
-                                    currentStep = .welcome
+                                    currentView = .home
                                 }
                             }
                         )
-                    case .setupStepTwo:
-                        SetupStepTwoView(
-                            onNext: {
-                                withAnimation(.easeInOut) {
-                                    currentStep = .completion
-                                }
-                            },
-                            onBack: {
-                                withAnimation(.easeInOut) {
-                                    currentStep = .setupStepOne
-                                }
-                            }
-                        )
-                    case .completion:
-                        CompletionView(onRestart: {
-                            withAnimation(.easeInOut) {
-                                currentStep = .welcome
-                            }
-                        })
                     }
                 }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .onAppear {
-            checkWalkthroughStatus()
-        }
     }
     
-    private func checkWalkthroughStatus() {
-        isWalkthroughCompleted = UserDefaults.standard.bool(forKey: "walkthroughCompleted")
-        if isWalkthroughCompleted {
-            currentStep = .completion
+    @ViewBuilder
+    private var walkthroughView: some View {
+        switch walkthroughStep {
+        case .welcome:
+            WelcomeView(onGetStarted: {
+                withAnimation(.easeInOut) {
+                    walkthroughStep = .setupStepOne
+                }
+            })
+        case .setupStepOne:
+            SetupStepOneView(
+                onNext: {
+                    withAnimation(.easeInOut) {
+                        walkthroughStep = .setupStepTwo
+                    }
+                },
+                onBack: {
+                    withAnimation(.easeInOut) {
+                        walkthroughStep = .welcome
+                    }
+                }
+            )
+        case .setupStepTwo:
+            SetupStepTwoView(
+                onNext: {
+                    withAnimation(.easeInOut) {
+                        walkthroughStep = .completion
+                    }
+                },
+                onBack: {
+                    withAnimation(.easeInOut) {
+                        walkthroughStep = .setupStepOne
+                    }
+                }
+            )
+        case .completion:
+            CompletionView(onRestart: {
+                withAnimation(.easeInOut) {
+                    walkthroughStep = .welcome
+                    currentView = .home
+                }
+            })
         }
     }
 }

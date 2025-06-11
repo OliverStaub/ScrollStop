@@ -42,10 +42,12 @@ struct SetupStepTwoView: View {
                 Text("ScrollStop only works in Safari, not in native apps like Instagram or Twitter.")
                     .font(.body)
                     .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 
                 Text("Set up iOS Shortcuts so these apps open in Safari instead:")
                     .font(.body)
                     .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 
                 // App List
                 VStack(alignment: .leading, spacing: 8) {
