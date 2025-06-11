@@ -64,11 +64,7 @@
 		3DBE1CB02DDB8900007A7E2A /* Exceptions for "Shared (App)" folder in "ScrollStop (iOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"/Localized: Resources/complete.html",
 				"/Localized: Resources/Main.html",
-				"/Localized: Resources/step1.html",
-				"/Localized: Resources/step2.html",
-				"/Localized: Resources/welcome.html",
 				Assets.xcassets,
 				components/button.js,
 				Resources/Icon.png,
@@ -95,11 +91,7 @@
 		3DBE1CBA2DDB8900007A7E2A /* Exceptions for "Shared (App)" folder in "ScrollStop (macOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"/Localized: Resources/complete.html",
 				"/Localized: Resources/Main.html",
-				"/Localized: Resources/step1.html",
-				"/Localized: Resources/step2.html",
-				"/Localized: Resources/welcome.html",
 				Assets.xcassets,
 				components/button.js,
 				Resources/Icon.png,

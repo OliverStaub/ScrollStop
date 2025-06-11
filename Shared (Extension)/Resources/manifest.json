@@ -33,20 +33,7 @@
         "blocking-screen.js",
         "content.js"
       ],
-      "matches": [
-        "*://*.facebook.com/*",
-        "*://*.twitter.com/*",
-        "*://*.instagram.com/*",
-        "*://*.reddit.com/*",
-        "*://*.x.com/*",
-        "*://*.tiktok.com/*",
-        "*://*.youtube.com/*",
-        "*://*.linkedin.com/*",
-        "*://*.pinterest.com/*",
-        "*://*.snapchat.com/*",
-        "*://*.tumblr.com/*",
-        "*://*.quora.com/*"
-      ],
+      "matches": ["<all_urls>"],
       "run_at": "document_end"
     }
   ],
@@ -57,6 +44,7 @@
   },
 
   "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
 
   "web_accessible_resources": [
     {
@@ -66,20 +54,7 @@
         "transition-screen.css",
         "blocking-screen.css"
       ],
-      "matches": [
-        "*://*.facebook.com/*",
-        "*://*.twitter.com/*",
-        "*://*.instagram.com/*",
-        "*://*.reddit.com/*",
-        "*://*.x.com/*",
-        "*://*.tiktok.com/*",
-        "*://*.youtube.com/*",
-        "*://*.linkedin.com/*",
-        "*://*.pinterest.com/*",
-        "*://*.snapchat.com/*",
-        "*://*.tumblr.com/*",
-        "*://*.quora.com/*"
-      ]
+      "matches": ["<all_urls>"]
     }
   ]
 }

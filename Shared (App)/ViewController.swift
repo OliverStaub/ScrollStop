@@ -9,6 +9,7 @@ import WebKit
 
 #if os(iOS)
 import UIKit
+import SwiftUI
 typealias PlatformViewController = UIViewController
 #elseif os(macOS)
 import Cocoa
@@ -18,49 +19,54 @@ typealias PlatformViewController = NSViewController
 
 let extensionBundleIdentifier = "Luddite.ScrollStop.Extension"
 
-class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMessageHandler {
+class ViewController: PlatformViewController {
 
     @IBOutlet var webView: WKWebView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.webView.navigationDelegate = self
-
+    
 #if os(iOS)
-        self.webView.scrollView.isScrollEnabled = true
-        self.webView.scrollView.bounces = true
-        self.webView.scrollView.showsVerticalScrollIndicator = true
-#endif
-
-        self.webView.configuration.userContentController.add(self, name: "controller")
-
-#if os(iOS)
-        loadInitialScreen()
+        setupSwiftUIView()
 #else
-        self.webView.loadFileURL(Bundle.main.url(forResource: "Main", withExtension: "html")!, allowingReadAccessTo: Bundle.main.resourceURL!)
+        setupWebView()
 #endif
     }
     
 #if os(iOS)
-    private func loadInitialScreen() {
-        loadScreen("welcome")
-    }
-    
-    private func loadScreen(_ screenName: String) {
-        guard let url = Bundle.main.url(forResource: screenName, withExtension: "html") else {
-            print("Could not find \(screenName).html")
-            return
-        }
-        self.webView.loadFileURL(url, allowingReadAccessTo: Bundle.main.resourceURL!)
+    private func setupSwiftUIView() {
+        let contentView = ContentView()
+        let hostingController = UIHostingController(rootView: contentView)
+        
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+        
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 #endif
+    
+#if os(macOS)
+    private func setupWebView() {
+        self.webView.navigationDelegate = self
+        self.webView.configuration.userContentController.add(self, name: "controller")
+        self.webView.loadFileURL(Bundle.main.url(forResource: "Main", withExtension: "html")!, allowingReadAccessTo: Bundle.main.resourceURL!)
+    }
+#endif
+}
 
+// MARK: - macOS WebView Delegates
+#if os(macOS)
+extension ViewController: WKNavigationDelegate, WKScriptMessageHandler {
+    
     // MARK: - WKNavigationDelegate
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-#if os(iOS)
-        webView.evaluateJavaScript("initializeApp()")
-#elseif os(macOS)
         webView.evaluateJavaScript("show('mac')")
 
         SFSafariExtensionManager.getStateOfSafariExtension(withIdentifier: extensionBundleIdentifier) { (state, error) in
@@ -77,7 +83,6 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
                 }
             }
         }
-#endif
     }
 
     // MARK: - Navigation Delegate
@@ -88,34 +93,9 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
             return
         }
         
-        // Handle settings URL scheme to open main iOS Settings
-        if url.scheme == "settings" {
-#if os(iOS)
-            if let settingsURL = URL(string: "App-Prefs:root=SAFARI") {
-                // Try to open Safari settings directly
-                UIApplication.shared.open(settingsURL) { success in
-                    if !success {
-                        // Fall back to main Settings app if Safari direct link fails
-                        if let mainSettingsURL = URL(string: "App-Prefs:") {
-                            UIApplication.shared.open(mainSettingsURL)
-                        }
-                    }
-                }
-            }
-#endif
-            decisionHandler(.cancel)
-            return
-        }
-        
         // For external links, open in default browser
         if !url.isFileURL && (url.scheme == "http" || url.scheme == "https") {
-#if os(macOS)
             NSWorkspace.shared.open(url)
-#elseif os(iOS)
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url)
-            }
-#endif
             decisionHandler(.cancel)
             return
         }
@@ -128,22 +108,6 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let messageBody = message.body as? String else { return }
         
-#if os(iOS)
-        switch messageBody {
-        case "navigate-to-step1":
-            loadScreen("step1")
-        case "navigate-to-step2":
-            loadScreen("step2")
-        case "navigate-to-complete":
-            loadScreen("complete")
-        case "navigate-to-welcome":
-            loadScreen("welcome")
-        case "restart-walkthrough":
-            loadScreen("welcome")
-        default:
-            break
-        }
-#elseif os(macOS)
         if messageBody == "open-preferences" {
             SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier) { error in
                 guard error == nil else {
@@ -155,6 +119,6 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
                 }
             }
         }
-#endif
     }
 }
+#endif
