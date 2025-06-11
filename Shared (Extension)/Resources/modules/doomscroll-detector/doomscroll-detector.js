@@ -6,12 +6,21 @@ if (typeof window.DoomscrollDetector === "undefined") {
     constructor(config = {}) {
       this.config = {
         SCROLL_LIMIT: config.scrollLimit || 4000, // Pixels scrolled before triggering
+        SWIPE_LIMIT: config.swipeLimit || 15, // Number of swipes before triggering (for Shorts)
         ...config,
       };
 
       this.scrollDistance = 0;
+      this.swipeCount = 0;
       this.isInitialized = false;
       this.scrollHandler = null;
+      this.touchStartY = 0;
+      this.touchStartTime = 0;
+      this.isYouTubeShorts = false;
+      
+      // Bind touch handlers
+      this.handleTouchStart = this.handleTouchStart.bind(this);
+      this.handleTouchEnd = this.handleTouchEnd.bind(this);
     }
 
     /**
@@ -22,14 +31,24 @@ if (typeof window.DoomscrollDetector === "undefined") {
         return;
       }
 
+      // Check if we're on YouTube Shorts
+      this.isYouTubeShorts = this.detectYouTubeShorts();
+
       this.scrollHandler = this.handleScroll.bind(this);
       window.addEventListener("scroll", this.scrollHandler, { passive: true });
+      
+      // Add touch listeners for swipe detection (especially for YouTube Shorts)
+      if (this.isYouTubeShorts || window.location.hostname.includes('tiktok')) {
+        document.addEventListener("touchstart", this.handleTouchStart, { passive: true });
+        document.addEventListener("touchend", this.handleTouchEnd, { passive: true });
+        
+        // Also detect YouTube Shorts navigation changes
+        if (this.isYouTubeShorts) {
+          this.setupShortsNavigationDetection();
+        }
+      }
+      
       this.isInitialized = true;
-
-      console.log(
-        "DoomscrollDetector initialized with scroll limit:",
-        this.config.SCROLL_LIMIT
-      );
     }
 
     /**
@@ -40,8 +59,22 @@ if (typeof window.DoomscrollDetector === "undefined") {
         window.removeEventListener("scroll", this.scrollHandler);
         this.scrollHandler = null;
       }
+      
+      // Remove touch listeners
+      document.removeEventListener("touchstart", this.handleTouchStart);
+      document.removeEventListener("touchend", this.handleTouchEnd);
+      
+      // Clean up Shorts observer
+      if (this.shortsObserver) {
+        this.shortsObserver.disconnect();
+        this.shortsObserver = null;
+      }
+      
       this.isInitialized = false;
       this.scrollDistance = 0;
+      this.swipeCount = 0;
+      this.touchStartY = 0;
+      this.touchStartTime = 0;
     }
 
     /**
@@ -62,13 +95,16 @@ if (typeof window.DoomscrollDetector === "undefined") {
     /**
      * Trigger doomscroll detection event and cleanup
      */
-    triggerDoomscrollDetected() {
+    triggerDoomscrollDetected(triggerType = 'scroll') {
       // Dispatch custom event that other modules can listen to
       window.dispatchEvent(
         new CustomEvent("doomscroll-detected", {
           detail: {
             scrollDistance: this.scrollDistance,
             scrollLimit: this.config.SCROLL_LIMIT,
+            swipeCount: this.swipeCount,
+            swipeLimit: this.config.SWIPE_LIMIT,
+            triggerType: triggerType, // 'scroll' or 'swipe'
             hostname: window.location.hostname,
           },
         })
@@ -76,6 +112,80 @@ if (typeof window.DoomscrollDetector === "undefined") {
 
       // Clean up after detection
       this.destroy();
+    }
+
+    /**
+     * Detect if we're on YouTube Shorts
+     */
+    detectYouTubeShorts() {
+      return window.location.hostname.includes('youtube.com') && 
+             (window.location.pathname.includes('/shorts/') || 
+              document.querySelector('ytd-shorts') !== null ||
+              document.querySelector('[is-shorts]') !== null);
+    }
+
+    /**
+     * Handle touch start for swipe detection
+     */
+    handleTouchStart(e) {
+      this.touchStartY = e.touches[0].clientY;
+      this.touchStartTime = Date.now();
+    }
+
+    /**
+     * Handle touch end for swipe detection
+     */
+    handleTouchEnd(e) {
+      if (!this.touchStartY) return;
+      
+      const touchEndY = e.changedTouches[0].clientY;
+      const swipeDistance = this.touchStartY - touchEndY;
+      const swipeTime = Date.now() - this.touchStartTime;
+      
+      // Detect upward swipes (positive distance) of at least 50px that are quick (under 500ms)
+      // This helps distinguish intentional swipes from slow scrolls
+      if (swipeDistance > 50 && swipeTime < 500) {
+        this.swipeCount++;
+        
+        // Check if we've reached the swipe limit
+        if (this.swipeCount >= this.config.SWIPE_LIMIT) {
+          this.triggerDoomscrollDetected('swipe');
+        }
+      }
+      
+      this.touchStartY = 0;
+      this.touchStartTime = 0;
+    }
+
+    /**
+     * Set up YouTube Shorts navigation detection
+     */
+    setupShortsNavigationDetection() {
+      // Track URL changes in Shorts
+      let lastUrl = window.location.href;
+      
+      // Use a more reliable observer for Shorts navigation
+      const observer = new MutationObserver(() => {
+        const currentUrl = window.location.href;
+        if (currentUrl !== lastUrl && currentUrl.includes('/shorts/')) {
+          this.swipeCount++;
+          
+          if (this.swipeCount >= this.config.SWIPE_LIMIT) {
+            this.triggerDoomscrollDetected('navigation');
+          }
+          
+          lastUrl = currentUrl;
+        }
+      });
+      
+      // Observe changes to the document
+      observer.observe(document, { 
+        childList: true, 
+        subtree: true 
+      });
+      
+      // Store observer for cleanup
+      this.shortsObserver = observer;
     }
 
     /**

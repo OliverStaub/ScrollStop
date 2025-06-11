@@ -120,3 +120,75 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 - **Non-Intrusive**: Can be hidden with single click, reappears on reload
 - **Customizable Position**: User can drag to preferred screen location
 - **Persistent Data**: Time accumulates across sessions and different sites
+
+**iOS App UI Recommendation:**
+- **Issue Identified**: Web-based walkthrough with JavaScript buttons is unreliable on iOS
+- **Recommended Solution**: Replace HTML/CSS/JS walkthrough with native SwiftUI interface
+- **Benefits**: More reliable, better iOS integration, proper native styling, no script loading issues
+- **Implementation**: Create SwiftUI views for welcome, setup steps, and completion screens
+
+## Native UI Migration Plan
+
+### iOS App SwiftUI Migration:
+
+**1. Create SwiftUI Views:**
+```swift
+// ContentView.swift - Main walkthrough container
+// WelcomeView.swift - Welcome screen with app intro
+// SetupStepOneView.swift - Safari extension setup instructions
+// SetupStepTwoView.swift - iOS Shortcuts guidance  
+// CompletionView.swift - Setup completion confirmation
+```
+
+**2. Replace WKWebView with SwiftUI:**
+- Remove HTML files (welcome.html, step1.html, step2.html, complete.html)
+- Replace ViewController.swift WebView with SwiftUI hosting
+- Use NavigationView for step transitions
+- Implement native iOS design patterns
+
+**3. Key SwiftUI Components Needed:**
+- NavigationView for step flow
+- Button with .buttonStyle(.borderedProminent)
+- Text with proper typography scales
+- Image for app icon
+- List for setup instructions
+- Link for external URLs
+- @State for navigation flow
+
+**4. Benefits:**
+- Native iOS appearance and animations
+- Proper accessibility support
+- No JavaScript loading issues
+- Better performance
+- Easier maintenance
+
+### macOS App AppKit/SwiftUI Migration:
+
+**1. Replace WKWebView with native views:**
+- Create NSViewController or SwiftUI views
+- Use NSButton for preferences action
+- Implement proper macOS styling
+- Add proper window management
+
+**2. Recommended Components:**
+- NSButton with system styling
+- NSTextField for status text
+- NSImageView for app icon
+- Proper spacing using Auto Layout or SwiftUI
+
+**3. Integration Points:**
+- Keep SafariWebExtensionHandler.swift unchanged
+- Update ViewController.swift to use native UI
+- Maintain existing message passing to extension
+
+### Implementation Priority:
+1. **iOS First**: More critical due to touch/button issues
+2. **macOS Second**: Less critical but would improve consistency
+3. **Preserve Extension**: Keep all web extension code unchanged
+
+### Migration Steps:
+1. Create new SwiftUI files alongside existing HTML
+2. Update ViewControllers to host SwiftUI instead of WebView
+3. Test thoroughly on both platforms
+4. Remove HTML/CSS/JS files once SwiftUI is working
+5. Update build targets to exclude web resources

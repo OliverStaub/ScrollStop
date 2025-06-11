@@ -75,6 +75,9 @@ class TimerTracker {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
   }
@@ -195,7 +198,11 @@ class TimerTracker {
    * Add drag functionality to timer
    */
   addDragFunctionality(container) {
+    // Mouse events for desktop
     container.addEventListener('mousedown', this.handleMouseDown);
+    
+    // Touch events for mobile
+    container.addEventListener('touchstart', this.handleTouchStart, { passive: false });
     
     // Prevent text selection during drag
     container.addEventListener('selectstart', (e) => e.preventDefault());
@@ -291,6 +298,100 @@ class TimerTracker {
   }
 
   /**
+   * Handle touch start for mobile drag
+   */
+  handleTouchStart(e) {
+    this.mouseDownTime = Date.now();
+    this.hasDragged = false;
+    this.isDragging = false;
+    
+    const container = document.getElementById('scrollstop-timer-container');
+    const rect = container.getBoundingClientRect();
+    const touch = e.touches[0];
+    
+    this.dragOffset.x = touch.clientX - rect.left;
+    this.dragOffset.y = touch.clientY - rect.top;
+    this.initialMousePos.x = touch.clientX;
+    this.initialMousePos.y = touch.clientY;
+    
+    document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+    document.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+    
+    e.preventDefault();
+  }
+
+  /**
+   * Handle touch move for mobile dragging
+   */
+  handleTouchMove(e) {
+    const touch = e.touches[0];
+    const deltaX = Math.abs(touch.clientX - this.initialMousePos.x);
+    const deltaY = Math.abs(touch.clientY - this.initialMousePos.y);
+    
+    // Start dragging if touch moved more than 5 pixels
+    if (!this.isDragging && (deltaX > 5 || deltaY > 5)) {
+      this.isDragging = true;
+      this.hasDragged = true;
+      
+      const container = document.getElementById('scrollstop-timer-container');
+      if (container) {
+        container.style.cursor = 'grabbing';
+      }
+    }
+    
+    if (!this.isDragging) return;
+    
+    const container = document.getElementById('scrollstop-timer-container');
+    if (!container) return;
+    
+    const x = touch.clientX - this.dragOffset.x;
+    const y = touch.clientY - this.dragOffset.y;
+    
+    // Keep within viewport bounds
+    const maxX = window.innerWidth - container.offsetWidth;
+    const maxY = window.innerHeight - container.offsetHeight;
+    
+    const clampedX = Math.max(0, Math.min(x, maxX));
+    const clampedY = Math.max(0, Math.min(y, maxY));
+    
+    container.style.left = clampedX + 'px';
+    container.style.top = clampedY + 'px';
+    container.style.transform = 'none';
+    
+    e.preventDefault();
+  }
+
+  /**
+   * Handle touch end for mobile drag end
+   */
+  handleTouchEnd(e) {
+    const wasActuallyDragging = this.isDragging;
+    this.isDragging = false;
+    
+    const container = document.getElementById('scrollstop-timer-container');
+    
+    if (container) {
+      container.style.cursor = 'grab';
+      
+      // Save position if we actually dragged
+      if (wasActuallyDragging) {
+        this.saveTimerPosition();
+      } else {
+        // If we didn't drag, treat this as a tap to hide
+        const tapDuration = Date.now() - this.mouseDownTime;
+        if (tapDuration < 300 && !this.hasDragged) {
+          this.handleTimerClick();
+        }
+      }
+    }
+    
+    document.removeEventListener('touchmove', this.handleTouchMove);
+    document.removeEventListener('touchend', this.handleTouchEnd);
+    
+    e.preventDefault();
+  }
+
+  /**
    * Save timer position to storage
    */
   async saveTimerPosition() {
@@ -336,7 +437,7 @@ class TimerTracker {
   /**
    * Handle timer click - hide timer
    */
-  async handleTimerClick() {
+  async handleTimerClick(e) {
     // Don't hide if we just finished dragging
     if (this.hasDragged) {
       this.hasDragged = false;
@@ -345,8 +446,14 @@ class TimerTracker {
     
     // Only hide on actual click (not after drag)
     const clickDuration = Date.now() - this.mouseDownTime;
-    if (clickDuration < 200) { // Quick click
+    if (clickDuration < 300) { // Quick tap/click
       await this.hideTimer();
+    }
+    
+    // Prevent event bubbling
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
   }
 
@@ -504,6 +611,8 @@ class TimerTracker {
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
+    document.removeEventListener('touchmove', this.handleTouchMove);
+    document.removeEventListener('touchend', this.handleTouchEnd);
     
     // Clear intervals
     if (this.updateInterval) {

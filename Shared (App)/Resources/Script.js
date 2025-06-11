@@ -58,16 +58,36 @@ function createButtons() {
 
     // Welcome screen - Get Started button
     const getStartedContainer = document.getElementById('get-started-button');
-    if (getStartedContainer) {
-        new HeadlessButton('Get Started', {
-            color: 'blue',
-            onClick: () => navigateToScreen('step1')
-        }).render(getStartedContainer);
+    if (getStartedContainer && getStartedContainer.children.length === 0) {
+        if (typeof HeadlessButton !== 'undefined') {
+            new HeadlessButton('Get Started', {
+                color: 'blue',
+                onClick: () => navigateToScreen('step1')
+            }).render(getStartedContainer);
+        } else {
+            // Fallback: create simple button
+            const button = document.createElement('button');
+            button.textContent = 'Get Started';
+            button.className = 'primary-button';
+            button.style.cssText = `
+                background: #007AFF;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                font-weight: 500;
+                margin: 1rem 0;
+            `;
+            button.addEventListener('click', () => navigateToScreen('step1'));
+            getStartedContainer.appendChild(button);
+        }
     }
 
     // Step 1 - Settings button
     const openSettingsContainer = document.getElementById('open-settings-button');
-    if (openSettingsContainer) {
+    if (openSettingsContainer && openSettingsContainer.children.length === 0) {
         new HeadlessButton('📱 Open Settings App', {
             color: 'blue',
             onClick: openSettingsApp

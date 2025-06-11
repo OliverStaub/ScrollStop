@@ -94,10 +94,10 @@ class GlassmorphismTimer {
 
     background: [
       "background: rgba(0, 0, 0, 0.25)",
-      "backdrop-filter: blur(15px)",
-      "-webkit-backdrop-filter: blur(15px)",
-      "border: 1.5px solid rgba(255, 255, 255, 0.3)",
-      "box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.2)",
+      "backdrop-filter: blur(12px) saturate(150%)",
+      "-webkit-backdrop-filter: blur(12px) saturate(150%)",
+      "border: 1.5px solid rgba(255, 255, 255, 0.22)",
+      "box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), inset 0px 1px 0px rgba(255, 255, 255, 0.27)",
       "position: absolute",
       "top: 0",
       "left: 0",
@@ -132,7 +132,7 @@ class GlassmorphismTimer {
     active: ["transform: scale(0.98)"],
 
     running: [
-      "box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.4), 0px 0px 20px rgba(52, 199, 89, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.2)",
+      "box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), 0px 0px 20px rgba(52, 199, 89, 0.6), inset 0px 1px 0px rgba(255, 255, 255, 0.27)",
     ],
   };
 
@@ -263,9 +263,9 @@ class GlassmorphismTimer {
     if (bg) {
       if (this.isActive) {
         bg.style.boxShadow =
-          "0px 4px 32px rgba(0, 0, 0, 0.4), 0px 0px 20px rgba(52, 199, 89, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.2)";
+          "0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), 0px 0px 20px rgba(52, 199, 89, 0.6), inset 0px 1px 0px rgba(255, 255, 255, 0.27)";
       } else {
-        bg.style.boxShadow = "0px 4px 32px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.2)";
+        bg.style.boxShadow = "0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), inset 0px 1px 0px rgba(255, 255, 255, 0.27)";
       }
     }
   }

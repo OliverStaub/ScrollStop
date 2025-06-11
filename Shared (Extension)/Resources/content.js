@@ -38,7 +38,6 @@ class ScrollStopCoordinator {
       await this.checkCurrentSite();
 
       this.isInitialized = true;
-      console.log("ScrollStop coordinator initialized");
     } catch (error) {
       console.error("Error initializing ScrollStop coordinator:", error);
     }
@@ -57,7 +56,6 @@ class ScrollStopCoordinator {
       if (isTrackedSite) {
         this.timerTracker = new TimerTracker();
         await this.timerTracker.initialize();
-        console.log("Timer tracker initialized for:", hostname);
       }
     } catch (error) {
       console.error("Error initializing timer tracker:", error);
@@ -122,17 +120,16 @@ class ScrollStopCoordinator {
 
     this.doomscrollDetector = new DoomscrollDetector({
       scrollLimit: 4000, // Can be made configurable
+      swipeLimit: 15, // Number of swipes for YouTube Shorts/TikTok
     });
 
     this.doomscrollDetector.initialize();
-    console.log("Doomscroll detection started for:", this.currentHostname);
   }
 
   /**
    * Handle doomscroll detection event
    */
   async handleDoomscrollDetected(event) {
-    console.log("Doomscroll detected:", event.detail);
 
     try {
       // Create time block immediately
@@ -154,7 +151,6 @@ class ScrollStopCoordinator {
    * Handle animation completion event
    */
   handleAnimationComplete(event) {
-    console.log("Doomscroll animation complete:", event.detail);
 
     // Show transition screen
     this.transitionScreen = new TransitionScreen({
@@ -168,7 +164,6 @@ class ScrollStopCoordinator {
    * Handle transition screen completion event
    */
   handleTransitionComplete(event) {
-    console.log("Transition screen complete:", event.detail);
 
     // Show blocking screen
     this.showBlockingScreen();
@@ -190,7 +185,6 @@ class ScrollStopCoordinator {
    */
   handleTimeBlockRemoved(event) {
     if (event.detail.hostname === this.currentHostname) {
-      console.log("Time block removed, reloading page");
       window.location.reload();
     }
   }
