@@ -15,7 +15,7 @@
     "format:check": "prettier --check .",
     "validate": "npm run lint && npm run format:check && npm run test",
     "validate:manifest": "node scripts/validate-manifest.js",
-    "validate:sites": "node scripts/validate-sites.js", 
+    "validate:sites": "node scripts/validate-sites.js",
     "validate:extension": "npm run validate:manifest && npm run validate:sites && npm run build:check",
     "build:check": "node scripts/check-manifest-paths.js",
     "precommit": "npm run format && npm run validate"
