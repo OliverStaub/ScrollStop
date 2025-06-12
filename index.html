@@ -25,42 +25,21 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
         }
-        /* Force visible text colors on all components */
-        [data-slot="text"], 
-        [data-slot="text"] *,
-        p, p *,
-        span, span * {
-            color: #374151 !important; /* gray-700 */
+        
+        /* Ensure dark mode detection works properly */
+        @media (prefers-color-scheme: dark) {
+            .dark-auto {
+                @apply dark;
+            }
         }
-        .dark [data-slot="text"], 
-        .dark [data-slot="text"] *,
-        .dark p, .dark p *,
-        .dark span, .dark span * {
-            color: #d1d5db !important; /* gray-300 */
-        }
-        [data-slot="heading"],
-        [data-slot="heading"] *,
-        h1, h1 *, h2, h2 *, h3, h3 *, h4, h4 *, h5, h5 *, h6, h6 * {
-            color: #111827 !important; /* gray-900 */
-        }
-        .dark [data-slot="heading"],
-        .dark [data-slot="heading"] *,
-        .dark h1, .dark h1 *, .dark h2, .dark h2 *, .dark h3, .dark h3 *, 
-        .dark h4, .dark h4 *, .dark h5, .dark h5 *, .dark h6, .dark h6 * {
-            color: #f9fafb !important; /* gray-50 */
-        }
-        /* Force badge text visibility */
-        .badge-text,
-        .badge-text * {
-            color: inherit !important;
-        }
-        /* Force all text to be visible - last resort */
-        body * {
-            visibility: visible !important;
-        }
+        
+        /* Custom accent color for ScrollStop branding */
+        .text-accent { color: #34c759; }
+        .bg-accent { background-color: #34c759; }
+        .border-accent { border-color: #34c759; }
     </style>
 </head>
-<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen dark-auto">
     <!-- Hero Section -->
     <div class="container mx-auto px-6 py-12">
         <div class="text-center mb-16">
@@ -142,132 +121,109 @@
     </div>
 
     <script>
-        // Initialize components with better text visibility
+        // Initialize components
         document.addEventListener('DOMContentLoaded', function() {
+            // Add dark mode class if system prefers dark
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+
             // Hero section
             new HeadlessHeading('🌱 ScrollStop', { 
                 level: 1,
-                className: 'text-4xl md:text-6xl font-bold'
+                className: 'text-4xl md:text-6xl font-bold text-center'
             }).render('#main-title');
             
             new HeadlessText('Break Free from Endless Scrolling', {
-                className: 'text-xl font-medium'
+                className: 'text-xl font-medium text-center'
             }).render('#subtitle');
             
             // Hero badges
             new HeadlessBadge('Safari Extension', { 
-                color: 'zinc',
-                className: 'badge-text'
+                color: 'zinc'
             }).render('#hero-badges');
             new HeadlessBadge('Privacy First', { 
-                color: 'green',
-                className: 'badge-text'
+                color: 'green'
             }).render('#hero-badges');
             new HeadlessBadge('Free & Open Source', { 
-                color: 'zinc',
-                className: 'badge-text'
+                color: 'zinc'
             }).render('#hero-badges');
             
             new HeadlessText('ScrollStop is a Safari extension designed to help you reclaim your time and mental well-being by preventing endless scrolling on social media sites and tracking news reading habits.', {
-                className: 'text-lg leading-relaxed'
+                className: 'text-lg leading-relaxed text-center'
             }).render('#hero-description');
 
             // Features
             new HeadlessHeading('Smart Detection', { 
-                level: 3,
-                className: 'font-semibold'
+                level: 3
             }).render('#feature-1-title');
-            new HeadlessText('Automatically detects excessive scrolling behavior on popular social media sites.', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#feature-1-desc');
+            new HeadlessText('Automatically detects excessive scrolling behavior on popular social media sites.').render('#feature-1-desc');
             
             new HeadlessHeading('Time Blocking', { 
-                level: 3,
-                className: 'font-semibold'
+                level: 3
             }).render('#feature-2-title');
-            new HeadlessText('Blocks access for 60 minutes when doomscrolling is detected, with persistent timer tracking.', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#feature-2-desc');
+            new HeadlessText('Blocks access for 60 minutes when doomscrolling is detected, with persistent timer tracking.').render('#feature-2-desc');
             
             new HeadlessHeading('News Tracking', { 
-                level: 3,
-                className: 'font-semibold'
+                level: 3
             }).render('#feature-3-title');
-            new HeadlessText('Monitors news reading time with 20-minute daily limits and smart blocking.', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#feature-3-desc');
+            new HeadlessText('Monitors news reading time with 20-minute daily limits and smart blocking.').render('#feature-3-desc');
             
             new HeadlessHeading('Privacy First', { 
-                level: 3,
-                className: 'font-semibold'
+                level: 3
             }).render('#feature-4-title');
-            new HeadlessText('All blocking happens locally on your device. No data is sent to external servers.', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#feature-4-desc');
+            new HeadlessText('All blocking happens locally on your device. No data is sent to external servers.').render('#feature-4-desc');
 
             // How it works
             new HeadlessHeading('How It Works', { 
                 level: 2,
-                className: 'text-3xl font-bold'
+                className: 'text-3xl font-bold text-center'
             }).render('#how-it-works-title');
             
             new HeadlessHeading('Monitor', { 
-                level: 4,
-                className: 'font-semibold'
+                level: 4
             }).render('#step-1-title');
-            new HeadlessText('ScrollStop monitors your scrolling behavior and time spent on blocked sites', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#step-1-desc');
+            new HeadlessText('ScrollStop monitors your scrolling behavior and time spent on blocked sites').render('#step-1-desc');
             
             new HeadlessHeading('Detect', { 
-                level: 4,
-                className: 'font-semibold'
+                level: 4
             }).render('#step-2-title');
-            new HeadlessText('When excessive scrolling or time limits are reached, a warning animation appears', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#step-2-desc');
+            new HeadlessText('When excessive scrolling or time limits are reached, a warning animation appears').render('#step-2-desc');
             
             new HeadlessHeading('Block', { 
-                level: 4,
-                className: 'font-semibold'
+                level: 4
             }).render('#step-3-title');
-            new HeadlessText('The site is blocked with a countdown timer and alternative activity suggestions', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#step-3-desc');
+            new HeadlessText('The site is blocked with a countdown timer and alternative activity suggestions').render('#step-3-desc');
             
             new HeadlessHeading('Redirect', { 
-                level: 4,
-                className: 'font-semibold'
+                level: 4
             }).render('#step-4-title');
-            new HeadlessText('You\\'re encouraged to do something more productive with personalized suggestions', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#step-4-desc');
+            new HeadlessText('You\'re encouraged to do something more productive with personalized suggestions').render('#step-4-desc');
 
             // Supported sites
             new HeadlessHeading('Supported Sites', { 
                 level: 2,
-                className: 'text-3xl font-bold'
+                className: 'text-3xl font-bold text-center'
             }).render('#supported-sites-title');
             
             const socialSites = ['Facebook', 'Twitter/X', 'Instagram', 'Reddit', 'TikTok', 'YouTube', 'LinkedIn', 'Pinterest'];
             socialSites.forEach(site => {
                 new HeadlessBadge(site, { 
-                    color: 'zinc',
-                    className: 'badge-text'
+                    color: 'zinc'
                 }).render('#site-badges');
             });
             
             new HeadlessText('Plus comprehensive news sites including major publications from US, Germany, Switzerland, and Austria.', {
-                className: 'max-w-2xl mx-auto'
+                className: 'text-center'
             }).render('#supported-sites-desc');
 
             // CTA
             new HeadlessHeading('Ready to Reclaim Your Time?', { 
                 level: 2,
-                className: 'text-3xl font-bold text-white'
+                className: 'text-3xl font-bold text-white text-center'
             }).render('#cta-title');
             new HeadlessText('ScrollStop is available as a Safari Web Extension for both iOS and macOS. Take control of your digital habits today.', {
-                className: 'text-gray-200 max-w-2xl mx-auto'
+                className: 'text-gray-200 text-center'
             }).render('#cta-desc');
             
             new HeadlessButton('Available on App Store', { 
@@ -281,9 +237,7 @@
             }).render('#cta-buttons');
 
             // Footer
-            new HeadlessText('© 2025 Oliver Staub. Made with 💚 to help you touch grass.', {
-                className: 'text-gray-600 dark:text-gray-400'
-            }).render('#footer-text');
+            new HeadlessText('© 2025 Oliver Staub. Made with 💚 to help you touch grass.').render('#footer-text');
         });
     </script>
 </body>

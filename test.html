@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Test - ScrollStop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        accent: '#34c759'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="jscomponents/heading.js"></script>
+    <script src="jscomponents/text.js"></script>
+    <script src="jscomponents/badge.js"></script>
+    <script src="jscomponents/button.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <!-- Test Dark Mode Toggle -->
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Component Test Page</h1>
+            <button id="dark-toggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
+                Toggle Dark Mode
+            </button>
+        </div>
+
+        <!-- Heading Components -->
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold border-b pb-2">Heading Components</h2>
+            <div id="heading-h1" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"></div>
+            <div id="heading-h2" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"></div>
+            <div id="heading-h3" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"></div>
+        </section>
+
+        <!-- Text Components -->
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold border-b pb-2">Text Components</h2>
+            <div id="text-normal" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"></div>
+            <div id="text-custom" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"></div>
+        </section>
+
+        <!-- Badge Components -->
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold border-b pb-2">Badge Components</h2>
+            <div id="badges" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg flex flex-wrap gap-2"></div>
+        </section>
+
+        <!-- Button Components -->
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold border-b pb-2">Button Components</h2>
+            <div id="buttons" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg flex flex-wrap gap-2"></div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dark mode toggle functionality
+            const darkToggle = document.getElementById('dark-toggle');
+            darkToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+            });
+
+            // Auto-detect system preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+
+            // Test Heading Components
+            new HeadlessHeading('This is H1 Heading', { 
+                level: 1,
+                className: 'text-4xl font-bold'
+            }).render('#heading-h1');
+
+            new HeadlessHeading('This is H2 Heading', { 
+                level: 2,
+                className: 'text-3xl font-semibold'
+            }).render('#heading-h2');
+
+            new HeadlessHeading('This is H3 Heading', { 
+                level: 3
+            }).render('#heading-h3');
+
+            // Test Text Components
+            new HeadlessText('This is normal text using HeadlessText component. It should be visible in both light and dark modes with proper contrast.').render('#text-normal');
+
+            new HeadlessText('This is custom styled text with larger font size and different color.', {
+                className: 'text-lg text-blue-600 dark:text-blue-400'
+            }).render('#text-custom');
+
+            // Test Badge Components
+            const badgeColors = ['zinc', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
+            badgeColors.forEach(color => {
+                new HeadlessBadge(color, { color }).render('#badges');
+            });
+
+            // Test Button Components
+            const buttonColors = ['dark', 'light', 'zinc', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
+            buttonColors.forEach(color => {
+                new HeadlessButton(color, { 
+                    color,
+                    onClick: () => alert(`Clicked ${color} button!`)
+                }).render('#buttons');
+            });
+        });
+    </script>
+</body>
+</html>
