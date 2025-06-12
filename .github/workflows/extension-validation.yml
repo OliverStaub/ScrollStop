@@ -21,10 +21,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+
+      - name: Cache node_modules and npm cache
+        id: npm-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}-v2
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Verify dependencies (cache hit)
+        if: steps.npm-cache.outputs.cache-hit == 'true'
+        run: echo "✅ Using cached dependencies - install skipped"
 
       - name: Validate manifest.json syntax
         run: |
@@ -199,10 +215,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+
+      - name: Cache node_modules and npm cache
+        id: npm-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}-v2
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Verify dependencies (cache hit)
+        if: steps.npm-cache.outputs.cache-hit == 'true'
+        run: echo "✅ Using cached dependencies - install skipped"
 
       - name: Lint extension JavaScript files
         run: npm run lint -- 'Shared (Extension)/Resources/**/*.js'
@@ -222,10 +254,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+
+      - name: Cache node_modules and npm cache
+        id: npm-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}-v2
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Verify dependencies (cache hit)
+        if: steps.npm-cache.outputs.cache-hit == 'true'
+        run: echo "✅ Using cached dependencies - install skipped"
 
       - name: Run unit tests for changed modules
         run: |
