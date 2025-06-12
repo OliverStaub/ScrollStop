@@ -119,7 +119,7 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 - **Choice Dialog Feature**: When accessing blocked sites, users see a dialog with 3 options: Continue with ScrollStop (full functionality), Timer Only (no blocking), or Block Now (immediate block). Appears on every page reload.
 - **Adult Sites Blocking**: Third site category with 4-hour block duration (vs 1-hour for social/news). Comprehensive 89+ site blocklist including major platforms, streaming, cam sites, and hentai. Timer tracking and choice dialog work identically to other categories.
 - **Precommit Workflow**: ALWAYS run `npm run precommit` before committing. This automatically formats code with Prettier, then runs full validation (ESLint, tests, manifest validation). Never commit without this.
-- **Feature Branch Workflow**: When working with Claude Code, create feature branches for new development. Create pull requests to trigger CI/CD validation before merging to main. This ensures all tests pass and code quality is maintained.
+- **Feature Branch Workflow**: When working with Claude Code, ALWAYS create feature branches for new development using descriptive names like `fix/reddit-choice-dialog-text-alignment` or `feature/add-system-language-detection`. Create pull requests to trigger CI/CD validation before merging to main. This ensures all tests pass and code quality is maintained. NEVER work directly on main branch. Use feature branches for EVERY bug fix or new feature.
 - **npm Caching**: CI pipeline uses comprehensive caching strategy (setup-node + actions/cache) to reduce npm install time from ~5 minutes to ~30 seconds on cache hits.
 
 ### iOS App Personalization Features Implementation (Session Summary)
@@ -216,11 +216,13 @@ The app now transforms from a simple blocking tool into a personalized productiv
 **Critical Web Component Styling Rules:**
 
 **NEVER override TailwindUI/HeadlessUI component styles with aggressive CSS:**
+
 - Components have sophisticated built-in dark/light mode styling (e.g., `text-zinc-950 dark:text-white`)
 - Custom CSS with `!important` rules breaks component functionality
 - Components are designed to handle their own theming automatically
 
 **Proper Implementation:**
+
 - Let components manage their own styling through their built-in classes
 - Use system dark mode detection: `window.matchMedia('(prefers-color-scheme: dark)')`
 - Apply `dark` class to `document.documentElement` for proper Tailwind dark mode
@@ -228,16 +230,45 @@ The app now transforms from a simple blocking tool into a personalized productiv
 - Test components in isolation to verify proper rendering
 
 **Common Mistakes to Avoid:**
+
 - Forcing text colors with `!important` overrides
-- Overriding component `data-slot` attributes with custom styles  
+- Overriding component `data-slot` attributes with custom styles
 - Fighting component's natural theming system
 - Not testing dark/light mode transitions
 
 **Best Practices:**
+
 - Create test pages to verify component functionality
 - Use component's built-in color and styling options
 - Respect component design systems and let them work as intended
 - Focus custom styling on layout and branding, not core component appearance
+
+### Choice Dialog Reddit Mobile Bug Fix (Session Summary)
+
+**Issue:** Button text in choice dialog was cut off/misaligned on Reddit mobile, showing only half of "Timer Only" text.
+
+**Root Cause:** Reddit's aggressive CSS was interfering with button text positioning and alignment in the fallback simple dialog implementation.
+
+**Solution Applied:**
+
+- Added defensive CSS styling with `!important` declarations for all button properties
+- Used `display: flex !important` with `align-items: center` and `justify-content: center` for proper text centering
+- Added `min-height: 44px` for consistent button height on mobile
+- Reset all potential conflicting properties: `line-height`, `vertical-align`, `text-align`, `text-indent`, etc.
+- Used `setProperty()` with `!important` in hover effects to maintain alignment
+- Added `appearance: none` and `-webkit-appearance: none` to override browser defaults
+
+**Key Defensive Properties:**
+
+- `line-height: 1.2 !important` - Prevents text spacing issues
+- `text-align: center !important` - Centers text horizontally
+- `vertical-align: middle !important` - Centers text vertically
+- `display: flex !important` - Enables proper flexbox centering
+- `align-items: center !important` - Centers content vertically in flex container
+- `justify-content: center !important` - Centers content horizontally in flex container
+- `text-rendering: auto !important` - Prevents text rendering conflicts
+
+**Why This Happened:** Third-party sites like Reddit have CSS that can override extension styles, especially affecting text positioning in buttons. Using `!important` and defensive styling prevents these conflicts.
 
 ## Design System
 
