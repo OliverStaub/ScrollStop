@@ -1,0 +1,9 @@
+node_modules/
+coverage/
+*.xcodeproj/
+*.xcworkspace/
+DerivedData/
+build/
+dist/
+*.log
+.DS_Store

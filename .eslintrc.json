@@ -1,0 +1,70 @@
+{
+  "env": {
+    "browser": true,
+    "webextensions": true,
+    "es2022": true,
+    "jest": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "jest"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "prefer-const": "error",
+    "no-var": "error",
+    "eqeqeq": "error",
+    "curly": "error",
+    "no-duplicate-imports": "error",
+    "no-unreachable": "error",
+    "no-undef": "error",
+    "consistent-return": "warn"
+  },
+  "globals": {
+    "browser": "readonly",
+    "chrome": "readonly",
+    "TimeManager": "readonly",
+    "StorageHelper": "readonly",
+    "DoomscrollDetector": "readonly",
+    "DoomscrollAnimation": "readonly",
+    "TransitionScreen": "readonly",
+    "BlockingScreen": "readonly",
+    "TimerTracker": "readonly",
+    "ChoiceDialog": "readonly",
+    "GlassmorphismTimer": "readonly",
+    "HeadlessDialog": "readonly",
+    "HeadlessButton": "readonly",
+    "HeadlessDialogTitle": "readonly",
+    "HeadlessDialogBody": "readonly"
+  },
+  "overrides": [
+    {
+      "files": ["tests/**/*.js"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "no-console": "off"
+      }
+    },
+    {
+      "files": ["scripts/**/*.js"],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
+}

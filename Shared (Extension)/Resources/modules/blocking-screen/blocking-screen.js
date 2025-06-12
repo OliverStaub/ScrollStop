@@ -58,7 +58,7 @@ if (typeof window.BlockingScreen === "undefined") {
      * Apply styles to blocking screen element
      */
     applyBlockingStyles() {
-      if (!this.blockingElement) return;
+      if (!this.blockingElement) {return;}
 
       this.blockingElement.style.cssText = `
         height: 100vh;
@@ -84,7 +84,7 @@ if (typeof window.BlockingScreen === "undefined") {
      * Update blocking screen content
      */
     async updateBlockingContent() {
-      if (!this.blockingElement) return;
+      if (!this.blockingElement) {return;}
 
       const suggestionsHTML = await this.getSuggestionsHTML();
       
@@ -423,7 +423,7 @@ if (typeof window.BlockingScreen === "undefined") {
      * @param {string} siteName - Name of the blocked site
      */
     updateSiteName(siteName) {
-      if (!this.blockingElement) return;
+      if (!this.blockingElement) {return;}
 
       const titleElement = this.blockingElement.querySelector("p");
       if (titleElement) {

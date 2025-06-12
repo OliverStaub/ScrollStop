@@ -1,0 +1,274 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  lint-and-test:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run ESLint
+        run: npm run lint
+      
+      - name: Run Prettier check
+        run: npm run format:check
+      
+      - name: Validate manifest.json
+        run: npm run validate:manifest
+      
+      - name: Validate sites.json
+        run: npm run validate:sites
+      
+      - name: Check manifest file paths
+        run: npm run build:check
+      
+      - name: Run unit tests
+        run: npm run test:unit
+      
+      - name: Run integration tests
+        run: npm run test:integration
+      
+      - name: Generate test coverage
+        run: npm run test:coverage
+        
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  build-macos:
+    name: Build macOS Extension
+    runs-on: macos-latest
+    needs: lint-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      
+      - name: Build macOS Extension
+        run: |
+          xcodebuild -project ScrollStop.xcodeproj \
+            -scheme "ScrollStop (macOS)" \
+            -configuration Release \
+            clean build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
+      
+      - name: Archive macOS build artifacts
+        uses: actions/upload-artifact@v3
+        if: success()
+        with:
+          name: macos-build
+          path: |
+            build/Release/
+            !build/Release/**/*.dSYM/
+          retention-days: 7
+
+  build-ios:
+    name: Build iOS Extension
+    runs-on: macos-latest
+    needs: lint-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      
+      - name: Build iOS Extension
+        run: |
+          xcodebuild -project ScrollStop.xcodeproj \
+            -scheme "ScrollStop (iOS)" \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            clean build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
+      
+      - name: Archive iOS build artifacts
+        uses: actions/upload-artifact@v3
+        if: success()
+        with:
+          name: ios-build
+          path: |
+            build/Release-iphoneos/
+            !build/Release-iphoneos/**/*.dSYM/
+          retention-days: 7
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run Semgrep security scan
+        uses: semgrep/semgrep-action@v1
+        with:
+          publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
+          publishDeployment: true
+          generateSarif: "1"
+        env:
+          SEMGREP_RULES: >-
+            p/security-audit
+            p/secrets
+            p/javascript
+      
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: semgrep.sarif
+      
+      - name: Check for secrets with TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  dependency-scan:
+    name: Dependency Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+      
+      - name: Run dependency review
+        uses: actions/dependency-review-action@v3
+        if: github.event_name == 'pull_request'
+
+  performance-test:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run performance tests
+        run: |
+          # Add performance test script when available
+          echo "Performance tests placeholder"
+      
+      - name: Memory leak detection
+        run: |
+          # Add memory leak test script when available
+          echo "Memory leak tests placeholder"
+
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for better analysis
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests with coverage
+        run: npm run test:coverage
+      
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=oliverstaub_ScrollStop
+            -Dsonar.organization=oliverstaub
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.sources=Shared\ \(Extension\)/Resources
+            -Dsonar.tests=tests
+            -Dsonar.exclusions=**/*.test.js,**/node_modules/**,**/coverage/**
+
+  notification:
+    name: Notification
+    runs-on: ubuntu-latest
+    needs: [lint-and-test, build-macos, build-ios, security-scan]
+    if: always()
+    
+    steps:
+      - name: Check job results
+        run: |
+          if [[ "${{ needs.lint-and-test.result }}" == "failure" ]]; then
+            echo "❌ Tests failed"
+            exit 1
+          elif [[ "${{ needs.build-macos.result }}" == "failure" ]]; then
+            echo "❌ macOS build failed"
+            exit 1
+          elif [[ "${{ needs.build-ios.result }}" == "failure" ]]; then
+            echo "❌ iOS build failed"
+            exit 1
+          else
+            echo "✅ All checks passed"
+          fi

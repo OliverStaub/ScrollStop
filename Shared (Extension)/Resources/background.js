@@ -35,7 +35,7 @@ browser.runtime.onInstalled.addListener(() => {
 });
 
 // Handle messages from content scripts
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
   console.log("Background received request:", request);
 
   if (request.action === "getBlockedSites") {
@@ -45,6 +45,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "getNewsSites") {
     return Promise.resolve({ newsSites: newsSites });
   }
+  
+  return false;
 });
 
 // Note: Removed tab monitoring since we only run on specific sites now

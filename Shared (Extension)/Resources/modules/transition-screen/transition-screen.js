@@ -57,7 +57,7 @@ if (typeof window.TransitionScreen === "undefined") {
      * Apply styles to transition element
      */
     applyTransitionStyles() {
-      if (!this.transitionElement) return;
+      if (!this.transitionElement) {return;}
 
       this.transitionElement.style.cssText = `
         height: 100vh;
@@ -83,7 +83,7 @@ if (typeof window.TransitionScreen === "undefined") {
      * Update transition screen content
      */
     updateTransitionContent() {
-      if (!this.transitionElement) return;
+      if (!this.transitionElement) {return;}
 
       this.transitionElement.innerHTML = `
         <div style="max-width: 600px; width: 100%; padding: 2rem;">
@@ -178,7 +178,7 @@ if (typeof window.TransitionScreen === "undefined") {
      * @param {string} message - Custom message to display
      */
     updateMessage(message) {
-      if (!this.transitionElement) return;
+      if (!this.transitionElement) {return;}
 
       const messageElement =
         this.transitionElement.querySelector("div:nth-child(3)");

@@ -1,0 +1,65 @@
+{
+  "name": "scrollstop-extension",
+  "version": "2.0.0",
+  "description": "Safari Web Extension that prevents doomscrolling on social media sites and tracks news reading time",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "jest --testPathPattern=tests/unit --testTimeout=10000",
+    "test:integration": "jest --testPathPattern=tests/integration --testTimeout=30000",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint 'Shared (Extension)/Resources/**/*.js' 'tests/**/*.js' 'scripts/**/*.js'",
+    "lint:fix": "eslint --fix 'Shared (Extension)/Resources/**/*.js' 'tests/**/*.js' 'scripts/**/*.js'",
+    "format": "prettier --write 'Shared (Extension)/Resources/**/*.js' 'tests/**/*.js' 'scripts/**/*.js' '*.json' '*.md'",
+    "format:check": "prettier --check 'Shared (Extension)/Resources/**/*.js' 'tests/**/*.js' 'scripts/**/*.js' '*.json' '*.md'",
+    "validate": "npm run lint && npm run format:check && npm run test",
+    "validate:manifest": "node scripts/validate-manifest.js",
+    "validate:sites": "node scripts/validate-sites.js",
+    "build:check": "node scripts/check-manifest-paths.js",
+    "precommit": "npm run validate"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@types/jest": "^29.5.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^27.9.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.2.0",
+    "puppeteer": "^21.9.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
+    "moduleDirectories": ["node_modules", "Shared (Extension)/Resources"],
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "Shared (Extension)/Resources/**/*.js",
+      "!Shared (Extension)/Resources/components/**/*.js"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "html"],
+    "globals": {
+      "browser": {},
+      "chrome": {}
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OliverStaub/ScrollStop.git"
+  },
+  "keywords": [
+    "safari-extension",
+    "doomscrolling",
+    "productivity",
+    "social-media",
+    "news-tracker",
+    "time-management"
+  ],
+  "author": "Oliver Staub",
+  "license": "MIT"
+}

@@ -159,7 +159,7 @@ class ScrollStopCoordinator {
   /**
    * Handle doomscroll detection event
    */
-  async handleDoomscrollDetected(event) {
+  async handleDoomscrollDetected(_event) {
 
     try {
       // Create time block immediately
@@ -180,7 +180,7 @@ class ScrollStopCoordinator {
   /**
    * Handle animation completion event
    */
-  handleAnimationComplete(event) {
+  handleAnimationComplete(_event) {
 
     // Show transition screen
     this.transitionScreen = new TransitionScreen({

@@ -71,7 +71,7 @@ if (typeof window.DoomscrollAnimation === "undefined") {
      * Apply styles to warning element
      */
     applyWarningStyles() {
-      if (!this.warningElement) return;
+      if (!this.warningElement) {return;}
 
       this.warningElement.style.cssText = `
         height: 100vh;
@@ -127,7 +127,7 @@ if (typeof window.DoomscrollAnimation === "undefined") {
      * Toggle warning element visibility for flashing effect
      */
     toggleWarningVisibility() {
-      if (!this.warningElement) return;
+      if (!this.warningElement) {return;}
 
       if (!this.isWarningVisible) {
         this.warningElement.style.opacity = "1";

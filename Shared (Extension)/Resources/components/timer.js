@@ -272,7 +272,7 @@ class GlassmorphismTimer {
 
   // Timer control methods
   start() {
-    if (this.isActive || this.currentTime <= 0) return this;
+    if (this.isActive || this.currentTime <= 0) {return this;}
 
     this.isActive = true;
     this.updateBackgroundShadow();
@@ -298,7 +298,7 @@ class GlassmorphismTimer {
   }
 
   stop() {
-    if (!this.isActive) return this;
+    if (!this.isActive) {return this;}
 
     this.isActive = false;
     this.updateBackgroundShadow();
@@ -366,12 +366,12 @@ class GlassmorphismTimer {
   // Utility methods
   updateSize(sizeOptions) {
     // Update size options
-    if (sizeOptions.width) this.options.width = sizeOptions.width;
-    if (sizeOptions.height) this.options.height = sizeOptions.height;
-    if (sizeOptions.fontSize) this.options.fontSize = sizeOptions.fontSize;
-    if (sizeOptions.padding) this.options.padding = sizeOptions.padding;
+    if (sizeOptions.width) {this.options.width = sizeOptions.width;}
+    if (sizeOptions.height) {this.options.height = sizeOptions.height;}
+    if (sizeOptions.fontSize) {this.options.fontSize = sizeOptions.fontSize;}
+    if (sizeOptions.padding) {this.options.padding = sizeOptions.padding;}
     if (sizeOptions.borderRadius)
-      this.options.borderRadius = sizeOptions.borderRadius;
+      {this.options.borderRadius = sizeOptions.borderRadius;}
 
     // Reapply styles
     this.element.style.cssText = this.getContainerStyles();

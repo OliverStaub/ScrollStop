@@ -217,7 +217,7 @@ class TimerTracker {
    * Handle mouse down for drag start
    */
   handleMouseDown(e) {
-    if (e.button !== 0) return; // Only left mouse button
+    if (e.button !== 0) {return;} // Only left mouse button
     
     this.mouseDownTime = Date.now();
     this.hasDragged = false;
@@ -255,10 +255,10 @@ class TimerTracker {
       }
     }
     
-    if (!this.isDragging) return;
+    if (!this.isDragging) {return;}
     
     const container = document.getElementById('scrollstop-timer-container');
-    if (!container) return;
+    if (!container) {return;}
     
     const x = e.clientX - this.dragOffset.x;
     const y = e.clientY - this.dragOffset.y;
@@ -343,10 +343,10 @@ class TimerTracker {
       }
     }
     
-    if (!this.isDragging) return;
+    if (!this.isDragging) {return;}
     
     const container = document.getElementById('scrollstop-timer-container');
-    if (!container) return;
+    if (!container) {return;}
     
     const x = touch.clientX - this.dragOffset.x;
     const y = touch.clientY - this.dragOffset.y;
@@ -401,7 +401,7 @@ class TimerTracker {
   async saveTimerPosition() {
     try {
       const container = document.getElementById('scrollstop-timer-container');
-      if (!container) return;
+      if (!container) {return;}
       
       const position = {
         left: container.style.left,
@@ -428,9 +428,9 @@ class TimerTracker {
       if (position) {
         const container = document.getElementById('scrollstop-timer-container');
         if (container) {
-          if (position.left) container.style.left = position.left;
-          if (position.top) container.style.top = position.top;
-          if (position.transform) container.style.transform = position.transform;
+          if (position.left) {container.style.left = position.left;}
+          if (position.top) {container.style.top = position.top;}
+          if (position.transform) {container.style.transform = position.transform;}
         }
       }
     } catch (error) {
@@ -484,7 +484,7 @@ class TimerTracker {
    * Start time tracking
    */
   startTracking() {
-    if (this.isActive) return;
+    if (this.isActive) {return;}
     
     this.isActive = true;
     this.startTime = Date.now();
@@ -499,7 +499,7 @@ class TimerTracker {
    * Stop time tracking and save accumulated time
    */
   async stopTracking() {
-    if (!this.isActive) return;
+    if (!this.isActive) {return;}
     
     this.isActive = false;
     
@@ -536,7 +536,7 @@ class TimerTracker {
    * Update timer display with current accumulated + session time
    */
   updateTimerDisplay() {
-    if (!this.timer || !this.isActive) return;
+    if (!this.timer || !this.isActive) {return;}
     
     const currentSessionTime = this.startTime ? 
       Math.floor((Date.now() - this.startTime) / 1000) : 0;
@@ -570,7 +570,7 @@ class TimerTracker {
     
     // Handle page focus/blur
     window.addEventListener('focus', () => {
-      if (!this.isActive) this.startTracking();
+      if (!this.isActive) {this.startTracking();}
     });
     
     window.addEventListener('blur', () => {

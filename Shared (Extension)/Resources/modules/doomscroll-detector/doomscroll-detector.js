@@ -136,7 +136,7 @@ if (typeof window.DoomscrollDetector === "undefined") {
      * Handle touch end for swipe detection
      */
     handleTouchEnd(e) {
-      if (!this.touchStartY) return;
+      if (!this.touchStartY) {return;}
       
       const touchEndY = e.changedTouches[0].clientY;
       const swipeDistance = this.touchStartY - touchEndY;
