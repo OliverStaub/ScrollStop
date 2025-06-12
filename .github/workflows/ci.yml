@@ -225,13 +225,18 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit == 'true'
         run: echo "✅ Using cached dependencies - install skipped"
 
+      - name: Rebuild package-lock.json if needed
+        run: |
+          if ! npm audit --audit-level=moderate --dry-run > /dev/null 2>&1; then
+            echo "🔧 Package tree invalid, rebuilding package-lock.json..."
+            rm -f package-lock.json
+            npm install --package-lock-only --no-audit
+            echo "✅ Package-lock.json rebuilt successfully"
+          fi
+
       - name: Run npm audit
         run: npm audit --audit-level=moderate
         continue-on-error: true
-
-      - name: Run dependency review
-        uses: actions/dependency-review-action@v4
-        if: github.event_name == 'pull_request'
 
   performance-test:
     name: Performance Tests

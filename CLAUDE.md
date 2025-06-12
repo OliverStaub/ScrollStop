@@ -121,6 +121,8 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 - **Precommit Workflow**: ALWAYS run `npm run precommit` before committing. This automatically formats code with Prettier, then runs full validation (ESLint, tests, manifest validation). Never commit without this.
 - **Feature Branch Workflow**: When working with Claude Code, ALWAYS create feature branches for new development using descriptive names like `fix/reddit-choice-dialog-text-alignment` or `feature/add-system-language-detection`. Create pull requests to trigger CI/CD validation before merging to main. This ensures all tests pass and code quality is maintained. NEVER work directly on main branch. Use feature branches for EVERY bug fix or new feature.
 - **npm Caching**: CI pipeline uses comprehensive caching strategy (setup-node + actions/cache) to reduce npm install time from ~5 minutes to ~30 seconds on cache hits.
+- **Dependabot Dependency Management**: Use GitHub Dependabot for automatic dependency updates instead of manual package version management. Prevents CI issues with bleeding-edge versions by using stable, tested version ranges.
+- **Stable Package Versions**: Use tilde (~) for patch version pinning on critical packages like Puppeteer to avoid registry sync issues with brand-new releases.
 
 ### iOS App Personalization Features Implementation (Session Summary)
 
