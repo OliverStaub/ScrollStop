@@ -305,7 +305,7 @@ describe('Extension Integration Flow', () => {
         },
       ];
 
-      mockBrowser.storage.local.get.mockImplementation((keys) => {
+      mockBrowser.storage.local.get.mockImplementation((_keys) => {
         return Promise.resolve({
           blockedSites: ['facebook.com', 'twitter.com'],
           newsSites: ['cnn.com', 'bbc.com'],

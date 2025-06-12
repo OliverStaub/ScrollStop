@@ -193,7 +193,7 @@ class ScrollStopCoordinator {
   /**
    * Handle transition screen completion event
    */
-  handleTransitionComplete(event) {
+  handleTransitionComplete(_event) {
 
     // Show blocking screen
     this.showBlockingScreen();
@@ -222,7 +222,7 @@ class ScrollStopCoordinator {
   /**
    * Handle news time limit exceeded event
    */
-  async handleNewsTimeLimitExceeded(event) {
+  async handleNewsTimeLimitExceeded(_event) {
     console.log('ScrollStop: News time limit exceeded');
     
     // Show blocking screen for news sites

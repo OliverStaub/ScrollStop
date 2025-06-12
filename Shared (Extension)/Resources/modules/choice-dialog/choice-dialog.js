@@ -432,7 +432,7 @@ class ChoiceDialog {
     this.cleanup();
 
     // No session storage - dialog will appear on every reload
-    console.log('ChoiceDialog: Choice made but not storing (shows on every reload):', choice);
+    // ChoiceDialog: Choice made but not storing (shows on every reload)
 
     // Fire event for coordinator
     const event = new CustomEvent('choice-dialog-complete', {
@@ -488,7 +488,7 @@ class ChoiceDialog {
       } else {
         sessionStorage.removeItem(key);
       }
-      console.log('ScrollStop: Cleared session choice for', hostname);
+      // ScrollStop: Cleared session choice for hostname
     } catch (error) {
       console.error('Error clearing session choice:', error);
     }
@@ -554,4 +554,9 @@ class ChoiceDialog {
   remove() {
     this.cleanup();
   }
+}
+
+// Export for use in modules
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = ChoiceDialog;
 }

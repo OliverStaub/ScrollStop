@@ -36,13 +36,15 @@ const StorageWrapper = {
       } else if (typeof chrome !== 'undefined' && chrome.storage) {
         return await chrome.storage.local.set(data);
       } else {
-        console.warn('No storage API available, using localStorage fallback');
+        // No storage API available, using localStorage fallback
         for (const [key, value] of Object.entries(data)) {
           localStorage.setItem(key, JSON.stringify(value));
         }
+        return Promise.resolve();
       }
     } catch (error) {
       console.error('Storage set error:', error);
+      return Promise.reject(error);
     }
   }
 };
@@ -521,7 +523,6 @@ class TimerTracker {
         
         if (limitExceeded) {
           // News time limit exceeded, show blocking screen
-          console.log('News time limit exceeded, triggering block');
           window.dispatchEvent(
             new CustomEvent("news-time-limit-exceeded", {
               detail: { sessionTime: sessionTimeMs },
