@@ -30,9 +30,7 @@ class HeadlessText {
   }
 
   static styles = {
-    base: [
-      'text-base/6 text-zinc-500 sm:text-sm/6 dark:text-zinc-400'
-    ]
+    base: ['text-base/6 text-zinc-500 sm:text-sm/6 dark:text-zinc-400'],
   };
 
   createElement() {
@@ -65,8 +63,8 @@ class HeadlessText {
   }
 
   addClass(className) {
-    this.options.className = this.options.className 
-      ? `${this.options.className} ${className}` 
+    this.options.className = this.options.className
+      ? `${this.options.className} ${className}`
       : className;
     this.element.classList.add(className);
     return this;
@@ -76,7 +74,7 @@ class HeadlessText {
     if (this.options.className) {
       this.options.className = this.options.className
         .split(' ')
-        .filter(cls => cls !== className)
+        .filter((cls) => cls !== className)
         .join(' ');
     }
     this.element.classList.remove(className);
@@ -124,8 +122,8 @@ class HeadlessTextLink {
 
   static styles = {
     base: [
-      'text-zinc-950 underline decoration-zinc-950/50 hover:decoration-zinc-950 dark:text-white dark:decoration-white/50 dark:hover:decoration-white'
-    ]
+      'text-zinc-950 underline decoration-zinc-950/50 hover:decoration-zinc-950 dark:text-white dark:decoration-white/50 dark:hover:decoration-white',
+    ],
   };
 
   createElement() {
@@ -204,9 +202,7 @@ class HeadlessStrong {
   }
 
   static styles = {
-    base: [
-      'font-medium text-zinc-950 dark:text-white'
-    ]
+    base: ['font-medium text-zinc-950 dark:text-white'],
   };
 
   createElement() {
@@ -270,8 +266,8 @@ class HeadlessCode {
 
   static styles = {
     base: [
-      'rounded-sm border border-zinc-950/10 bg-zinc-950/2.5 px-0.5 text-sm font-medium text-zinc-950 sm:text-[0.8125rem] dark:border-white/20 dark:bg-white/5 dark:text-white'
-    ]
+      'rounded-sm border border-zinc-950/10 bg-zinc-950/2.5 px-0.5 text-sm font-medium text-zinc-950 sm:text-[0.8125rem] dark:border-white/20 dark:bg-white/5 dark:text-white',
+    ],
   };
 
   createElement() {

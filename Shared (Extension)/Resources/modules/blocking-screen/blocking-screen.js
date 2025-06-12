@@ -1,7 +1,7 @@
 // modules/blocking-screen/blocking-screen.js
 // Module for showing the full blocking screen with countdown
 
-if (typeof window.BlockingScreen === "undefined") {
+if (typeof window.BlockingScreen === 'undefined') {
   class BlockingScreen {
     constructor(config = {}) {
       this.config = {
@@ -28,7 +28,7 @@ if (typeof window.BlockingScreen === "undefined") {
         // Start countdown updates
         this.startCountdownUpdates();
       } catch (error) {
-        console.error("Error showing blocking screen:", error);
+        console.error('Error showing blocking screen:', error);
         this.cleanup();
       }
     }
@@ -37,16 +37,16 @@ if (typeof window.BlockingScreen === "undefined") {
      * Clear all existing page content
      */
     clearPageContent() {
-      document.body.innerHTML = "";
+      document.body.innerHTML = '';
     }
 
     /**
      * Create the blocking screen element
      */
     async createBlockingElement() {
-      this.blockingElement = document.createElement("div");
-      this.blockingElement.id = "time-block-screen";
-      this.blockingElement.className = "blocking-screen";
+      this.blockingElement = document.createElement('div');
+      this.blockingElement.id = 'time-block-screen';
+      this.blockingElement.className = 'blocking-screen';
 
       this.applyBlockingStyles();
       await this.updateBlockingContent();
@@ -58,7 +58,9 @@ if (typeof window.BlockingScreen === "undefined") {
      * Apply styles to blocking screen element
      */
     applyBlockingStyles() {
-      if (!this.blockingElement) {return;}
+      if (!this.blockingElement) {
+        return;
+      }
 
       this.blockingElement.style.cssText = `
         height: 100vh;
@@ -84,16 +86,18 @@ if (typeof window.BlockingScreen === "undefined") {
      * Update blocking screen content
      */
     async updateBlockingContent() {
-      if (!this.blockingElement) {return;}
+      if (!this.blockingElement) {
+        return;
+      }
 
       const suggestionsHTML = await this.getSuggestionsHTML();
-      
+
       // Check if this is a news site
       const isNews = await StorageHelper.isCurrentSiteNews(window.location.href, this.hostname);
-      
-      const emoji = isNews ? "📰" : "🌱";
-      const title = isNews ? "News Break Time!" : "Time to Touch Grass!";
-      const message = isNews 
+
+      const emoji = isNews ? '📰' : '🌱';
+      const title = isNews ? 'News Break Time!' : 'Time to Touch Grass!';
+      const message = isNews
         ? "You've spent 20 minutes reading news today. Take a break for 60 minutes."
         : "You've been scrolling too much. This site is blocked for 60 minutes.";
 
@@ -118,7 +122,7 @@ if (typeof window.BlockingScreen === "undefined") {
               Loading...
             </div>
             <div style="font-size: 1.2rem; opacity: 0.8;">
-              until you can access ${isNews ? "news sites" : "this site"} again
+              until you can access ${isNews ? 'news sites' : 'this site'} again
             </div>
           </div>
           
@@ -135,7 +139,7 @@ if (typeof window.BlockingScreen === "undefined") {
       try {
         const personalData = await this.getPersonalData();
         const suggestions = this.generatePersonalizedSuggestions(personalData);
-        
+
         const suggestionsGrid = suggestions
           .map(
             (suggestion) => `
@@ -145,12 +149,12 @@ if (typeof window.BlockingScreen === "undefined") {
           </div>
         `
           )
-          .join("");
+          .join('');
 
         return `
           <div style="margin-top: 2rem;">
             <p style="font-size: 1.1rem; margin: 1rem 0; opacity: 0.8;">
-              ${personalData.hasData ? "Here are some personalized suggestions for you:" : "Here are some better things you could be doing:"}
+              ${personalData.hasData ? 'Here are some personalized suggestions for you:' : 'Here are some better things you could be doing:'}
             </p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
               ${suggestionsGrid}
@@ -158,7 +162,7 @@ if (typeof window.BlockingScreen === "undefined") {
           </div>
         `;
       } catch (error) {
-        console.error("Error generating suggestions:", error);
+        console.error('Error generating suggestions:', error);
         return this.getDefaultSuggestionsHTML();
       }
     }
@@ -176,20 +180,20 @@ if (typeof window.BlockingScreen === "undefined") {
           friends: [],
           goals: [],
           books: [],
-          hasData: false
+          hasData: false,
         };
 
         // Try to get data from browser storage (shared with iOS app)
         if (typeof browser !== 'undefined' && browser.storage && browser.storage.local) {
           const result = await browser.storage.local.get([
             'scrollstop_householdTasks',
-            'scrollstop_hobbies', 
+            'scrollstop_hobbies',
             'scrollstop_currentTasks',
             'scrollstop_friends',
             'scrollstop_goals',
-            'scrollstop_books'
+            'scrollstop_books',
           ]);
-          
+
           data.householdTasks = result.scrollstop_householdTasks || [];
           data.hobbies = result.scrollstop_hobbies || [];
           data.currentTasks = result.scrollstop_currentTasks || [];
@@ -198,7 +202,9 @@ if (typeof window.BlockingScreen === "undefined") {
           data.books = result.scrollstop_books || [];
         } else {
           // Fallback to localStorage
-          data.householdTasks = JSON.parse(localStorage.getItem('scrollstop_householdTasks') || '[]');
+          data.householdTasks = JSON.parse(
+            localStorage.getItem('scrollstop_householdTasks') || '[]'
+          );
           data.hobbies = JSON.parse(localStorage.getItem('scrollstop_hobbies') || '[]');
           data.currentTasks = JSON.parse(localStorage.getItem('scrollstop_currentTasks') || '[]');
           data.friends = JSON.parse(localStorage.getItem('scrollstop_friends') || '[]');
@@ -207,13 +213,17 @@ if (typeof window.BlockingScreen === "undefined") {
         }
 
         // Check if we have any personal data
-        data.hasData = data.householdTasks.length > 0 || data.hobbies.length > 0 || 
-                       data.currentTasks.length > 0 || data.friends.length > 0 || 
-                       data.goals.length > 0 || data.books.length > 0;
+        data.hasData =
+          data.householdTasks.length > 0 ||
+          data.hobbies.length > 0 ||
+          data.currentTasks.length > 0 ||
+          data.friends.length > 0 ||
+          data.goals.length > 0 ||
+          data.books.length > 0;
 
         return data;
       } catch (error) {
-        console.error("Error loading personal data:", error);
+        console.error('Error loading personal data:', error);
         return { hasData: false };
       }
     }
@@ -225,7 +235,7 @@ if (typeof window.BlockingScreen === "undefined") {
      */
     generatePersonalizedSuggestions(personalData) {
       const suggestions = [];
-      
+
       if (!personalData.hasData) {
         return this.getDefaultSuggestions();
       }
@@ -233,44 +243,44 @@ if (typeof window.BlockingScreen === "undefined") {
       // Add current tasks (highest priority)
       if (personalData.currentTasks && personalData.currentTasks.length > 0) {
         const randomTask = this.getRandomItem(personalData.currentTasks);
-        suggestions.push({ emoji: "✅", text: randomTask });
+        suggestions.push({ emoji: '✅', text: randomTask });
       }
 
       // Add household tasks
       if (personalData.householdTasks && personalData.householdTasks.length > 0) {
         const randomTask = this.getRandomItem(personalData.householdTasks);
-        suggestions.push({ emoji: "🏠", text: randomTask });
+        suggestions.push({ emoji: '🏠', text: randomTask });
       }
 
       // Add friends to contact
       if (personalData.friends && personalData.friends.length > 0) {
         const randomFriend = this.getRandomItem(personalData.friends);
-        suggestions.push({ emoji: "📞", text: `Call ${randomFriend}` });
+        suggestions.push({ emoji: '📞', text: `Call ${randomFriend}` });
       }
 
       // Add hobbies
       if (personalData.hobbies && personalData.hobbies.length > 0) {
         const randomHobby = this.getRandomItem(personalData.hobbies);
-        suggestions.push({ emoji: "🎯", text: randomHobby });
+        suggestions.push({ emoji: '🎯', text: randomHobby });
       }
 
       // Add books
       if (personalData.books && personalData.books.length > 0) {
         const randomBook = this.getRandomItem(personalData.books);
-        suggestions.push({ emoji: "📚", text: `Read "${randomBook}"` });
+        suggestions.push({ emoji: '📚', text: `Read "${randomBook}"` });
       }
 
       // Add goals (if space allows)
       if (personalData.goals && personalData.goals.length > 0 && suggestions.length < 6) {
         const randomGoal = this.getRandomItem(personalData.goals);
-        suggestions.push({ emoji: "🎯", text: `Work on: ${randomGoal}` });
+        suggestions.push({ emoji: '🎯', text: `Work on: ${randomGoal}` });
       }
 
       // Fill with default suggestions if we don't have enough
       const defaultSuggestions = this.getDefaultSuggestions();
       while (suggestions.length < 4) {
         const randomDefault = this.getRandomItem(defaultSuggestions);
-        if (!suggestions.some(s => s.text === randomDefault.text)) {
+        if (!suggestions.some((s) => s.text === randomDefault.text)) {
           suggestions.push(randomDefault);
         }
       }
@@ -285,16 +295,16 @@ if (typeof window.BlockingScreen === "undefined") {
      */
     getDefaultSuggestions() {
       return [
-        { emoji: "🚶‍♂️", text: "Take a walk outside" },
-        { emoji: "📚", text: "Read a book" },
-        { emoji: "🧘‍♀️", text: "Meditate" },
-        { emoji: "💪", text: "Exercise" },
-        { emoji: "👥", text: "Call a friend" },
-        { emoji: "🎨", text: "Be creative" },
-        { emoji: "🧹", text: "Tidy up your space" },
-        { emoji: "💧", text: "Drink some water" },
-        { emoji: "🌱", text: "Do some stretching" },
-        { emoji: "📝", text: "Write in a journal" }
+        { emoji: '🚶‍♂️', text: 'Take a walk outside' },
+        { emoji: '📚', text: 'Read a book' },
+        { emoji: '🧘‍♀️', text: 'Meditate' },
+        { emoji: '💪', text: 'Exercise' },
+        { emoji: '👥', text: 'Call a friend' },
+        { emoji: '🎨', text: 'Be creative' },
+        { emoji: '🧹', text: 'Tidy up your space' },
+        { emoji: '💧', text: 'Drink some water' },
+        { emoji: '🌱', text: 'Do some stretching' },
+        { emoji: '📝', text: 'Write in a journal' },
       ];
     }
 
@@ -304,7 +314,7 @@ if (typeof window.BlockingScreen === "undefined") {
      */
     getDefaultSuggestionsHTML() {
       const suggestions = this.getDefaultSuggestions().slice(0, 6);
-      
+
       const suggestionsGrid = suggestions
         .map(
           (suggestion) => `
@@ -314,7 +324,7 @@ if (typeof window.BlockingScreen === "undefined") {
         </div>
       `
         )
-        .join("");
+        .join('');
 
       return `
         <div style="margin-top: 2rem;">
@@ -357,7 +367,7 @@ if (typeof window.BlockingScreen === "undefined") {
       try {
         // Check if this is a news site
         const isNews = await StorageHelper.isCurrentSiteNews(window.location.href, this.hostname);
-        
+
         let remainingTime;
         if (isNews) {
           remainingTime = await TimeManager.getRemainingNewsBlockTime();
@@ -378,13 +388,13 @@ if (typeof window.BlockingScreen === "undefined") {
 
         // Update display
         const timeDisplay = TimeManager.formatTime(remainingTime);
-        const countdownElement = document.getElementById("time-remaining");
+        const countdownElement = document.getElementById('time-remaining');
 
         if (countdownElement) {
           countdownElement.textContent = timeDisplay;
         }
       } catch (error) {
-        console.error("Error updating countdown:", error);
+        console.error('Error updating countdown:', error);
       }
     }
 
@@ -423,9 +433,11 @@ if (typeof window.BlockingScreen === "undefined") {
      * @param {string} siteName - Name of the blocked site
      */
     updateSiteName(siteName) {
-      if (!this.blockingElement) {return;}
+      if (!this.blockingElement) {
+        return;
+      }
 
-      const titleElement = this.blockingElement.querySelector("p");
+      const titleElement = this.blockingElement.querySelector('p');
       if (titleElement) {
         titleElement.textContent = `You've been scrolling too much on ${siteName}. This site is blocked for 60 minutes.`;
       }
@@ -440,7 +452,7 @@ if (typeof window.BlockingScreen === "undefined") {
   }
 
   // Export for use in other modules
-  if (typeof module !== "undefined" && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = BlockingScreen;
   } else {
     window.BlockingScreen = BlockingScreen;

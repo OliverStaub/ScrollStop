@@ -59,17 +59,17 @@ class GlassmorphismTimer {
     this.intervalId = null;
 
     this.options = {
-      width: options.width || "56px",
-      height: options.height || "27px",
-      fontSize: options.fontSize || "12px",
-      padding: options.padding || "5px 10px",
-      borderRadius: options.borderRadius || "35px",
+      width: options.width || '56px',
+      height: options.height || '27px',
+      fontSize: options.fontSize || '12px',
+      padding: options.padding || '5px 10px',
+      borderRadius: options.borderRadius || '35px',
       onClick: options.onClick || null,
       onStart: options.onStart || null,
       onStop: options.onStop || null,
       onComplete: options.onComplete || null,
       onTick: options.onTick || null,
-      className: options.className || "",
+      className: options.className || '',
       clickToToggle: options.clickToToggle !== false, // default true
       ...options,
     };
@@ -82,74 +82,71 @@ class GlassmorphismTimer {
   // Base styles
   static styles = {
     container: [
-      "position: relative",
-      "display: inline-flex",
-      "align-items: center",
-      "justify-content: center",
-      "cursor: pointer",
-      "user-select: none",
-      "transition: all 0.2s ease",
-      "outline: none",
+      'position: relative',
+      'display: inline-flex',
+      'align-items: center',
+      'justify-content: center',
+      'cursor: pointer',
+      'user-select: none',
+      'transition: all 0.2s ease',
+      'outline: none',
     ],
 
     background: [
-      "background: rgba(0, 0, 0, 0.25)",
-      "backdrop-filter: blur(12px) saturate(150%)",
-      "-webkit-backdrop-filter: blur(12px) saturate(150%)",
-      "border: 1.5px solid rgba(255, 255, 255, 0.22)",
-      "box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), inset 0px 1px 0px rgba(255, 255, 255, 0.27)",
-      "position: absolute",
-      "top: 0",
-      "left: 0",
-      "width: 100%",
-      "height: 100%",
+      'background: rgba(0, 0, 0, 0.25)',
+      'backdrop-filter: blur(12px) saturate(150%)',
+      '-webkit-backdrop-filter: blur(12px) saturate(150%)',
+      'border: 1.5px solid rgba(255, 255, 255, 0.22)',
+      'box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), inset 0px 1px 0px rgba(255, 255, 255, 0.27)',
+      'position: absolute',
+      'top: 0',
+      'left: 0',
+      'width: 100%',
+      'height: 100%',
     ],
 
     timeDisplay: [
-      "color: #34c759",
-      "text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8)",
+      'color: #34c759',
+      'text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8)',
       'font-family: "SF Mono", "Monaco", "Consolas", monospace',
-      "font-weight: 500",
-      "text-align: center",
-      "line-height: 1.2",
-      "position: absolute",
-      "top: 50%",
-      "left: 50%",
-      "transform: translate(-48%, -43%)",
-      "z-index: 1",
-      "white-space: nowrap",
-      "width: 100%",
-      "display: flex",
-      "align-items: center",
-      "justify-content: center",
+      'font-weight: 500',
+      'text-align: center',
+      'line-height: 1.2',
+      'position: absolute',
+      'top: 50%',
+      'left: 50%',
+      'transform: translate(-48%, -43%)',
+      'z-index: 1',
+      'white-space: nowrap',
+      'width: 100%',
+      'display: flex',
+      'align-items: center',
+      'justify-content: center',
     ],
 
-    hover: [
-      "transform: scale(1.02)",
-      "box-shadow: 0px 6px 40px rgba(0, 0, 0, 0.2)",
-    ],
+    hover: ['transform: scale(1.02)', 'box-shadow: 0px 6px 40px rgba(0, 0, 0, 0.2)'],
 
-    active: ["transform: scale(0.98)"],
+    active: ['transform: scale(0.98)'],
 
     running: [
-      "box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), 0px 0px 20px rgba(52, 199, 89, 0.6), inset 0px 1px 0px rgba(255, 255, 255, 0.27)",
+      'box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), 0px 0px 20px rgba(52, 199, 89, 0.6), inset 0px 1px 0px rgba(255, 255, 255, 0.27)',
     ],
   };
 
   createElement() {
     // Create main container
-    this.element = document.createElement("div");
-    this.element.className = "glassmorphism-timer";
+    this.element = document.createElement('div');
+    this.element.className = 'glassmorphism-timer';
     this.element.style.cssText = this.getContainerStyles();
 
     // Create background element
-    const background = document.createElement("div");
-    background.className = "timer-background";
+    const background = document.createElement('div');
+    background.className = 'timer-background';
     background.style.cssText = this.getBackgroundStyles();
 
     // Create time display
-    this.timeDisplay = document.createElement("div");
-    this.timeDisplay.className = "timer-display";
+    this.timeDisplay = document.createElement('div');
+    this.timeDisplay.className = 'timer-display';
     this.timeDisplay.style.cssText = this.getTimeDisplayStyles();
     this.timeDisplay.textContent = this.formatTime(this.currentTime);
 
@@ -168,21 +165,21 @@ class GlassmorphismTimer {
 
   getContainerStyles() {
     const size = this.getSizeConfig();
-    const baseStyles = GlassmorphismTimer.styles.container.join("; ");
+    const baseStyles = GlassmorphismTimer.styles.container.join('; ');
 
     return `${baseStyles}; width: ${size.width}; height: ${size.height}; border-radius: ${size.borderRadius};`;
   }
 
   getBackgroundStyles() {
     const size = this.getSizeConfig();
-    const baseStyles = GlassmorphismTimer.styles.background.join("; ");
+    const baseStyles = GlassmorphismTimer.styles.background.join('; ');
 
     return `${baseStyles}; border-radius: ${size.borderRadius};`;
   }
 
   getTimeDisplayStyles() {
     const size = this.getSizeConfig();
-    const baseStyles = GlassmorphismTimer.styles.timeDisplay.join("; ");
+    const baseStyles = GlassmorphismTimer.styles.timeDisplay.join('; ');
 
     return `${baseStyles}; font-size: ${size.fontSize}; padding: ${size.padding};`;
   }
@@ -199,7 +196,7 @@ class GlassmorphismTimer {
 
   addEventListeners() {
     // Click handler
-    this.element.addEventListener("click", (e) => {
+    this.element.addEventListener('click', (e) => {
       e.preventDefault();
 
       if (this.options.clickToToggle) {
@@ -212,29 +209,29 @@ class GlassmorphismTimer {
     });
 
     // Hover effects
-    this.element.addEventListener("mouseenter", () => {
-      this.element.style.transform = "scale(1.02)";
-      const bg = this.element.querySelector(".timer-background");
-      bg.style.boxShadow = "0px 6px 40px rgba(0, 0, 0, 0.2)";
+    this.element.addEventListener('mouseenter', () => {
+      this.element.style.transform = 'scale(1.02)';
+      const bg = this.element.querySelector('.timer-background');
+      bg.style.boxShadow = '0px 6px 40px rgba(0, 0, 0, 0.2)';
     });
 
-    this.element.addEventListener("mouseleave", () => {
-      this.element.style.transform = "scale(1)";
+    this.element.addEventListener('mouseleave', () => {
+      this.element.style.transform = 'scale(1)';
       this.updateBackgroundShadow();
     });
 
     // Active state
-    this.element.addEventListener("mousedown", () => {
-      this.element.style.transform = "scale(0.98)";
+    this.element.addEventListener('mousedown', () => {
+      this.element.style.transform = 'scale(0.98)';
     });
 
-    this.element.addEventListener("mouseup", () => {
-      this.element.style.transform = "scale(1.02)";
+    this.element.addEventListener('mouseup', () => {
+      this.element.style.transform = 'scale(1.02)';
     });
 
     // Keyboard support
-    this.element.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
+    this.element.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.element.click();
       }
@@ -247,9 +244,7 @@ class GlassmorphismTimer {
   formatTime(seconds) {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs
-      .toString()
-      .padStart(2, "0")}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
 
   updateDisplay() {
@@ -259,20 +254,23 @@ class GlassmorphismTimer {
   }
 
   updateBackgroundShadow() {
-    const bg = this.element?.querySelector(".timer-background");
+    const bg = this.element?.querySelector('.timer-background');
     if (bg) {
       if (this.isActive) {
         bg.style.boxShadow =
-          "0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), 0px 0px 20px rgba(52, 199, 89, 0.6), inset 0px 1px 0px rgba(255, 255, 255, 0.27)";
+          '0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), 0px 0px 20px rgba(52, 199, 89, 0.6), inset 0px 1px 0px rgba(255, 255, 255, 0.27)';
       } else {
-        bg.style.boxShadow = "0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), inset 0px 1px 0px rgba(255, 255, 255, 0.27)";
+        bg.style.boxShadow =
+          '0px 4px 32px rgba(0, 0, 0, 0.35), 0px 8px 64px rgba(0, 0, 0, 0.12), inset 0px 1px 0px rgba(255, 255, 255, 0.27)';
       }
     }
   }
 
   // Timer control methods
   start() {
-    if (this.isActive || this.currentTime <= 0) {return this;}
+    if (this.isActive || this.currentTime <= 0) {
+      return this;
+    }
 
     this.isActive = true;
     this.updateBackgroundShadow();
@@ -298,7 +296,9 @@ class GlassmorphismTimer {
   }
 
   stop() {
-    if (!this.isActive) {return this;}
+    if (!this.isActive) {
+      return this;
+    }
 
     this.isActive = false;
     this.updateBackgroundShadow();
@@ -366,17 +366,26 @@ class GlassmorphismTimer {
   // Utility methods
   updateSize(sizeOptions) {
     // Update size options
-    if (sizeOptions.width) {this.options.width = sizeOptions.width;}
-    if (sizeOptions.height) {this.options.height = sizeOptions.height;}
-    if (sizeOptions.fontSize) {this.options.fontSize = sizeOptions.fontSize;}
-    if (sizeOptions.padding) {this.options.padding = sizeOptions.padding;}
-    if (sizeOptions.borderRadius)
-      {this.options.borderRadius = sizeOptions.borderRadius;}
+    if (sizeOptions.width) {
+      this.options.width = sizeOptions.width;
+    }
+    if (sizeOptions.height) {
+      this.options.height = sizeOptions.height;
+    }
+    if (sizeOptions.fontSize) {
+      this.options.fontSize = sizeOptions.fontSize;
+    }
+    if (sizeOptions.padding) {
+      this.options.padding = sizeOptions.padding;
+    }
+    if (sizeOptions.borderRadius) {
+      this.options.borderRadius = sizeOptions.borderRadius;
+    }
 
     // Reapply styles
     this.element.style.cssText = this.getContainerStyles();
 
-    const bg = this.element.querySelector(".timer-background");
+    const bg = this.element.querySelector('.timer-background');
     bg.style.cssText = this.getBackgroundStyles();
 
     this.timeDisplay.style.cssText = this.getTimeDisplayStyles();
@@ -386,12 +395,12 @@ class GlassmorphismTimer {
 
   // Render method
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -414,15 +423,15 @@ class GlassmorphismTimer {
 
   // Static helper methods
   static createGroup(container, timers) {
-    const group = document.createElement("div");
-    group.className = "timer-group";
-    group.style.cssText = "display: flex; gap: 8px; align-items: center;";
+    const group = document.createElement('div');
+    group.className = 'timer-group';
+    group.style.cssText = 'display: flex; gap: 8px; align-items: center;';
 
     timers.forEach((config) => {
       new GlassmorphismTimer(config.time, config.options).render(group);
     });
 
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
     container.appendChild(group);
@@ -432,6 +441,6 @@ class GlassmorphismTimer {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = GlassmorphismTimer;
 }

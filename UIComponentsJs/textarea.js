@@ -127,7 +127,7 @@ class HeadlessTextarea {
     // Create the actual textarea element
     const textarea = document.createElement('textarea');
     textarea.className = this.getTextareaClasses();
-    
+
     // Set basic properties
     if (this.options.placeholder) textarea.placeholder = this.options.placeholder;
     if (this.options.value) textarea.value = this.options.value;
@@ -318,10 +318,10 @@ class HeadlessTextarea {
     const start = this.textarea.selectionStart;
     const end = this.textarea.selectionEnd;
     const value = this.textarea.value;
-    
+
     this.textarea.value = value.substring(0, start) + text + value.substring(end);
     this.textarea.setSelectionRange(start + text.length, start + text.length);
-    
+
     // Trigger input event
     this.textarea.dispatchEvent(new Event('input', { bubbles: true }));
     return this;
@@ -351,7 +351,10 @@ class HeadlessTextarea {
 
   // Method to get word count
   getWordCount() {
-    return this.textarea.value.trim().split(/\s+/).filter(word => word.length > 0).length;
+    return this.textarea.value
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
   }
 
   // Method to remove from DOM
@@ -369,7 +372,7 @@ class HeadlessTextarea {
 
     textareas.forEach((config) => {
       const textareaWrapper = document.createElement('div');
-      
+
       if (config.label) {
         const label = document.createElement('label');
         label.textContent = config.label;
@@ -381,25 +384,25 @@ class HeadlessTextarea {
       }
 
       new HeadlessTextarea(config.options).render(textareaWrapper);
-      
+
       // Add character counter if maxLength is specified
       if (config.options?.maxLength) {
         const counter = document.createElement('div');
         counter.className = 'text-xs text-zinc-500 dark:text-zinc-400 mt-1';
         const textareaInstance = new HeadlessTextarea(config.options);
-        
+
         const updateCounter = () => {
           const count = textareaInstance.getCharacterCount();
           counter.textContent = `${count}/${config.options.maxLength}`;
         };
-        
+
         textareaInstance.options.onInput = (value) => {
           updateCounter();
           if (config.options?.onInput) {
             config.options.onInput(value);
           }
         };
-        
+
         textareaWrapper.appendChild(counter);
         updateCounter();
       }

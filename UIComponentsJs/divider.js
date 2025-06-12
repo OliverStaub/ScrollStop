@@ -53,24 +53,18 @@ class HeadlessDivider {
 
   // Style configurations (converted from the original React component)
   static styles = {
-    base: [
-      'w-full border-t'
-    ],
-    
-    soft: [
-      'border-zinc-950/5 dark:border-white/5'
-    ],
-    
-    hard: [
-      'border-zinc-950/10 dark:border-white/10'
-    ]
+    base: ['w-full border-t'],
+
+    soft: ['border-zinc-950/5 dark:border-white/5'],
+
+    hard: ['border-zinc-950/10 dark:border-white/10'],
   };
 
   createElement() {
     // Create the divider element (hr)
     const divider = document.createElement('hr');
     divider.setAttribute('role', 'presentation');
-    
+
     // Apply CSS classes
     divider.className = this.getClasses();
 
@@ -80,7 +74,7 @@ class HeadlessDivider {
     }
 
     // Set any additional attributes (excluding the ones we handle specially)
-    Object.keys(this.options).forEach(key => {
+    Object.keys(this.options).forEach((key) => {
       if (!['soft', 'className', 'id'].includes(key)) {
         divider.setAttribute(key, this.options[key]);
       }
@@ -136,8 +130,9 @@ class HeadlessDivider {
   // Method to add custom classes
   addClass(className) {
     if (!this.options.className.includes(className)) {
-      this.options.className = this.options.className ? 
-        `${this.options.className} ${className}` : className;
+      this.options.className = this.options.className
+        ? `${this.options.className} ${className}`
+        : className;
       this.element.className = this.getClasses();
     }
     return this;
@@ -147,7 +142,7 @@ class HeadlessDivider {
   removeClass(className) {
     this.options.className = this.options.className
       .split(' ')
-      .filter(cls => cls !== className)
+      .filter((cls) => cls !== className)
       .join(' ');
     this.element.className = this.getClasses();
     return this;
@@ -215,18 +210,18 @@ class HeadlessDivider {
       element: group,
       dividers: dividerInstances,
       setAllSoft: (soft) => {
-        dividerInstances.forEach(divider => divider.setSoft(soft));
+        dividerInstances.forEach((divider) => divider.setSoft(soft));
       },
       toggleAll: () => {
-        dividerInstances.forEach(divider => divider.toggle());
-      }
+        dividerInstances.forEach((divider) => divider.toggle());
+      },
     };
   }
 
   // Static method to create a section with content and dividers
   static createSection(container, sections) {
     const wrapper = document.createElement('div');
-    
+
     sections.forEach((section, index) => {
       // Add content
       if (section.content) {

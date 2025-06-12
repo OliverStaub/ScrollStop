@@ -9,7 +9,7 @@
  *   { id: 2, name: 'Banana' },
  *   { id: 3, name: 'Cherry' }
  * ];
- * 
+ *
  * const combobox = new HeadlessCombobox({
  *   options: options,
  *   displayValue: (option) => option ? option.name : '',
@@ -57,13 +57,13 @@ class HeadlessCombobox {
   constructor(options = {}) {
     this.options = {
       options: options.options || [],
-      displayValue: options.displayValue || ((value) => value ? String(value) : ''),
+      displayValue: options.displayValue || ((value) => (value ? String(value) : '')),
       filter: options.filter || null,
       anchor: options.anchor || 'bottom',
-      className: options.className || "",
-      placeholder: options.placeholder || "",
+      className: options.className || '',
+      placeholder: options.placeholder || '',
       autoFocus: options.autoFocus || false,
-      ariaLabel: options.ariaLabel || "",
+      ariaLabel: options.ariaLabel || '',
       onChange: options.onChange || null,
       renderOption: options.renderOption || null,
       ...options,
@@ -81,30 +81,30 @@ class HeadlessCombobox {
 
   createElement() {
     // Main container
-    const container = document.createElement("div");
-    container.className = "relative";
+    const container = document.createElement('div');
+    container.className = 'relative';
 
     // Control span
-    const controlSpan = document.createElement("span");
+    const controlSpan = document.createElement('span');
     controlSpan.setAttribute('data-slot', 'control');
     controlSpan.className = this.getControlClasses();
 
     // Input element
-    this.input = document.createElement("input");
-    this.input.type = "text";
+    this.input = document.createElement('input');
+    this.input.type = 'text';
     this.input.setAttribute('data-slot', 'control');
     this.input.setAttribute('role', 'combobox');
     this.input.setAttribute('aria-expanded', 'false');
     this.input.setAttribute('aria-autocomplete', 'list');
-    
+
     if (this.options.ariaLabel) {
       this.input.setAttribute('aria-label', this.options.ariaLabel);
     }
-    
+
     if (this.options.placeholder) {
       this.input.placeholder = this.options.placeholder;
     }
-    
+
     if (this.options.autoFocus) {
       this.input.autofocus = true;
     }
@@ -116,16 +116,16 @@ class HeadlessCombobox {
     this.input.addEventListener('blur', (e) => this.handleBlur(e));
 
     // Button (chevron)
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "group absolute inset-y-0 right-0 flex items-center px-2";
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'group absolute inset-y-0 right-0 flex items-center px-2';
     button.addEventListener('click', () => this.toggle());
 
     const chevronSvg = this.createChevronIcon();
     button.appendChild(chevronSvg);
 
     // Options container
-    this.optionsContainer = document.createElement("div");
+    this.optionsContainer = document.createElement('div');
     this.optionsContainer.className = this.getOptionsClasses();
     this.optionsContainer.style.display = 'none';
     this.optionsContainer.setAttribute('role', 'listbox');
@@ -150,19 +150,22 @@ class HeadlessCombobox {
   }
 
   createChevronIcon() {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute('class', 'size-5 stroke-zinc-500 group-data-disabled:stroke-zinc-600 group-data-hover:stroke-zinc-700 sm:size-4 dark:stroke-zinc-400 dark:group-data-hover:stroke-zinc-300 forced-colors:stroke-[CanvasText]');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute(
+      'class',
+      'size-5 stroke-zinc-500 group-data-disabled:stroke-zinc-600 group-data-hover:stroke-zinc-700 sm:size-4 dark:stroke-zinc-400 dark:group-data-hover:stroke-zinc-300 forced-colors:stroke-[CanvasText]'
+    );
     svg.setAttribute('viewBox', '0 0 16 16');
     svg.setAttribute('aria-hidden', 'true');
     svg.setAttribute('fill', 'none');
 
-    const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path1.setAttribute('d', 'M5.75 10.75L8 13L10.25 10.75');
     path1.setAttribute('stroke-width', '1.5');
     path1.setAttribute('stroke-linecap', 'round');
     path1.setAttribute('stroke-linejoin', 'round');
 
-    const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path2.setAttribute('d', 'M10.25 5.25L8 3L5.75 5.25');
     path2.setAttribute('stroke-width', '1.5');
     path2.setAttribute('stroke-linecap', 'round');
@@ -201,14 +204,14 @@ class HeadlessCombobox {
       'has-data-disabled:before:bg-zinc-950/5',
       'has-data-disabled:before:shadow-none',
       // Invalid state
-      'has-data-invalid:before:shadow-red-500/10'
+      'has-data-invalid:before:shadow-red-500/10',
     ];
 
     if (this.options.className) {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getInputClasses() {
@@ -254,8 +257,8 @@ class HeadlessCombobox {
       'dark:data-disabled:bg-white/2.5',
       'dark:data-hover:data-disabled:border-white/15',
       // System icons
-      'dark:scheme-dark'
-    ].join(" ");
+      'dark:scheme-dark',
+    ].join(' ');
   }
 
   getOptionsClasses() {
@@ -293,19 +296,19 @@ class HeadlessCombobox {
       'absolute',
       'z-10',
       'w-full',
-      'mt-1'
-    ].join(" ");
+      'mt-1',
+    ].join(' ');
   }
 
   handleInputChange(e) {
     this.query = e.target.value;
     this.updateFilteredOptions();
     this.renderOptions();
-    
+
     if (!this.isOpen) {
       this.open();
     }
-    
+
     this.selectedIndex = -1;
   }
 
@@ -359,7 +362,7 @@ class HeadlessCombobox {
     if (this.query === '') {
       this.filteredOptions = [...this.options.options];
     } else {
-      this.filteredOptions = this.options.options.filter(option => {
+      this.filteredOptions = this.options.options.filter((option) => {
         if (this.options.filter) {
           return this.options.filter(option, this.query);
         } else {
@@ -372,15 +375,15 @@ class HeadlessCombobox {
 
   renderOptions() {
     this.optionsContainer.innerHTML = '';
-    
+
     this.filteredOptions.forEach((option, index) => {
       const optionElement = new HeadlessComboboxOption({
         option: option,
         index: index,
         onSelect: () => this.selectOption(option),
-        renderContent: this.options.renderOption
+        renderContent: this.options.renderOption,
       });
-      
+
       optionElement.render(this.optionsContainer);
     });
   }
@@ -402,7 +405,7 @@ class HeadlessCombobox {
     this.input.value = this.options.displayValue(option) || '';
     this.query = '';
     this.close();
-    
+
     if (this.options.onChange) {
       this.options.onChange(option);
     }
@@ -433,12 +436,12 @@ class HeadlessCombobox {
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -476,7 +479,7 @@ class HeadlessComboboxOption {
     this.options = {
       option: options.option,
       index: options.index || 0,
-      className: options.className || "",
+      className: options.className || '',
       onSelect: options.onSelect || null,
       renderContent: options.renderContent || null,
       ...options,
@@ -519,7 +522,7 @@ class HeadlessComboboxOption {
       'forced-colors:data-focus:bg-[Highlight]',
       'forced-colors:data-focus:text-[HighlightText]',
       // Disabled
-      'data-disabled:opacity-50'
+      'data-disabled:opacity-50',
     ],
     content: [
       // Base
@@ -538,18 +541,18 @@ class HeadlessComboboxOption {
       // Avatars
       '*:data-[slot=avatar]:-mx-0.5',
       '*:data-[slot=avatar]:size-6',
-      'sm:*:data-[slot=avatar]:size-5'
-    ]
+      'sm:*:data-[slot=avatar]:size-5',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     element.setAttribute('role', 'option');
     element.setAttribute('tabindex', '-1');
 
     // Add content
-    const contentWrapper = document.createElement("span");
+    const contentWrapper = document.createElement('span');
     contentWrapper.className = this.getContentClasses();
 
     if (this.options.renderContent) {
@@ -584,13 +587,16 @@ class HeadlessComboboxOption {
   }
 
   createCheckIcon() {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute('class', 'relative col-start-2 hidden size-5 self-center stroke-current group-data-selected/option:inline sm:size-4');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute(
+      'class',
+      'relative col-start-2 hidden size-5 self-center stroke-current group-data-selected/option:inline sm:size-4'
+    );
     svg.setAttribute('viewBox', '0 0 16 16');
     svg.setAttribute('fill', 'none');
     svg.setAttribute('aria-hidden', 'true');
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M4 8.5l3 3L12 4');
     path.setAttribute('stroke-width', '1.5');
     path.setAttribute('stroke-linecap', 'round');
@@ -607,20 +613,20 @@ class HeadlessComboboxOption {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getContentClasses() {
-    return HeadlessComboboxOption.styles.content.join(" ");
+    return HeadlessComboboxOption.styles.content.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -639,7 +645,7 @@ class HeadlessComboboxLabel {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -648,17 +654,11 @@ class HeadlessComboboxLabel {
 
   // Style configurations
   static styles = {
-    base: [
-      'ml-2.5',
-      'truncate',
-      'first:ml-0',
-      'sm:ml-2',
-      'sm:first:ml-0'
-    ]
+    base: ['ml-2.5', 'truncate', 'first:ml-0', 'sm:ml-2', 'sm:first:ml-0'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -671,16 +671,16 @@ class HeadlessComboboxLabel {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -705,7 +705,7 @@ class HeadlessComboboxDescription {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -723,19 +723,16 @@ class HeadlessComboboxDescription {
       'before:w-2',
       'before:min-w-0',
       'before:shrink',
-      'dark:text-zinc-400'
+      'dark:text-zinc-400',
     ],
-    inner: [
-      'flex-1',
-      'truncate'
-    ]
+    inner: ['flex-1', 'truncate'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.className = this.getClasses();
 
-    const inner = document.createElement("span");
+    const inner = document.createElement('span');
     inner.className = this.getInnerClasses();
     inner.textContent = this.text;
 
@@ -750,20 +747,20 @@ class HeadlessComboboxDescription {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getInnerClasses() {
-    return HeadlessComboboxDescription.styles.inner.join(" ");
+    return HeadlessComboboxDescription.styles.inner.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -788,11 +785,11 @@ class HeadlessComboboxDescription {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessCombobox,
     HeadlessComboboxOption,
     HeadlessComboboxLabel,
-    HeadlessComboboxDescription
+    HeadlessComboboxDescription,
   };
 }

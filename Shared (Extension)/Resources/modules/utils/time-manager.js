@@ -1,4 +1,4 @@
-if (typeof window.TimeManager === "undefined") {
+if (typeof window.TimeManager === 'undefined') {
   class TimeManager {
     static BLOCK_DURATION = 60 * 60 * 1000; // 60 minutes in milliseconds
     static NEWS_TIME_LIMIT = 20 * 60 * 1000; // 20 minutes in milliseconds
@@ -46,7 +46,7 @@ if (typeof window.TimeManager === "undefined") {
 
       // Dispatch event for other modules to listen to
       window.dispatchEvent(
-        new CustomEvent("time-block-created", {
+        new CustomEvent('time-block-created', {
           detail: { hostname, timestamp: timeBlocks[hostname].timestamp },
         })
       );
@@ -66,7 +66,7 @@ if (typeof window.TimeManager === "undefined") {
 
         // Dispatch event for other modules to listen to
         window.dispatchEvent(
-          new CustomEvent("time-block-removed", {
+          new CustomEvent('time-block-removed', {
             detail: { hostname },
           })
         );
@@ -100,7 +100,7 @@ if (typeof window.TimeManager === "undefined") {
     static formatTime(milliseconds) {
       const minutes = Math.floor(milliseconds / 60000);
       const seconds = Math.floor((milliseconds % 60000) / 1000);
-      return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
 
     /**
@@ -109,20 +109,20 @@ if (typeof window.TimeManager === "undefined") {
      */
     static async getNewsTimeData() {
       return new Promise((resolve) => {
-        browser.storage.local.get(["newsTimeData"], (result) => {
+        browser.storage.local.get(['newsTimeData'], (result) => {
           const today = new Date().toDateString();
           const data = result.newsTimeData || {};
-          
+
           // Reset daily tracking if it's a new day
           if (!data.dailyStart || new Date(data.dailyStart).toDateString() !== today) {
             data.dailyStart = Date.now();
             data.totalTime = 0;
           }
-          
+
           // Default values
           data.blocked = data.blocked || false;
           data.blockedUntil = data.blockedUntil || 0;
-          
+
           resolve(data);
         });
       });
@@ -147,18 +147,18 @@ if (typeof window.TimeManager === "undefined") {
      */
     static async isNewsTimeBlocked() {
       const data = await this.getNewsTimeData();
-      
+
       if (!data.blocked) {
         return false;
       }
-      
+
       const now = Date.now();
       if (now >= data.blockedUntil) {
         // Block expired, remove it
         await this.removeNewsTimeBlock();
         return false;
       }
-      
+
       return true;
     }
 
@@ -169,15 +169,15 @@ if (typeof window.TimeManager === "undefined") {
     static async createNewsTimeBlock() {
       const data = await this.getNewsTimeData();
       const now = Date.now();
-      
+
       data.blocked = true;
       data.blockedUntil = now + this.NEWS_BLOCK_DURATION;
-      
+
       await this.setNewsTimeData(data);
-      
+
       // Dispatch event for other modules to listen to
       window.dispatchEvent(
-        new CustomEvent("news-time-block-created", {
+        new CustomEvent('news-time-block-created', {
           detail: { blockedUntil: data.blockedUntil },
         })
       );
@@ -189,16 +189,16 @@ if (typeof window.TimeManager === "undefined") {
      */
     static async removeNewsTimeBlock() {
       const data = await this.getNewsTimeData();
-      
+
       if (data.blocked) {
         data.blocked = false;
         data.blockedUntil = 0;
-        
+
         await this.setNewsTimeData(data);
-        
+
         // Dispatch event for other modules to listen to
         window.dispatchEvent(
-          new CustomEvent("news-time-block-removed", {
+          new CustomEvent('news-time-block-removed', {
             detail: {},
           })
         );
@@ -212,16 +212,16 @@ if (typeof window.TimeManager === "undefined") {
      */
     static async addNewsTime(timeSpent) {
       const data = await this.getNewsTimeData();
-      
+
       data.totalTime += timeSpent;
-      
+
       // Check if limit exceeded
       if (data.totalTime >= this.NEWS_TIME_LIMIT && !data.blocked) {
         // Create time block
         await this.createNewsTimeBlock();
         return true;
       }
-      
+
       await this.setNewsTimeData(data);
       return false;
     }
@@ -241,11 +241,11 @@ if (typeof window.TimeManager === "undefined") {
      */
     static async getRemainingNewsBlockTime() {
       const data = await this.getNewsTimeData();
-      
+
       if (!data.blocked) {
         return 0;
       }
-      
+
       const now = Date.now();
       return Math.max(0, data.blockedUntil - now);
     }
@@ -268,7 +268,7 @@ if (typeof window.TimeManager === "undefined") {
 
           // Dispatch event for each removed block
           window.dispatchEvent(
-            new CustomEvent("time-block-removed", {
+            new CustomEvent('time-block-removed', {
               detail: { hostname },
             })
           );
@@ -278,7 +278,7 @@ if (typeof window.TimeManager === "undefined") {
       if (hasChanges) {
         await StorageHelper.setTimeBlocks(timeBlocks);
       }
-      
+
       // Also cleanup expired news blocks
       await this.cleanupExpiredNewsBlocks();
     }
@@ -289,7 +289,7 @@ if (typeof window.TimeManager === "undefined") {
      */
     static async cleanupExpiredNewsBlocks() {
       const data = await this.getNewsTimeData();
-      
+
       if (data.blocked) {
         const now = Date.now();
         if (now >= data.blockedUntil) {
@@ -299,7 +299,7 @@ if (typeof window.TimeManager === "undefined") {
     }
   }
   // Export for use in other modules
-  if (typeof module !== "undefined" && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = TimeManager;
   } else {
     window.TimeManager = TimeManager;

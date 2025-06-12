@@ -94,6 +94,9 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 
 - **UI Components Policy**: Only use UIComponentsJS components for all web UI elements. No other UI frameworks or plain HTML/CSS elements. iOS app uses SwiftUI natively.
 - **Choice Dialog Feature**: When accessing blocked sites, users see a dialog with 3 options: Continue with ScrollStop (full functionality), Timer Only (no blocking), or Block Now (immediate block). Appears on every page reload.
+- **Precommit Workflow**: ALWAYS run `npm run precommit` before committing. This automatically formats code with Prettier, then runs full validation (ESLint, tests, manifest validation). Never commit without this.
+- **Feature Branch Workflow**: When working with Claude Code, create feature branches for new development. Create pull requests to trigger CI/CD validation before merging to main. This ensures all tests pass and code quality is maintained.
+- **npm Caching**: CI pipeline uses comprehensive caching strategy (setup-node + actions/cache) to reduce npm install time from ~5 minutes to ~30 seconds on cache hits.
 
 ### iOS App Personalization Features Implementation (Session Summary)
 

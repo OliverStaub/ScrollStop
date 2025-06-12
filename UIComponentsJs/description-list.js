@@ -30,7 +30,7 @@
 class HeadlessDescriptionList {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -44,12 +44,12 @@ class HeadlessDescriptionList {
       'grid-cols-1',
       'text-base/6',
       'sm:grid-cols-[min(50%,theme(spacing.80))_auto]',
-      'sm:text-sm/6'
-    ]
+      'sm:text-sm/6',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("dl");
+    const element = document.createElement('dl');
 
     // Apply CSS classes
     element.className = this.getClasses();
@@ -65,17 +65,17 @@ class HeadlessDescriptionList {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   // Method to render the list to a container
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -106,8 +106,8 @@ class HeadlessDescriptionList {
   // Static method to create a complete description list
   static createList(items, container) {
     const dl = new HeadlessDescriptionList();
-    
-    items.forEach(item => {
+
+    items.forEach((item) => {
       dl.addItem(item.term, item.detail);
     });
 
@@ -120,7 +120,7 @@ class HeadlessDescriptionTerm {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -141,12 +141,12 @@ class HeadlessDescriptionTerm {
       'sm:py-3',
       'dark:border-white/5',
       'dark:text-zinc-400',
-      'sm:dark:border-white/5'
-    ]
+      'sm:dark:border-white/5',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("dt");
+    const element = document.createElement('dt');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -159,16 +159,16 @@ class HeadlessDescriptionTerm {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -193,7 +193,7 @@ class HeadlessDescriptionDetails {
   constructor(content, options = {}) {
     this.content = content;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -211,19 +211,19 @@ class HeadlessDescriptionDetails {
       'sm:py-3',
       'sm:nth-2:border-none',
       'dark:text-white',
-      'dark:sm:border-white/5'
-    ]
+      'dark:sm:border-white/5',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("dd");
-    
+    const element = document.createElement('dd');
+
     if (typeof this.content === 'string') {
       element.textContent = this.content;
     } else {
       element.appendChild(this.content);
     }
-    
+
     element.className = this.getClasses();
     return element;
   }
@@ -235,16 +235,16 @@ class HeadlessDescriptionDetails {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -254,13 +254,13 @@ class HeadlessDescriptionDetails {
   setContent(newContent) {
     this.content = newContent;
     this.element.innerHTML = '';
-    
+
     if (typeof newContent === 'string') {
       this.element.textContent = newContent;
     } else {
       this.element.appendChild(newContent);
     }
-    
+
     return this;
   }
 
@@ -273,10 +273,10 @@ class HeadlessDescriptionDetails {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessDescriptionList,
     HeadlessDescriptionTerm,
-    HeadlessDescriptionDetails
+    HeadlessDescriptionDetails,
   };
 }

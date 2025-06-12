@@ -9,14 +9,14 @@
  * // Complete form structure
  * const fieldset = new HeadlessFieldset();
  * new HeadlessLegend('User Information').render(fieldset.element);
- * 
+ *
  * const fieldGroup = new HeadlessFieldGroup();
  * const nameField = new HeadlessField();
  * new HeadlessLabel('Full Name').render(nameField.element);
  * // Add your input here
  * new HeadlessDescription('Enter your full legal name').render(nameField.element);
  * nameField.render(fieldGroup.element);
- * 
+ *
  * fieldGroup.render(fieldset.element);
  * fieldset.render('#user-form');
  *
@@ -36,7 +36,7 @@
 class HeadlessFieldset {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       disabled: options.disabled || false,
       ...options,
     };
@@ -46,14 +46,11 @@ class HeadlessFieldset {
 
   // Style configurations
   static styles = {
-    base: [
-      '*:data-[slot=text]:mt-1',
-      '[&>*+[data-slot=control]]:mt-6'
-    ]
+    base: ['*:data-[slot=text]:mt-1', '[&>*+[data-slot=control]]:mt-6'],
   };
 
   createElement() {
-    const element = document.createElement("fieldset");
+    const element = document.createElement('fieldset');
 
     // Set disabled state
     if (this.options.disabled) {
@@ -74,17 +71,17 @@ class HeadlessFieldset {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   // Method to render the fieldset to a container
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -111,7 +108,7 @@ class HeadlessLegend {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -126,12 +123,12 @@ class HeadlessLegend {
       'text-zinc-950',
       'data-disabled:opacity-50',
       'sm:text-sm/6',
-      'dark:text-white'
-    ]
+      'dark:text-white',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("legend");
+    const element = document.createElement('legend');
     element.textContent = this.text;
     element.setAttribute('data-slot', 'legend');
     element.className = this.getClasses();
@@ -145,16 +142,16 @@ class HeadlessLegend {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -178,7 +175,7 @@ class HeadlessLegend {
 class HeadlessFieldGroup {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -187,13 +184,11 @@ class HeadlessFieldGroup {
 
   // Style configurations
   static styles = {
-    base: [
-      'space-y-8'
-    ]
+    base: ['space-y-8'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.setAttribute('data-slot', 'control');
     element.className = this.getClasses();
     return element;
@@ -206,16 +201,16 @@ class HeadlessFieldGroup {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -233,7 +228,7 @@ class HeadlessFieldGroup {
 class HeadlessField {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -248,12 +243,12 @@ class HeadlessField {
       '[&>[data-slot=description]+[data-slot=control]]:mt-3',
       '[&>[data-slot=control]+[data-slot=description]]:mt-3',
       '[&>[data-slot=control]+[data-slot=error]]:mt-3',
-      '*:data-[slot=label]:font-medium'
-    ]
+      '*:data-[slot=label]:font-medium',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     return element;
   }
@@ -265,16 +260,16 @@ class HeadlessField {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -293,8 +288,8 @@ class HeadlessLabel {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
-      htmlFor: options.htmlFor || "",
+      className: options.className || '',
+      htmlFor: options.htmlFor || '',
       ...options,
     };
 
@@ -309,19 +304,19 @@ class HeadlessLabel {
       'select-none',
       'data-disabled:opacity-50',
       'sm:text-sm/6',
-      'dark:text-white'
-    ]
+      'dark:text-white',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("label");
+    const element = document.createElement('label');
     element.textContent = this.text;
     element.setAttribute('data-slot', 'label');
-    
+
     if (this.options.htmlFor) {
       element.setAttribute('for', this.options.htmlFor);
     }
-    
+
     element.className = this.getClasses();
     return element;
   }
@@ -333,16 +328,16 @@ class HeadlessLabel {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -373,7 +368,7 @@ class HeadlessDescription {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -387,12 +382,12 @@ class HeadlessDescription {
       'text-zinc-500',
       'data-disabled:opacity-50',
       'sm:text-sm/6',
-      'dark:text-zinc-400'
-    ]
+      'dark:text-zinc-400',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.textContent = this.text;
     element.setAttribute('data-slot', 'description');
     element.className = this.getClasses();
@@ -406,16 +401,16 @@ class HeadlessDescription {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -440,7 +435,7 @@ class HeadlessErrorMessage {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -454,12 +449,12 @@ class HeadlessErrorMessage {
       'text-red-600',
       'data-disabled:opacity-50',
       'sm:text-sm/6',
-      'dark:text-red-500'
-    ]
+      'dark:text-red-500',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.textContent = this.text;
     element.setAttribute('data-slot', 'error');
     element.className = this.getClasses();
@@ -473,16 +468,16 @@ class HeadlessErrorMessage {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -504,7 +499,7 @@ class HeadlessErrorMessage {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessFieldset,
     HeadlessLegend,
@@ -512,6 +507,6 @@ if (typeof module !== "undefined" && module.exports) {
     HeadlessField,
     HeadlessLabel,
     HeadlessDescription,
-    HeadlessErrorMessage
+    HeadlessErrorMessage,
   };
 }

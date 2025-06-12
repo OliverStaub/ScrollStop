@@ -34,14 +34,12 @@ class HeadlessAuthLayout {
   }
 
   static styles = {
-    main: [
-      'flex min-h-dvh flex-col p-2'
-    ],
+    main: ['flex min-h-dvh flex-col p-2'],
     container: [
       'flex grow items-center justify-center p-6',
       'lg:rounded-lg lg:bg-white lg:p-10 lg:shadow-xs lg:ring-1 lg:ring-zinc-950/5',
-      'dark:lg:bg-zinc-900 dark:lg:ring-white/10'
-    ]
+      'dark:lg:bg-zinc-900 dark:lg:ring-white/10',
+    ],
   };
 
   createElement() {
@@ -69,14 +67,14 @@ class HeadlessAuthLayout {
 
   updateContent(container) {
     container.innerHTML = '';
-    
+
     if (this.content) {
       if (typeof this.content === 'string') {
         container.innerHTML = this.content;
       } else if (this.content instanceof HTMLElement) {
         container.appendChild(this.content);
       } else if (Array.isArray(this.content)) {
-        this.content.forEach(item => {
+        this.content.forEach((item) => {
           if (typeof item === 'string') {
             const div = document.createElement('div');
             div.innerHTML = item;
@@ -102,7 +100,7 @@ class HeadlessAuthLayout {
     if (!Array.isArray(this.content)) {
       this.content = this.content ? [this.content] : [];
     }
-    
+
     if (Array.isArray(content)) {
       this.content.push(...content);
     } else {
@@ -126,10 +124,10 @@ class HeadlessAuthLayout {
   }
 
   addClass(className) {
-    this.options.className = this.options.className 
-      ? `${this.options.className} ${className}` 
+    this.options.className = this.options.className
+      ? `${this.options.className} ${className}`
       : className;
-    
+
     const container = this.element.querySelector('div');
     if (container) {
       container.classList.add(className);
@@ -141,10 +139,10 @@ class HeadlessAuthLayout {
     if (this.options.className) {
       this.options.className = this.options.className
         .split(' ')
-        .filter(cls => cls !== className)
+        .filter((cls) => cls !== className)
         .join(' ');
     }
-    
+
     const container = this.element.querySelector('div');
     if (container) {
       container.classList.remove(className);

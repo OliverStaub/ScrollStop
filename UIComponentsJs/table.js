@@ -8,7 +8,7 @@
  *   striped: true,
  *   dense: false
  * });
- * 
+ *
  * const thead = new HeadlessTableHead();
  * const headerRow = new HeadlessTableRow();
  * new HeadlessTableHeader('Name').render(headerRow.element);
@@ -16,7 +16,7 @@
  * new HeadlessTableHeader('Role').render(headerRow.element);
  * headerRow.render(thead.element);
  * thead.render(table.getTable());
- * 
+ *
  * const tbody = new HeadlessTableBody();
  * const row1 = new HeadlessTableRow();
  * new HeadlessTableCell('John Doe').render(row1.element);
@@ -24,7 +24,7 @@
  * new HeadlessTableCell('Admin').render(row1.element);
  * row1.render(tbody.element);
  * tbody.render(table.getTable());
- * 
+ *
  * table.render('#container');
  *
  * // Clickable rows
@@ -54,7 +54,7 @@
  *   { name: 'John Doe', email: 'john@example.com', role: 'Admin' },
  *   { name: 'Jane Smith', email: 'jane@example.com', role: 'User' }
  * ];
- * 
+ *
  * HeadlessTable.createTable(data, ['name', 'email', 'role'], '#table-container', {
  *   striped: true,
  *   headers: ['Name', 'Email Address', 'Role']
@@ -68,7 +68,7 @@ class HeadlessTable {
       dense: options.dense || false,
       grid: options.grid || false,
       striped: options.striped || false,
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -76,7 +76,7 @@ class HeadlessTable {
       bleed: this.options.bleed,
       dense: this.options.dense,
       grid: this.options.grid,
-      striped: this.options.striped
+      striped: this.options.striped,
     };
 
     this.element = this.createElement();
@@ -85,19 +85,19 @@ class HeadlessTable {
 
   createElement() {
     // Main container
-    const container = document.createElement("div");
-    container.className = "flow-root";
+    const container = document.createElement('div');
+    container.className = 'flow-root';
 
     // Overflow container
-    const overflowContainer = document.createElement("div");
+    const overflowContainer = document.createElement('div');
     overflowContainer.className = this.getOverflowClasses();
 
     // Alignment container
-    const alignContainer = document.createElement("div");
+    const alignContainer = document.createElement('div');
     alignContainer.className = this.getAlignClasses();
 
     // Actual table
-    this.table = document.createElement("table");
+    this.table = document.createElement('table');
     this.table.className = this.getTableClasses();
 
     // Assemble structure
@@ -109,50 +109,36 @@ class HeadlessTable {
   }
 
   getOverflowClasses() {
-    const classes = [
-      '-mx-(--gutter)',
-      'overflow-x-auto',
-      'whitespace-nowrap'
-    ];
+    const classes = ['-mx-(--gutter)', 'overflow-x-auto', 'whitespace-nowrap'];
 
     if (this.options.className) {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getAlignClasses() {
-    const classes = [
-      'inline-block',
-      'min-w-full',
-      'align-middle'
-    ];
+    const classes = ['inline-block', 'min-w-full', 'align-middle'];
 
     if (!this.options.bleed) {
       classes.push('sm:px-(--gutter)');
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getTableClasses() {
-    return [
-      'min-w-full',
-      'text-left',
-      'text-sm/6',
-      'text-zinc-950',
-      'dark:text-white'
-    ].join(" ");
+    return ['min-w-full', 'text-left', 'text-sm/6', 'text-zinc-950', 'dark:text-white'].join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -177,37 +163,37 @@ class HeadlessTable {
   // Static helper method to create a complete table from data
   static createTable(data, columns, container, options = {}) {
     const table = new HeadlessTable(options);
-    
+
     // Create header if headers are provided
     if (options.headers) {
       const thead = new HeadlessTableHead();
       const headerRow = new HeadlessTableRow();
-      
-      options.headers.forEach(header => {
+
+      options.headers.forEach((header) => {
         new HeadlessTableHeader(header).render(headerRow.element);
       });
-      
+
       headerRow.render(thead.element);
       thead.render(table.getTable());
     }
 
     // Create body with data
     const tbody = new HeadlessTableBody();
-    
-    data.forEach(item => {
+
+    data.forEach((item) => {
       const row = new HeadlessTableRow();
-      
-      columns.forEach(column => {
+
+      columns.forEach((column) => {
         const cellData = item[column] || '';
         new HeadlessTableCell(cellData).render(row.element);
       });
-      
+
       row.render(tbody.element);
     });
-    
+
     tbody.render(table.getTable());
     table.render(container);
-    
+
     return table;
   }
 }
@@ -215,7 +201,7 @@ class HeadlessTable {
 class HeadlessTableHead {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -224,14 +210,11 @@ class HeadlessTableHead {
 
   // Style configurations
   static styles = {
-    base: [
-      'text-zinc-500',
-      'dark:text-zinc-400'
-    ]
+    base: ['text-zinc-500', 'dark:text-zinc-400'],
   };
 
   createElement() {
-    const element = document.createElement("thead");
+    const element = document.createElement('thead');
     element.className = this.getClasses();
     return element;
   }
@@ -243,16 +226,16 @@ class HeadlessTableHead {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -270,7 +253,7 @@ class HeadlessTableHead {
 class HeadlessTableBody {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -278,17 +261,17 @@ class HeadlessTableBody {
   }
 
   createElement() {
-    const element = document.createElement("tbody");
+    const element = document.createElement('tbody');
     return element;
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -309,7 +292,7 @@ class HeadlessTableRow {
       href: options.href || null,
       target: options.target || null,
       title: options.title || null,
-      className: options.className || "",
+      className: options.className || '',
       onClick: options.onClick || null,
       tableContext: options.tableContext || { striped: false }, // Will be passed by parent table
       ...options,
@@ -318,14 +301,14 @@ class HeadlessTableRow {
     this.rowContext = {
       href: this.options.href,
       target: this.options.target,
-      title: this.options.title
+      title: this.options.title,
     };
 
     this.element = this.createElement();
   }
 
   createElement() {
-    const element = document.createElement("tr");
+    const element = document.createElement('tr');
     element.className = this.getClasses();
 
     // Add click handler for clickable rows
@@ -366,16 +349,16 @@ class HeadlessTableRow {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -404,7 +387,7 @@ class HeadlessTableHeader {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       tableContext: options.tableContext || { bleed: false, grid: false }, // Will be passed by parent table
       ...options,
     };
@@ -422,12 +405,12 @@ class HeadlessTableHeader {
       'font-medium',
       'first:pl-(--gutter,theme(spacing.2))',
       'last:pr-(--gutter,theme(spacing.2))',
-      'dark:border-b-white/10'
-    ]
+      'dark:border-b-white/10',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("th");
+    const element = document.createElement('th');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -439,12 +422,7 @@ class HeadlessTableHeader {
 
     // Grid styles
     if (grid) {
-      classes.push(
-        'border-l',
-        'border-l-zinc-950/5',
-        'first:border-l-0',
-        'dark:border-l-white/5'
-      );
+      classes.push('border-l', 'border-l-zinc-950/5', 'first:border-l-0', 'dark:border-l-white/5');
     }
 
     // Bleed styles
@@ -456,16 +434,16 @@ class HeadlessTableHeader {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -496,8 +474,13 @@ class HeadlessTableCell {
   constructor(content, options = {}) {
     this.content = content;
     this.options = {
-      className: options.className || "",
-      tableContext: options.tableContext || { bleed: false, dense: false, grid: false, striped: false },
+      className: options.className || '',
+      tableContext: options.tableContext || {
+        bleed: false,
+        dense: false,
+        grid: false,
+        striped: false,
+      },
       rowContext: options.rowContext || { href: null, target: null, title: null },
       ...options,
     };
@@ -512,12 +495,12 @@ class HeadlessTableCell {
       'relative',
       'px-4',
       'first:pl-(--gutter,theme(spacing.2))',
-      'last:pr-(--gutter,theme(spacing.2))'
-    ]
+      'last:pr-(--gutter,theme(spacing.2))',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("td");
+    const element = document.createElement('td');
     element.className = this.getClasses();
 
     // Set content
@@ -537,24 +520,24 @@ class HeadlessTableCell {
   }
 
   addRowLink(element) {
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.setAttribute('data-row-link', '');
     link.href = this.options.rowContext.href;
-    
+
     if (this.options.rowContext.target) {
       link.target = this.options.rowContext.target;
     }
-    
+
     if (this.options.rowContext.title) {
       link.setAttribute('aria-label', this.options.rowContext.title);
     }
-    
+
     // Check if this is the first cell in the row for tabindex
     const isFirstCell = !element.previousElementSibling;
     link.tabIndex = isFirstCell ? 0 : -1;
-    
-    link.className = "absolute inset-0 focus:outline-hidden";
-    
+
+    link.className = 'absolute inset-0 focus:outline-hidden';
+
     element.appendChild(link);
   }
 
@@ -569,12 +552,7 @@ class HeadlessTableCell {
 
     // Grid styles
     if (grid) {
-      classes.push(
-        'border-l',
-        'border-l-zinc-950/5',
-        'first:border-l-0',
-        'dark:border-l-white/5'
-      );
+      classes.push('border-l', 'border-l-zinc-950/5', 'first:border-l-0', 'dark:border-l-white/5');
     }
 
     // Padding styles
@@ -593,16 +571,16 @@ class HeadlessTableCell {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -611,23 +589,23 @@ class HeadlessTableCell {
 
   setContent(newContent) {
     this.content = newContent;
-    
+
     // Clear existing content but preserve row link if it exists
     const rowLink = this.element.querySelector('[data-row-link]');
     this.element.innerHTML = '';
-    
+
     // Add new content
     if (typeof newContent === 'string') {
       this.element.textContent = newContent;
     } else if (newContent) {
       this.element.appendChild(newContent.element || newContent);
     }
-    
+
     // Restore row link if it existed
     if (rowLink) {
       this.element.appendChild(rowLink);
     }
-    
+
     return this;
   }
 
@@ -639,18 +617,18 @@ class HeadlessTableCell {
 
   setRowContext(rowContext) {
     this.options.rowContext = rowContext;
-    
+
     // Remove existing row link
     const existingLink = this.element.querySelector('[data-row-link]');
     if (existingLink) {
       existingLink.remove();
     }
-    
+
     // Add new row link if href is provided
     if (rowContext.href) {
       this.addRowLink(this.element);
     }
-    
+
     return this;
   }
 
@@ -663,13 +641,13 @@ class HeadlessTableCell {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessTable,
     HeadlessTableHead,
     HeadlessTableBody,
     HeadlessTableRow,
     HeadlessTableHeader,
-    HeadlessTableCell
+    HeadlessTableCell,
   };
 }

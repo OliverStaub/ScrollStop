@@ -109,7 +109,7 @@ class HeadlessSwitch {
       'group-data-checked:bg-(--switch) group-data-checked:shadow-(--switch-shadow) group-data-checked:ring-(--switch-ring)',
       'group-data-checked:translate-x-4 sm:group-data-checked:translate-x-3',
       // Disabled
-      'group-data-checked:group-data-disabled:bg-white group-data-checked:group-data-disabled:shadow-sm group-data-checked:group-data-disabled:ring-black/5'
+      'group-data-checked:group-data-disabled:bg-white group-data-checked:group-data-disabled:shadow-sm group-data-checked:group-data-disabled:ring-black/5',
     ],
 
     colors: {
@@ -206,7 +206,9 @@ class HeadlessSwitch {
 
   createElement() {
     // Create wrapper (label if there's a label, div otherwise)
-    const wrapper = this.options.label ? document.createElement('label') : document.createElement('div');
+    const wrapper = this.options.label
+      ? document.createElement('label')
+      : document.createElement('div');
     wrapper.className = this.options.label ? 'flex items-center cursor-pointer' : '';
     wrapper.setAttribute('data-slot', 'control');
 
@@ -244,7 +246,7 @@ class HeadlessSwitch {
         this.options.checked = !this.options.checked;
         switchButton.setAttribute('aria-checked', this.options.checked.toString());
         this.updateDataAttributes();
-        
+
         if (this.options.onChange) {
           this.options.onChange(this.options.checked, e);
         }
@@ -289,7 +291,7 @@ class HeadlessSwitch {
       const labelText = document.createElement('span');
       labelText.textContent = this.options.label;
       labelText.className = 'ml-3 text-sm text-zinc-900 dark:text-white';
-      
+
       wrapper.appendChild(switchButton);
       wrapper.appendChild(labelText);
     } else {
@@ -302,7 +304,7 @@ class HeadlessSwitch {
   getSwitchClasses() {
     const classes = [...HeadlessSwitch.styles.switch];
     const colorClasses = HeadlessSwitch.styles.colors[this.options.color];
-    
+
     if (Array.isArray(colorClasses)) {
       classes.push(...colorClasses);
     } else {
@@ -419,19 +421,23 @@ class HeadlessSwitch {
           if (config.options?.onChange) {
             config.options.onChange(checked, event);
           }
-          
+
           // Call the group's onChange if it exists
           if (groupOptions.onChange) {
-            groupOptions.onChange(config.label || `switch-${switchInstances.length}`, checked, event);
+            groupOptions.onChange(
+              config.label || `switch-${switchInstances.length}`,
+              checked,
+              event
+            );
           }
-        }
+        },
       };
 
       const switchInstance = new HeadlessSwitch({
         ...switchOptions,
-        label: config.label
+        label: config.label,
       });
-      
+
       switchInstance.render(group);
       switchInstances.push(switchInstance);
     });
@@ -449,24 +455,24 @@ class HeadlessSwitch {
         return switchInstances.map((switchInstance, index) => ({
           index,
           label: switches[index].label,
-          checked: switchInstance.isChecked()
+          checked: switchInstance.isChecked(),
         }));
       },
       setAll: (checked) => {
-        switchInstances.forEach(switchInstance => {
+        switchInstances.forEach((switchInstance) => {
           switchInstance.setChecked(checked);
         });
       },
       disableAll: () => {
-        switchInstances.forEach(switchInstance => {
+        switchInstances.forEach((switchInstance) => {
           switchInstance.setDisabled(true);
         });
       },
       enableAll: () => {
-        switchInstances.forEach(switchInstance => {
+        switchInstances.forEach((switchInstance) => {
           switchInstance.setDisabled(false);
         });
-      }
+      },
     };
   }
 }

@@ -1,7 +1,7 @@
 // modules/doomscroll-detector/doomscroll-detector.js
 // Module for detecting excessive scrolling behavior
 
-if (typeof window.DoomscrollDetector === "undefined") {
+if (typeof window.DoomscrollDetector === 'undefined') {
   class DoomscrollDetector {
     constructor(config = {}) {
       this.config = {
@@ -17,7 +17,7 @@ if (typeof window.DoomscrollDetector === "undefined") {
       this.touchStartY = 0;
       this.touchStartTime = 0;
       this.isYouTubeShorts = false;
-      
+
       // Bind touch handlers
       this.handleTouchStart = this.handleTouchStart.bind(this);
       this.handleTouchEnd = this.handleTouchEnd.bind(this);
@@ -35,19 +35,19 @@ if (typeof window.DoomscrollDetector === "undefined") {
       this.isYouTubeShorts = this.detectYouTubeShorts();
 
       this.scrollHandler = this.handleScroll.bind(this);
-      window.addEventListener("scroll", this.scrollHandler, { passive: true });
-      
+      window.addEventListener('scroll', this.scrollHandler, { passive: true });
+
       // Add touch listeners for swipe detection (especially for YouTube Shorts)
       if (this.isYouTubeShorts || window.location.hostname.includes('tiktok')) {
-        document.addEventListener("touchstart", this.handleTouchStart, { passive: true });
-        document.addEventListener("touchend", this.handleTouchEnd, { passive: true });
-        
+        document.addEventListener('touchstart', this.handleTouchStart, { passive: true });
+        document.addEventListener('touchend', this.handleTouchEnd, { passive: true });
+
         // Also detect YouTube Shorts navigation changes
         if (this.isYouTubeShorts) {
           this.setupShortsNavigationDetection();
         }
       }
-      
+
       this.isInitialized = true;
     }
 
@@ -56,20 +56,20 @@ if (typeof window.DoomscrollDetector === "undefined") {
      */
     destroy() {
       if (this.scrollHandler) {
-        window.removeEventListener("scroll", this.scrollHandler);
+        window.removeEventListener('scroll', this.scrollHandler);
         this.scrollHandler = null;
       }
-      
+
       // Remove touch listeners
-      document.removeEventListener("touchstart", this.handleTouchStart);
-      document.removeEventListener("touchend", this.handleTouchEnd);
-      
+      document.removeEventListener('touchstart', this.handleTouchStart);
+      document.removeEventListener('touchend', this.handleTouchEnd);
+
       // Clean up Shorts observer
       if (this.shortsObserver) {
         this.shortsObserver.disconnect();
         this.shortsObserver = null;
       }
-      
+
       this.isInitialized = false;
       this.scrollDistance = 0;
       this.swipeCount = 0;
@@ -81,8 +81,7 @@ if (typeof window.DoomscrollDetector === "undefined") {
      * Handle scroll events and detect doomscrolling
      */
     handleScroll() {
-      const currentScrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop;
+      const currentScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       const scrollDelta = currentScrollTop - this.scrollDistance;
       this.scrollDistance = currentScrollTop;
 
@@ -98,7 +97,7 @@ if (typeof window.DoomscrollDetector === "undefined") {
     triggerDoomscrollDetected(triggerType = 'scroll') {
       // Dispatch custom event that other modules can listen to
       window.dispatchEvent(
-        new CustomEvent("doomscroll-detected", {
+        new CustomEvent('doomscroll-detected', {
           detail: {
             scrollDistance: this.scrollDistance,
             scrollLimit: this.config.SCROLL_LIMIT,
@@ -118,10 +117,12 @@ if (typeof window.DoomscrollDetector === "undefined") {
      * Detect if we're on YouTube Shorts
      */
     detectYouTubeShorts() {
-      return window.location.hostname.includes('youtube.com') && 
-             (window.location.pathname.includes('/shorts/') || 
-              document.querySelector('ytd-shorts') !== null ||
-              document.querySelector('[is-shorts]') !== null);
+      return (
+        window.location.hostname.includes('youtube.com') &&
+        (window.location.pathname.includes('/shorts/') ||
+          document.querySelector('ytd-shorts') !== null ||
+          document.querySelector('[is-shorts]') !== null)
+      );
     }
 
     /**
@@ -136,23 +137,25 @@ if (typeof window.DoomscrollDetector === "undefined") {
      * Handle touch end for swipe detection
      */
     handleTouchEnd(e) {
-      if (!this.touchStartY) {return;}
-      
+      if (!this.touchStartY) {
+        return;
+      }
+
       const touchEndY = e.changedTouches[0].clientY;
       const swipeDistance = this.touchStartY - touchEndY;
       const swipeTime = Date.now() - this.touchStartTime;
-      
+
       // Detect upward swipes (positive distance) of at least 50px that are quick (under 500ms)
       // This helps distinguish intentional swipes from slow scrolls
       if (swipeDistance > 50 && swipeTime < 500) {
         this.swipeCount++;
-        
+
         // Check if we've reached the swipe limit
         if (this.swipeCount >= this.config.SWIPE_LIMIT) {
           this.triggerDoomscrollDetected('swipe');
         }
       }
-      
+
       this.touchStartY = 0;
       this.touchStartTime = 0;
     }
@@ -163,27 +166,27 @@ if (typeof window.DoomscrollDetector === "undefined") {
     setupShortsNavigationDetection() {
       // Track URL changes in Shorts
       let lastUrl = window.location.href;
-      
+
       // Use a more reliable observer for Shorts navigation
       const observer = new MutationObserver(() => {
         const currentUrl = window.location.href;
         if (currentUrl !== lastUrl && currentUrl.includes('/shorts/')) {
           this.swipeCount++;
-          
+
           if (this.swipeCount >= this.config.SWIPE_LIMIT) {
             this.triggerDoomscrollDetected('navigation');
           }
-          
+
           lastUrl = currentUrl;
         }
       });
-      
+
       // Observe changes to the document
-      observer.observe(document, { 
-        childList: true, 
-        subtree: true 
+      observer.observe(document, {
+        childList: true,
+        subtree: true,
       });
-      
+
       // Store observer for cleanup
       this.shortsObserver = observer;
     }
@@ -208,10 +211,7 @@ if (typeof window.DoomscrollDetector === "undefined") {
      * @returns {number} Progress from 0 to 100
      */
     getScrollProgress() {
-      return Math.min(
-        100,
-        (this.scrollDistance / this.config.SCROLL_LIMIT) * 100
-      );
+      return Math.min(100, (this.scrollDistance / this.config.SCROLL_LIMIT) * 100);
     }
 
     /**
@@ -224,7 +224,7 @@ if (typeof window.DoomscrollDetector === "undefined") {
   }
 
   // Export for use in other modules
-  if (typeof module !== "undefined" && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = DoomscrollDetector;
   } else {
     window.DoomscrollDetector = DoomscrollDetector;

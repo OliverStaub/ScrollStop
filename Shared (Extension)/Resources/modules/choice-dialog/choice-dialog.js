@@ -1,6 +1,6 @@
 /**
  * Choice Dialog Module - Shows user choice when accessing blocked sites
- * 
+ *
  * Options:
  * a) Continue with ScrollStop (full functionality)
  * b) Timer only mode (no blocking)
@@ -12,7 +12,7 @@ class ChoiceDialog {
     this.options = {
       siteTitle: options.siteTitle || window.location.hostname,
       onChoiceMade: options.onChoiceMade || null,
-      ...options
+      ...options,
     };
 
     this.dialog = null;
@@ -25,13 +25,13 @@ class ChoiceDialog {
    */
   show() {
     console.log('ChoiceDialog: show() called, isShown:', this.isShown);
-    
+
     if (this.isShown) {
       return Promise.resolve(this.choice);
     }
 
     this.isShown = true;
-    
+
     return new Promise((resolve) => {
       console.log('ChoiceDialog: Creating dialog...');
       this.createDialog(resolve);
@@ -46,19 +46,18 @@ class ChoiceDialog {
       console.log('ChoiceDialog: createDialog() called');
       console.log('ChoiceDialog: HeadlessDialog available:', typeof HeadlessDialog !== 'undefined');
       console.log('ChoiceDialog: HeadlessButton available:', typeof HeadlessButton !== 'undefined');
-      
+
       // Create dialog container with glassmorphism styling
       this.dialog = new HeadlessDialog({
         size: 'sm', // Narrower dialog
         isOpen: true,
         className: 'scrollstop-glassmorphism-dialog',
-        onClose: () => this.handleChoice('continue', resolve)
+        onClose: () => this.handleChoice('continue', resolve),
       });
-      
+
       console.log('ChoiceDialog: Dialog created successfully');
-      
+
       this.createDialogContent(resolve);
-      
     } catch (error) {
       console.error('ChoiceDialog: Error in createDialog:', error);
       this.handleDialogFailure(resolve);
@@ -81,45 +80,45 @@ class ChoiceDialog {
       // Create action buttons using HeadlessButton default styling
       const continueBtn = new HeadlessButton('Continue with ScrollStop', {
         color: 'blue',
-        onClick: () => this.handleChoice('continue', resolve)
+        onClick: () => this.handleChoice('continue', resolve),
       });
 
       const timerOnlyBtn = new HeadlessButton('Timer Only', {
         color: 'zinc',
         outline: true,
-        onClick: () => this.handleChoice('timer-only', resolve)
+        onClick: () => this.handleChoice('timer-only', resolve),
       });
 
       const blockBtn = new HeadlessButton('Block Now', {
         color: 'red',
         outline: true,
-        onClick: () => this.handleChoice('block', resolve)
+        onClick: () => this.handleChoice('block', resolve),
       });
 
       console.log('ChoiceDialog: Buttons created, assembling content...');
 
-      // Create simple button container without descriptions  
+      // Create simple button container without descriptions
       const buttonContainer = document.createElement('div');
       buttonContainer.className = 'space-y-3';
-      
+
       buttonContainer.appendChild(continueBtn.element);
       buttonContainer.appendChild(timerOnlyBtn.element);
       buttonContainer.appendChild(blockBtn.element);
 
       console.log('ChoiceDialog: Adding content to dialog panel...');
-      
+
       // Add all content to dialog panel manually to avoid render issues
       const panel = this.dialog.getPanel();
       console.log('ChoiceDialog: Panel object:', panel);
-      
+
       if (!panel) {
         console.error('ChoiceDialog: Panel is null, cannot add content');
         throw new Error('Dialog panel is not available');
       }
-      
+
       panel.appendChild(title.element);
       panel.appendChild(body.element);
-      
+
       // Add actions container
       const actionsContainer = document.createElement('div');
       actionsContainer.className = 'mt-8';
@@ -127,10 +126,9 @@ class ChoiceDialog {
       panel.appendChild(actionsContainer);
 
       console.log('ChoiceDialog: Content added, rendering dialog...');
-      
+
       // Render dialog to page - use a more robust approach
       this.renderDialog();
-      
     } catch (error) {
       console.error('ChoiceDialog: Error creating dialog content:', error);
       this.handleDialogFailure(resolve);
@@ -155,7 +153,7 @@ class ChoiceDialog {
    */
   createSimpleDialog(resolve) {
     console.log('ChoiceDialog: Creating simple dialog...');
-    
+
     // Create overlay
     const overlay = document.createElement('div');
     overlay.style.cssText = `
@@ -170,7 +168,7 @@ class ChoiceDialog {
       align-items: center;
       justify-content: center;
     `;
-    
+
     // Create dialog box with glassmorphism styling
     const dialogBox = document.createElement('div');
     dialogBox.style.cssText = `
@@ -186,7 +184,7 @@ class ChoiceDialog {
       color: white;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     `;
-    
+
     // Create simplified content
     dialogBox.innerHTML = `
       <h2 style="
@@ -241,41 +239,41 @@ class ChoiceDialog {
         ">Block Now</button>
       </div>
     `;
-    
+
     // Add event listeners and hover effects
     const continueBtn = dialogBox.querySelector('#ss-continue');
     const timerBtn = dialogBox.querySelector('#ss-timer');
     const blockBtn = dialogBox.querySelector('#ss-block');
-    
+
     // Click handlers
     continueBtn.addEventListener('click', () => {
       this.cleanupSimpleDialog(overlay);
       this.handleChoice('continue', resolve);
     });
-    
+
     timerBtn.addEventListener('click', () => {
       this.cleanupSimpleDialog(overlay);
       this.handleChoice('timer-only', resolve);
     });
-    
+
     blockBtn.addEventListener('click', () => {
       this.cleanupSimpleDialog(overlay);
       this.handleChoice('block', resolve);
     });
-    
+
     // Hover effects for all buttons
-    [continueBtn, timerBtn, blockBtn].forEach(button => {
+    [continueBtn, timerBtn, blockBtn].forEach((button) => {
       button.addEventListener('mouseenter', () => {
         button.style.transform = 'scale(1.02)';
         button.style.boxShadow = '0px 6px 20px rgba(0, 0, 0, 0.3)';
       });
-      
+
       button.addEventListener('mouseleave', () => {
         button.style.transform = 'scale(1.0)';
         button.style.boxShadow = 'none';
       });
     });
-    
+
     // Close on overlay click
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) {
@@ -283,14 +281,14 @@ class ChoiceDialog {
         this.handleChoice('continue', resolve);
       }
     });
-    
+
     // Assemble and show
     overlay.appendChild(dialogBox);
     document.body.appendChild(overlay);
-    
+
     // Store reference for cleanup
     this.simpleDialog = overlay;
-    
+
     console.log('ChoiceDialog: Simple dialog created and shown');
   }
 
@@ -310,7 +308,7 @@ class ChoiceDialog {
   applyGlassmorphismStyling() {
     try {
       console.log('ChoiceDialog: Applying glassmorphism styling...');
-      
+
       // Find the dialog panel element
       const panel = this.dialog.element.querySelector('[role="dialog"]');
       if (!panel) {
@@ -340,7 +338,7 @@ class ChoiceDialog {
         `;
       }
 
-      // Style the description 
+      // Style the description
       const description = panel.querySelector('p');
       if (description) {
         description.style.cssText += `
@@ -352,7 +350,6 @@ class ChoiceDialog {
       // Let HeadlessButton use its default styling - no overrides
 
       console.log('ChoiceDialog: Glassmorphism styling applied successfully');
-      
     } catch (error) {
       console.error('ChoiceDialog: Error applying glassmorphism styling:', error);
     }
@@ -366,43 +363,43 @@ class ChoiceDialog {
       console.log('ChoiceDialog: Attempting to render dialog');
       console.log('ChoiceDialog: document.body exists:', !!document.body);
       console.log('ChoiceDialog: document.readyState:', document.readyState);
-      
+
       // Try multiple container options
       let container = document.body;
-      
+
       if (!container) {
         container = document.documentElement;
         console.log('ChoiceDialog: Using documentElement as container');
       }
-      
+
       if (!container) {
         console.error('ChoiceDialog: No suitable container found');
         return false;
       }
-      
+
       try {
         // Bypass the HeadlessDialog render method and append directly
         container.appendChild(this.dialog.element);
         console.log('ChoiceDialog: Dialog appended directly to container');
-        
+
         // Apply glassmorphism styling
         this.applyGlassmorphismStyling();
-        
+
         // Manually trigger dialog open state
         this.dialog.open();
-        
+
         return true;
       } catch (error) {
         console.error('ChoiceDialog: Error appending dialog:', error);
         return false;
       }
     };
-    
+
     // Try to render immediately
     if (attemptRender()) {
       return;
     }
-    
+
     // If failed, wait for DOM ready
     if (document.readyState === 'loading') {
       console.log('ChoiceDialog: DOM still loading, waiting for DOMContentLoaded');
@@ -436,7 +433,7 @@ class ChoiceDialog {
 
     // Fire event for coordinator
     const event = new CustomEvent('choice-dialog-complete', {
-      detail: { choice: choice }
+      detail: { choice: choice },
     });
     window.dispatchEvent(event);
 
@@ -456,13 +453,13 @@ class ChoiceDialog {
       const data = {
         choice: choice,
         timestamp: Date.now(),
-        hostname: window.location.hostname
+        hostname: window.location.hostname,
       };
-      
+
       // Store in extension storage
       if (typeof browser !== 'undefined' && browser.storage && browser.storage.local) {
         await browser.storage.local.set({
-          [`scrollstop_choice_${window.location.hostname}`]: data
+          [`scrollstop_choice_${window.location.hostname}`]: data,
         });
       } else {
         // Fallback to sessionStorage
@@ -482,7 +479,7 @@ class ChoiceDialog {
   static async clearSessionChoice(hostname) {
     try {
       const key = `scrollstop_choice_${hostname}`;
-      
+
       if (typeof browser !== 'undefined' && browser.storage && browser.storage.local) {
         await browser.storage.local.remove(key);
       } else {
@@ -500,15 +497,15 @@ class ChoiceDialog {
   static async getSessionChoice(hostname) {
     try {
       const key = `scrollstop_choice_${hostname}`;
-      
+
       // Try browser.storage.local first (session storage not always available)
       if (typeof browser !== 'undefined' && browser.storage && browser.storage.local) {
         const result = await browser.storage.local.get(key);
         const data = result[key];
-        
+
         if (data && data.timestamp) {
           // Check if choice is still valid (within last hour)
-          const hourAgo = Date.now() - (60 * 60 * 1000);
+          const hourAgo = Date.now() - 60 * 60 * 1000;
           if (data.timestamp > hourAgo) {
             return data.choice;
           }
@@ -520,7 +517,7 @@ class ChoiceDialog {
         const stored = sessionStorage.getItem(key);
         if (stored) {
           const data = JSON.parse(stored);
-          const hourAgo = Date.now() - (60 * 60 * 1000);
+          const hourAgo = Date.now() - 60 * 60 * 1000;
           if (data.timestamp > hourAgo) {
             return data.choice;
           }
@@ -530,7 +527,7 @@ class ChoiceDialog {
     } catch (error) {
       console.error('Error getting session choice:', error);
     }
-    
+
     return null;
   }
 

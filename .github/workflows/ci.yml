@@ -13,18 +13,18 @@ jobs:
   lint-and-test:
     name: Lint and Test
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
-      
+
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -32,34 +32,34 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      
+
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
-      
+
       - name: Run ESLint
         run: npm run lint
-      
+
       - name: Run Prettier check
         run: npm run format:check
-      
+
       - name: Validate manifest.json
         run: npm run validate:manifest
-      
+
       - name: Validate sites.json
         run: npm run validate:sites
-      
+
       - name: Check manifest file paths
         run: npm run build:check
-      
+
       - name: Run unit tests
         run: npm run test:unit
-      
+
       - name: Run integration tests
         run: npm run test:integration
-      
+
       - name: Generate test coverage
         run: npm run test:coverage
-        
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -72,16 +72,16 @@ jobs:
     name: Build macOS Extension
     runs-on: macos-latest
     needs: lint-and-test
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
-      
+
       - name: Build macOS Extension
         run: |
           xcodebuild -project ScrollStop.xcodeproj \
@@ -90,7 +90,7 @@ jobs:
             clean build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
-      
+
       - name: Archive macOS build artifacts
         uses: actions/upload-artifact@v3
         if: success()
@@ -105,16 +105,16 @@ jobs:
     name: Build iOS Extension
     runs-on: macos-latest
     needs: lint-and-test
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
-      
+
       - name: Build iOS Extension
         run: |
           xcodebuild -project ScrollStop.xcodeproj \
@@ -124,7 +124,7 @@ jobs:
             clean build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
-      
+
       - name: Archive iOS build artifacts
         uses: actions/upload-artifact@v3
         if: success()
@@ -139,29 +139,29 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     needs: lint-and-test
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Run Semgrep security scan
         uses: semgrep/semgrep-action@v1
         with:
           publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
           publishDeployment: true
-          generateSarif: "1"
+          generateSarif: '1'
         env:
           SEMGREP_RULES: >-
             p/security-audit
             p/secrets
             p/javascript
-      
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
         if: always()
         with:
           sarif_file: semgrep.sarif
-      
+
       - name: Check for secrets with TruffleHog
         uses: trufflesecurity/trufflehog@main
         with:
@@ -173,18 +173,18 @@ jobs:
   dependency-scan:
     name: Dependency Scan
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
-      
+
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -192,14 +192,14 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      
+
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
-      
+
       - name: Run npm audit
         run: npm audit --audit-level=moderate
         continue-on-error: true
-      
+
       - name: Run dependency review
         uses: actions/dependency-review-action@v3
         if: github.event_name == 'pull_request'
@@ -208,18 +208,18 @@ jobs:
     name: Performance Tests
     runs-on: ubuntu-latest
     needs: lint-and-test
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
-      
+
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -227,15 +227,15 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      
+
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
-      
+
       - name: Run performance tests
         run: |
           # Add performance test script when available
           echo "Performance tests placeholder"
-      
+
       - name: Memory leak detection
         run: |
           # Add memory leak test script when available
@@ -245,20 +245,20 @@ jobs:
     name: Code Quality Analysis
     runs-on: ubuntu-latest
     needs: lint-and-test
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better analysis
-      
+          fetch-depth: 0 # Shallow clones should be disabled for better analysis
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
-      
+
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -266,13 +266,13 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      
+
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
-      
+
       - name: Run tests with coverage
         run: npm run test:coverage
-      
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -292,7 +292,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint-and-test, build-macos, build-ios, security-scan]
     if: always()
-    
+
     steps:
       - name: Check job results
         run: |

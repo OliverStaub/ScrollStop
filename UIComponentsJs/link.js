@@ -97,44 +97,32 @@ class HeadlessLink {
       'inline-flex items-center',
       'transition-colors duration-200',
       'focus:outline-2 focus:outline-offset-2 focus:outline-blue-500',
-      'hover:underline'
+      'hover:underline',
     ],
-    
+
     // Common link styles you might want to use
-    primary: [
-      'text-blue-600 dark:text-blue-400',
-      'hover:text-blue-800 dark:hover:text-blue-300'
-    ],
-    
-    secondary: [
-      'text-zinc-600 dark:text-zinc-400',
-      'hover:text-zinc-800 dark:hover:text-zinc-200'
-    ],
-    
-    danger: [
-      'text-red-600 dark:text-red-400',
-      'hover:text-red-800 dark:hover:text-red-300'
-    ],
-    
-    muted: [
-      'text-zinc-500 dark:text-zinc-500',
-      'hover:text-zinc-700 dark:hover:text-zinc-300'
-    ]
+    primary: ['text-blue-600 dark:text-blue-400', 'hover:text-blue-800 dark:hover:text-blue-300'],
+
+    secondary: ['text-zinc-600 dark:text-zinc-400', 'hover:text-zinc-800 dark:hover:text-zinc-200'],
+
+    danger: ['text-red-600 dark:text-red-400', 'hover:text-red-800 dark:hover:text-red-300'],
+
+    muted: ['text-zinc-500 dark:text-zinc-500', 'hover:text-zinc-700 dark:hover:text-zinc-300'],
   };
 
   createElement() {
     // Create the link element
     const link = document.createElement('a');
-    
+
     // Set href and handle special link types
     link.href = this.buildHref();
-    
+
     // Set text content
     link.textContent = this.text;
-    
+
     // Apply CSS classes
     link.className = this.getClasses();
-    
+
     // Set basic attributes
     if (this.options.target) link.target = this.options.target;
     if (this.options.rel) link.rel = this.options.rel;
@@ -175,19 +163,19 @@ class HeadlessLink {
 
   buildHref() {
     let href = this.options.href;
-    
+
     // Handle mailto links with subject and body
     if (href.startsWith('mailto:')) {
       const params = new URLSearchParams();
       if (this.options.subject) params.append('subject', this.options.subject);
       if (this.options.body) params.append('body', this.options.body);
-      
+
       const queryString = params.toString();
       if (queryString) {
         href += (href.includes('?') ? '&' : '?') + queryString;
       }
     }
-    
+
     return href;
   }
 
@@ -244,8 +232,9 @@ class HeadlessLink {
   // Method to add classes
   addClass(className) {
     if (!this.options.className.includes(className)) {
-      this.options.className = this.options.className ? 
-        `${this.options.className} ${className}` : className;
+      this.options.className = this.options.className
+        ? `${this.options.className} ${className}`
+        : className;
       this.element.className = this.getClasses();
     }
     return this;
@@ -255,7 +244,7 @@ class HeadlessLink {
   removeClass(className) {
     this.options.className = this.options.className
       .split(' ')
-      .filter(cls => cls !== className)
+      .filter((cls) => cls !== className)
       .join(' ');
     this.element.className = this.getClasses();
     return this;
@@ -310,7 +299,7 @@ class HeadlessLink {
   static createGroup(container, links, groupOptions = {}) {
     const group = document.createElement('nav');
     group.className = groupOptions.className || 'flex space-x-4';
-    
+
     if (groupOptions.ariaLabel) {
       group.setAttribute('aria-label', groupOptions.ariaLabel);
     }
@@ -330,7 +319,7 @@ class HeadlessLink {
 
     return {
       element: group,
-      links: linkInstances
+      links: linkInstances,
     };
   }
 
@@ -366,7 +355,8 @@ class HeadlessLink {
       } else {
         const link = new HeadlessLink(item.text, {
           ...item,
-          className: 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'
+          className:
+            'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
         });
         link.render(li);
       }
@@ -391,17 +381,20 @@ class HeadlessLink {
     nav.className = options.className || 'flex justify-center space-x-1';
 
     const pages = [];
-    
+
     // Previous button
     if (currentPage > 1) {
       pages.push({
         text: options.prevText || 'Previous',
         href: options.getHref ? options.getHref(currentPage - 1) : `#page-${currentPage - 1}`,
-        className: 'px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-50',
-        onClick: options.onPageChange ? (e) => {
-          e.preventDefault();
-          options.onPageChange(currentPage - 1);
-        } : null
+        className:
+          'px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-50',
+        onClick: options.onPageChange
+          ? (e) => {
+              e.preventDefault();
+              options.onPageChange(currentPage - 1);
+            }
+          : null,
       });
     }
 
@@ -413,14 +406,17 @@ class HeadlessLink {
       pages.push({
         text: i.toString(),
         href: options.getHref ? options.getHref(i) : `#page-${i}`,
-        className: i === currentPage ? 
-          'px-3 py-2 rounded-md bg-blue-600 text-white' : 
-          'px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-50',
+        className:
+          i === currentPage
+            ? 'px-3 py-2 rounded-md bg-blue-600 text-white'
+            : 'px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-50',
         'aria-current': i === currentPage ? 'page' : null,
-        onClick: options.onPageChange ? (e) => {
-          e.preventDefault();
-          options.onPageChange(i);
-        } : null
+        onClick: options.onPageChange
+          ? (e) => {
+              e.preventDefault();
+              options.onPageChange(i);
+            }
+          : null,
       });
     }
 
@@ -429,11 +425,14 @@ class HeadlessLink {
       pages.push({
         text: options.nextText || 'Next',
         href: options.getHref ? options.getHref(currentPage + 1) : `#page-${currentPage + 1}`,
-        className: 'px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-50',
-        onClick: options.onPageChange ? (e) => {
-          e.preventDefault();
-          options.onPageChange(currentPage + 1);
-        } : null
+        className:
+          'px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-50',
+        onClick: options.onPageChange
+          ? (e) => {
+              e.preventDefault();
+              options.onPageChange(currentPage + 1);
+            }
+          : null,
       });
     }
 

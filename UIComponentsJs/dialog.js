@@ -16,18 +16,18 @@
  *   isOpen: false,
  *   onClose: () => dialog.close()
  * });
- * 
+ *
  * new HeadlessDialogTitle('Confirm Action').render(dialog.getPanel());
  * new HeadlessDialogDescription('Are you sure you want to proceed?').render(dialog.getPanel());
- * 
+ *
  * const body = new HeadlessDialogBody();
  * body.element.innerHTML = '<p>This action cannot be undone.</p>';
  * body.render(dialog.getPanel());
- * 
+ *
  * const actions = new HeadlessDialogActions();
  * // Add your buttons here
  * actions.render(dialog.getPanel());
- * 
+ *
  * dialog.render('#app');
  *
  * // Different sizes
@@ -45,7 +45,7 @@ class HeadlessDialog {
   constructor(options = {}) {
     this.options = {
       size: options.size || 'lg',
-      className: options.className || "",
+      className: options.className || '',
       isOpen: options.isOpen || false,
       onClose: options.onClose || null,
       ...options,
@@ -71,13 +71,14 @@ class HeadlessDialog {
 
   createElement() {
     // Main dialog container
-    const dialogContainer = document.createElement("div");
-    dialogContainer.className = "fixed inset-0 z-50";
-    dialogContainer.style.display = this.isOpen ? "block" : "none";
+    const dialogContainer = document.createElement('div');
+    dialogContainer.className = 'fixed inset-0 z-50';
+    dialogContainer.style.display = this.isOpen ? 'block' : 'none';
 
     // Backdrop
-    const backdrop = document.createElement("div");
-    backdrop.className = "fixed inset-0 flex w-screen justify-center overflow-y-auto bg-zinc-950/25 px-2 py-2 focus:outline-0 sm:px-6 sm:py-8 lg:px-8 lg:py-16 dark:bg-zinc-950/50";
+    const backdrop = document.createElement('div');
+    backdrop.className =
+      'fixed inset-0 flex w-screen justify-center overflow-y-auto bg-zinc-950/25 px-2 py-2 focus:outline-0 sm:px-6 sm:py-8 lg:px-8 lg:py-16 dark:bg-zinc-950/50';
     backdrop.addEventListener('click', (e) => {
       if (e.target === backdrop && this.options.onClose) {
         this.options.onClose();
@@ -85,15 +86,16 @@ class HeadlessDialog {
     });
 
     // Content container
-    const contentContainer = document.createElement("div");
-    contentContainer.className = "fixed inset-0 w-screen overflow-y-auto pt-6 sm:pt-0";
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'fixed inset-0 w-screen overflow-y-auto pt-6 sm:pt-0';
 
     // Grid layout
-    const gridContainer = document.createElement("div");
-    gridContainer.className = "grid min-h-full grid-rows-[1fr_auto] justify-items-center sm:grid-rows-[1fr_auto_3fr] sm:p-4";
+    const gridContainer = document.createElement('div');
+    gridContainer.className =
+      'grid min-h-full grid-rows-[1fr_auto] justify-items-center sm:grid-rows-[1fr_auto_3fr] sm:p-4';
 
     // Dialog panel
-    this.panel = document.createElement("div");
+    this.panel = document.createElement('div');
     this.panel.className = this.getPanelClasses();
     this.panel.setAttribute('role', 'dialog');
     this.panel.setAttribute('aria-modal', 'true');
@@ -129,7 +131,7 @@ class HeadlessDialog {
       'sm:rounded-2xl',
       'dark:bg-zinc-900',
       'dark:ring-white/10',
-      'forced-colors:outline'
+      'forced-colors:outline',
     ];
 
     // Add size class
@@ -142,23 +144,23 @@ class HeadlessDialog {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
-    
+
     // Update event listeners
     this.updateEventListeners();
-    
+
     return this;
   }
 
@@ -174,14 +176,14 @@ class HeadlessDialog {
 
   open() {
     this.isOpen = true;
-    this.element.style.display = "block";
+    this.element.style.display = 'block';
     this.updateEventListeners();
     return this;
   }
 
   close() {
     this.isOpen = false;
-    this.element.style.display = "none";
+    this.element.style.display = 'none';
     this.updateEventListeners();
     return this;
   }
@@ -218,7 +220,7 @@ class HeadlessDialogTitle {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -233,12 +235,12 @@ class HeadlessDialogTitle {
       'text-balance',
       'text-zinc-950',
       'sm:text-base/6',
-      'dark:text-white'
-    ]
+      'dark:text-white',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("h2");
+    const element = document.createElement('h2');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -251,16 +253,16 @@ class HeadlessDialogTitle {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -285,14 +287,14 @@ class HeadlessDialogDescription {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
     this.element = this.createElement();
   }
 
-  // Style configurations  
+  // Style configurations
   static styles = {
     base: [
       'mt-2',
@@ -300,12 +302,12 @@ class HeadlessDialogDescription {
       'text-base/6',
       'text-zinc-500',
       'sm:text-sm/6',
-      'dark:text-zinc-400'
-    ]
+      'dark:text-zinc-400',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("p");
+    const element = document.createElement('p');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -318,16 +320,16 @@ class HeadlessDialogDescription {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -351,7 +353,7 @@ class HeadlessDialogDescription {
 class HeadlessDialogBody {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -360,13 +362,11 @@ class HeadlessDialogBody {
 
   // Style configurations
   static styles = {
-    base: [
-      'mt-6'
-    ]
+    base: ['mt-6'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     return element;
   }
@@ -378,16 +378,16 @@ class HeadlessDialogBody {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -415,7 +415,7 @@ class HeadlessDialogBody {
 class HeadlessDialogActions {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -433,12 +433,12 @@ class HeadlessDialogActions {
       'gap-3',
       '*:w-full',
       'sm:flex-row',
-      'sm:*:w-auto'
-    ]
+      'sm:*:w-auto',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     return element;
   }
@@ -450,16 +450,16 @@ class HeadlessDialogActions {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -490,12 +490,12 @@ class HeadlessDialogActions {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessDialog,
     HeadlessDialogTitle,
     HeadlessDialogDescription,
     HeadlessDialogBody,
-    HeadlessDialogActions
+    HeadlessDialogActions,
   };
 }

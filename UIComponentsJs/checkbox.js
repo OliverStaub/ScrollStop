@@ -168,7 +168,10 @@ class HeadlessCheckbox {
 
     // Create the SVG for checkmark and indeterminate states
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'size-4 stroke-(--checkbox-check) opacity-0 group-data-checked:opacity-100 sm:h-3.5 sm:w-3.5');
+    svg.setAttribute(
+      'class',
+      'size-4 stroke-(--checkbox-check) opacity-0 group-data-checked:opacity-100 sm:h-3.5 sm:w-3.5'
+    );
     svg.setAttribute('viewBox', '0 0 14 14');
     svg.setAttribute('fill', 'none');
 
@@ -243,7 +246,7 @@ class HeadlessCheckbox {
   getClasses() {
     const classes = [...HeadlessCheckbox.styles.base];
     const colorClasses = HeadlessCheckbox.styles.colors[this.options.color];
-    
+
     if (Array.isArray(colorClasses)) {
       classes.push(...colorClasses);
     } else {

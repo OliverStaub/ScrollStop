@@ -21,13 +21,13 @@ jobs:
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       tag_name: ${{ steps.get_version.outputs.tag_name }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Get version
         id: get_version
         run: |
@@ -36,7 +36,7 @@ jobs:
           else
             echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Generate changelog
         id: changelog
         run: |
@@ -47,13 +47,13 @@ jobs:
           else
             COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)" --no-merges)
           fi
-          
+
           echo "## Changes" > changelog.md
           echo "$COMMITS" >> changelog.md
-          
+
           echo "Generated changelog:"
           cat changelog.md
-      
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -70,16 +70,16 @@ jobs:
     name: Build and Upload macOS
     runs-on: macos-latest
     needs: create-release
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
-      
+
       - name: Build macOS Extension (Release)
         run: |
           xcodebuild -project ScrollStop.xcodeproj \
@@ -89,7 +89,7 @@ jobs:
             archive \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
-      
+
       - name: Export macOS App
         run: |
           xcodebuild -exportArchive \
@@ -99,12 +99,12 @@ jobs:
           # Fallback: just copy the app from archive
           mkdir -p ScrollStop-macOS-Export && \
           cp -R ScrollStop-macOS.xcarchive/Products/Applications/*.app ScrollStop-macOS-Export/
-      
+
       - name: Create macOS ZIP
         run: |
           cd ScrollStop-macOS-Export
           zip -r ../ScrollStop-macOS-${{ needs.create-release.outputs.tag_name }}.zip *.app
-      
+
       - name: Upload macOS Release Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -119,16 +119,16 @@ jobs:
     name: Build and Upload iOS
     runs-on: macos-latest
     needs: create-release
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
-      
+
       - name: Build iOS Extension (Release)
         run: |
           xcodebuild -project ScrollStop.xcodeproj \
@@ -139,7 +139,7 @@ jobs:
             archive \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
-      
+
       - name: Export iOS App
         run: |
           xcodebuild -exportArchive \
@@ -149,13 +149,13 @@ jobs:
           # Fallback: just copy the app from archive
           mkdir -p ScrollStop-iOS-Export && \
           cp -R ScrollStop-iOS.xcarchive/Products/Applications/*.app ScrollStop-iOS-Export/
-      
+
       - name: Create iOS ZIP
         run: |
           cd ScrollStop-iOS-Export
           zip -r ../ScrollStop-iOS-${{ needs.create-release.outputs.tag_name }}.zip *.app *.ipa || \
           zip -r ../ScrollStop-iOS-${{ needs.create-release.outputs.tag_name }}.zip *.app
-      
+
       - name: Upload iOS Release Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -170,29 +170,29 @@ jobs:
     name: Create Extension Package
     runs-on: ubuntu-latest
     needs: create-release
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run validation
         run: npm run validate
-      
+
       - name: Create Extension Source Package
         run: |
           mkdir -p ScrollStop-Extension-Source
           cp -R "Shared (Extension)/Resources/"* ScrollStop-Extension-Source/
           zip -r ScrollStop-Extension-Source-${{ needs.create-release.outputs.tag_name }}.zip ScrollStop-Extension-Source
-      
+
       - name: Upload Extension Source Package
         uses: actions/upload-release-asset@v1
         env:
@@ -208,17 +208,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: [create-release, build-and-upload-ios]
     if: startsWith(github.ref, 'refs/tags/v')
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Update App Store Connect metadata
         run: |
           echo "📱 Placeholder: Update App Store Connect metadata"
           echo "Version: ${{ needs.create-release.outputs.tag_name }}"
           # Add actual App Store Connect API calls here when ready
-      
+
       - name: Update Mac App Store metadata
         run: |
           echo "💻 Placeholder: Update Mac App Store metadata" 
@@ -230,7 +230,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [create-release, build-and-upload-macos, build-and-upload-ios, create-extension-package]
     if: always()
-    
+
     steps:
       - name: Check release status
         run: |
@@ -238,7 +238,7 @@ jobs:
           echo "✅ macOS build: ${{ needs.build-and-upload-macos.result }}"
           echo "✅ iOS build: ${{ needs.build-and-upload-ios.result }}"
           echo "✅ Extension package: ${{ needs.create-extension-package.result }}"
-          
+
           if [[ "${{ needs.build-and-upload-macos.result }}" == "failure" || 
                 "${{ needs.build-and-upload-ios.result }}" == "failure" || 
                 "${{ needs.create-extension-package.result }}" == "failure" ]]; then

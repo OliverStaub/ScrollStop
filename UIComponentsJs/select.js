@@ -35,14 +35,14 @@
  *
  * // Select with option groups
  * new HeadlessSelect([
- *   { 
+ *   {
  *     label: 'Fruits',
  *     options: [
  *       { value: 'apple', text: 'Apple' },
  *       { value: 'banana', text: 'Banana' }
  *     ]
  *   },
- *   { 
+ *   {
  *     label: 'Vegetables',
  *     options: [
  *       { value: 'carrot', text: 'Carrot' },
@@ -136,9 +136,7 @@ class HeadlessSelect {
       'px-[calc(--spacing(3.5)-1px)] sm:px-[calc(--spacing(3)-1px)]',
     ],
 
-    chevronIcon: [
-      'pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2',
-    ],
+    chevronIcon: ['pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'],
   };
 
   createElement() {
@@ -151,7 +149,7 @@ class HeadlessSelect {
     const select = document.createElement('select');
     select.className = this.getSelectClasses();
     select.multiple = this.config.multiple;
-    
+
     // Set basic properties
     if (this.config.disabled) select.disabled = true;
     if (this.config.required) select.required = true;
@@ -164,7 +162,7 @@ class HeadlessSelect {
 
     // Set initial value(s)
     if (this.config.multiple && Array.isArray(this.config.value)) {
-      this.config.value.forEach(val => {
+      this.config.value.forEach((val) => {
         const option = select.querySelector(`option[value="${val}"]`);
         if (option) option.selected = true;
       });
@@ -178,7 +176,7 @@ class HeadlessSelect {
     // Add event listeners
     select.addEventListener('change', (e) => {
       if (this.config.multiple) {
-        const selectedValues = Array.from(e.target.selectedOptions).map(option => option.value);
+        const selectedValues = Array.from(e.target.selectedOptions).map((option) => option.value);
         this.config.value = selectedValues;
         if (this.config.onChange) {
           this.config.onChange(selectedValues, e);
@@ -224,7 +222,10 @@ class HeadlessSelect {
       chevronWrapper.className = HeadlessSelect.styles.chevronIcon.join(' ');
 
       const chevronSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      chevronSvg.setAttribute('class', 'size-5 stroke-zinc-500 group-has-data-disabled:stroke-zinc-600 sm:size-4 dark:stroke-zinc-400 forced-colors:stroke-[CanvasText]');
+      chevronSvg.setAttribute(
+        'class',
+        'size-5 stroke-zinc-500 group-has-data-disabled:stroke-zinc-600 sm:size-4 dark:stroke-zinc-400 forced-colors:stroke-[CanvasText]'
+      );
       chevronSvg.setAttribute('viewBox', '0 0 16 16');
       chevronSvg.setAttribute('aria-hidden', 'true');
       chevronSvg.setAttribute('fill', 'none');
@@ -253,20 +254,20 @@ class HeadlessSelect {
   }
 
   buildOptions(select) {
-    this.options.forEach(option => {
+    this.options.forEach((option) => {
       if (option.label && option.options) {
         // This is an optgroup
         const optgroup = document.createElement('optgroup');
         optgroup.label = option.label;
-        
-        option.options.forEach(subOption => {
+
+        option.options.forEach((subOption) => {
           const opt = document.createElement('option');
           opt.value = subOption.value;
           opt.textContent = subOption.text;
           if (subOption.disabled) opt.disabled = true;
           optgroup.appendChild(opt);
         });
-        
+
         select.appendChild(optgroup);
       } else {
         // This is a regular option
@@ -332,29 +333,29 @@ class HeadlessSelect {
   // Method to update selected value(s)
   setValue(newValue) {
     this.config.value = newValue;
-    
+
     if (this.config.multiple && Array.isArray(newValue)) {
       // Clear all selections first
-      Array.from(this.select.options).forEach(option => {
+      Array.from(this.select.options).forEach((option) => {
         option.selected = false;
       });
-      
+
       // Set new selections
-      newValue.forEach(val => {
+      newValue.forEach((val) => {
         const option = this.select.querySelector(`option[value="${val}"]`);
         if (option) option.selected = true;
       });
     } else if (!this.config.multiple) {
       this.select.value = newValue;
     }
-    
+
     return this;
   }
 
   // Method to get current value(s)
   getValue() {
     if (this.config.multiple) {
-      return Array.from(this.select.selectedOptions).map(option => option.value);
+      return Array.from(this.select.selectedOptions).map((option) => option.value);
     } else {
       return this.select.value;
     }
@@ -369,7 +370,7 @@ class HeadlessSelect {
         optgroup.label = groupLabel;
         this.select.appendChild(optgroup);
       }
-      
+
       const opt = document.createElement('option');
       opt.value = option.value;
       opt.textContent = option.text;
@@ -382,7 +383,7 @@ class HeadlessSelect {
       if (option.disabled) opt.disabled = true;
       this.select.appendChild(opt);
     }
-    
+
     return this;
   }
 
@@ -425,7 +426,7 @@ class HeadlessSelect {
   // Method to clear selection
   clear() {
     if (this.config.multiple) {
-      Array.from(this.select.options).forEach(option => {
+      Array.from(this.select.options).forEach((option) => {
         option.selected = false;
       });
       this.config.value = [];
@@ -449,7 +450,7 @@ class HeadlessSelect {
   // Method to get selected option text(s)
   getSelectedText() {
     if (this.config.multiple) {
-      return Array.from(this.select.selectedOptions).map(option => option.textContent);
+      return Array.from(this.select.selectedOptions).map((option) => option.textContent);
     } else {
       return this.select.selectedOptions[0]?.textContent || '';
     }
@@ -470,7 +471,7 @@ class HeadlessSelect {
 
     selects.forEach((config) => {
       const selectWrapper = document.createElement('div');
-      
+
       if (config.label) {
         const label = document.createElement('label');
         label.textContent = config.label;

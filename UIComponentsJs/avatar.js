@@ -7,36 +7,36 @@
  * new HeadlessAvatar({ src: '/path/to/image.jpg', alt: 'User Name' }).render('#container');
  *
  * // Avatar with initials fallback
- * new HeadlessAvatar({ 
- *   src: '/path/to/image.jpg', 
- *   initials: 'JD', 
- *   alt: 'John Doe' 
+ * new HeadlessAvatar({
+ *   src: '/path/to/image.jpg',
+ *   initials: 'JD',
+ *   alt: 'John Doe'
  * }).render('#user-profile');
  *
  * // Square avatar
- * new HeadlessAvatar({ 
- *   src: '/path/to/image.jpg', 
- *   square: true, 
- *   alt: 'Company Logo' 
+ * new HeadlessAvatar({
+ *   src: '/path/to/image.jpg',
+ *   square: true,
+ *   alt: 'Company Logo'
  * }).render('#company-info');
  *
  * // Initials only avatar
- * new HeadlessAvatar({ 
- *   initials: 'AB', 
- *   alt: 'Alice Bob' 
+ * new HeadlessAvatar({
+ *   initials: 'AB',
+ *   alt: 'Alice Bob'
  * }).render('#chat-user');
  *
  * // Clickable avatar button
- * new HeadlessAvatarButton({ 
- *   src: '/avatar.jpg', 
- *   initials: 'ME', 
+ * new HeadlessAvatarButton({
+ *   src: '/avatar.jpg',
+ *   initials: 'ME',
  *   alt: 'My Profile',
  *   onClick: () => console.log('Avatar clicked!')
  * }).render('#user-menu');
  *
  * // Avatar button as link
- * new HeadlessAvatarButton({ 
- *   src: '/avatar.jpg', 
+ * new HeadlessAvatarButton({
+ *   src: '/avatar.jpg',
  *   href: '/profile',
  *   alt: 'Go to Profile'
  * }).render('#navigation');
@@ -58,20 +58,12 @@ class HeadlessAvatar {
   static styles = {
     base: [
       'inline-grid shrink-0 align-middle *:col-start-1 *:row-start-1',
-      'outline -outline-offset-1 outline-black/10 dark:outline-white/10'
+      'outline -outline-offset-1 outline-black/10 dark:outline-white/10',
     ],
-    round: [
-      'rounded-full *:rounded-full'
-    ],
-    square: [
-      'rounded-[20%] *:rounded-[20%]'
-    ],
-    svg: [
-      'size-full fill-current p-[5%] text-[48px] font-medium uppercase select-none'
-    ],
-    img: [
-      'size-full'
-    ]
+    round: ['rounded-full *:rounded-full'],
+    square: ['rounded-[20%] *:rounded-[20%]'],
+    svg: ['size-full fill-current p-[5%] text-[48px] font-medium uppercase select-none'],
+    img: ['size-full'],
   };
 
   createElement() {
@@ -97,7 +89,7 @@ class HeadlessAvatar {
 
   getClasses() {
     const classes = [...HeadlessAvatar.styles.base];
-    
+
     if (this.options.square) {
       classes.push(...HeadlessAvatar.styles.square);
     } else {
@@ -115,7 +107,7 @@ class HeadlessAvatar {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.className = HeadlessAvatar.styles.svg.join(' ');
     svg.setAttribute('viewBox', '0 0 100 100');
-    
+
     if (!this.options.alt) {
       svg.setAttribute('aria-hidden', 'true');
     }
@@ -136,7 +128,7 @@ class HeadlessAvatar {
     text.setAttribute('text-anchor', 'middle');
     text.setAttribute('dy', '.125em');
     text.textContent = this.options.initials;
-    
+
     svg.appendChild(text);
     return svg;
   }
@@ -146,7 +138,7 @@ class HeadlessAvatar {
     img.className = HeadlessAvatar.styles.img.join(' ');
     img.src = this.options.src;
     img.alt = this.options.alt;
-    
+
     // Handle image load error - show initials fallback
     img.addEventListener('error', () => {
       if (this.options.initials && !this.element.querySelector('svg')) {
@@ -161,7 +153,7 @@ class HeadlessAvatar {
   setSrc(src) {
     this.options.src = src;
     const existingImg = this.element.querySelector('img');
-    
+
     if (src) {
       if (existingImg) {
         existingImg.src = src;
@@ -172,14 +164,14 @@ class HeadlessAvatar {
     } else if (existingImg) {
       existingImg.remove();
     }
-    
+
     return this;
   }
 
   setInitials(initials) {
     this.options.initials = initials;
     const existingSvg = this.element.querySelector('svg');
-    
+
     if (initials) {
       if (existingSvg) {
         const text = existingSvg.querySelector('text');
@@ -199,18 +191,18 @@ class HeadlessAvatar {
     } else if (existingSvg) {
       existingSvg.remove();
     }
-    
+
     return this;
   }
 
   setAlt(alt) {
     this.options.alt = alt;
-    
+
     const img = this.element.querySelector('img');
     if (img) {
       img.alt = alt;
     }
-    
+
     const svg = this.element.querySelector('svg');
     if (svg) {
       if (alt) {
@@ -229,7 +221,7 @@ class HeadlessAvatar {
         }
       }
     }
-    
+
     return this;
   }
 
@@ -282,31 +274,25 @@ class HeadlessAvatarButton {
       src: this.options.src,
       square: this.options.square,
       initials: this.options.initials,
-      alt: this.options.alt
+      alt: this.options.alt,
     });
 
     this.element = this.createElement();
   }
 
   static styles = {
-    base: [
-      'relative inline-grid focus:outline-2 focus:outline-offset-2 focus:outline-blue-500'
-    ],
-    round: [
-      'rounded-full'
-    ],
-    square: [
-      'rounded-[20%]'
-    ],
+    base: ['relative inline-grid focus:outline-2 focus:outline-offset-2 focus:outline-blue-500'],
+    round: ['rounded-full'],
+    square: ['rounded-[20%]'],
     touchTarget: [
-      'absolute top-1/2 left-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden'
-    ]
+      'absolute top-1/2 left-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden',
+    ],
   };
 
   createElement() {
     // Create button or anchor element
-    const element = this.options.href 
-      ? document.createElement('a') 
+    const element = this.options.href
+      ? document.createElement('a')
       : document.createElement('button');
 
     element.className = this.getClasses();
@@ -340,7 +326,7 @@ class HeadlessAvatarButton {
 
   getClasses() {
     const classes = [...HeadlessAvatarButton.styles.base];
-    
+
     if (this.options.square) {
       classes.push(...HeadlessAvatarButton.styles.square);
     } else {
@@ -392,13 +378,13 @@ class HeadlessAvatarButton {
     if (this.options.onClick) {
       this.element.removeEventListener('click', this.options.onClick);
     }
-    
+
     this.options.onClick = onClick;
-    
+
     if (onClick) {
       this.element.addEventListener('click', onClick);
     }
-    
+
     return this;
   }
 

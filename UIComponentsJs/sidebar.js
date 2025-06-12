@@ -5,13 +5,13 @@
  *
  * // Basic sidebar
  * const sidebar = new HeadlessSidebar();
- * 
+ *
  * const header = new HeadlessSidebarHeader();
  * header.element.innerHTML = '<h2>My App</h2>';
  * header.render(sidebar.element);
- * 
+ *
  * const body = new HeadlessSidebarBody();
- * 
+ *
  * const section = new HeadlessSidebarSection();
  * new HeadlessSidebarHeading('Navigation').render(section.element);
  * new HeadlessSidebarItem({
@@ -24,39 +24,39 @@
  *   href: '/settings'
  * }).render(section.element);
  * section.render(body.element);
- * 
+ *
  * body.render(sidebar.element);
  * sidebar.render('#container');
  *
  * // With dividers and spacers
  * const sidebar = new HeadlessSidebar();
  * const body = new HeadlessSidebarBody();
- * 
+ *
  * const section1 = new HeadlessSidebarSection();
  * new HeadlessSidebarItem({
  *   children: 'Home',
  *   href: '/'
  * }).render(section1.element);
  * section1.render(body.element);
- * 
+ *
  * new HeadlessSidebarDivider().render(body.element);
- * 
+ *
  * const section2 = new HeadlessSidebarSection();
  * new HeadlessSidebarItem({
  *   children: 'Profile',
  *   href: '/profile'
  * }).render(section2.element);
  * section2.render(body.element);
- * 
+ *
  * new HeadlessSidebarSpacer().render(body.element);
- * 
+ *
  * const footer = new HeadlessSidebarFooter();
  * new HeadlessSidebarItem({
  *   children: 'Logout',
  *   onClick: () => logout()
  * }).render(footer.element);
  * footer.render(sidebar.element);
- * 
+ *
  * body.render(sidebar.element);
  * sidebar.render('#app-sidebar');
  *
@@ -73,7 +73,7 @@
 class HeadlessSidebar {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -82,16 +82,11 @@ class HeadlessSidebar {
 
   // Style configurations
   static styles = {
-    base: [
-      'flex',
-      'h-full',
-      'min-h-0',
-      'flex-col'
-    ]
+    base: ['flex', 'h-full', 'min-h-0', 'flex-col'],
   };
 
   createElement() {
-    const element = document.createElement("nav");
+    const element = document.createElement('nav');
     element.className = this.getClasses();
     return element;
   }
@@ -103,16 +98,16 @@ class HeadlessSidebar {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -130,7 +125,7 @@ class HeadlessSidebar {
 class HeadlessSidebarHeader {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -146,12 +141,12 @@ class HeadlessSidebarHeader {
       'border-zinc-950/5',
       'p-4',
       'dark:border-white/5',
-      '[&>[data-slot=section]+[data-slot=section]]:mt-2.5'
-    ]
+      '[&>[data-slot=section]+[data-slot=section]]:mt-2.5',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     return element;
   }
@@ -163,16 +158,16 @@ class HeadlessSidebarHeader {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -190,7 +185,7 @@ class HeadlessSidebarHeader {
 class HeadlessSidebarBody {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -205,12 +200,12 @@ class HeadlessSidebarBody {
       'flex-col',
       'overflow-y-auto',
       'p-4',
-      '[&>[data-slot=section]+[data-slot=section]]:mt-8'
-    ]
+      '[&>[data-slot=section]+[data-slot=section]]:mt-8',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     return element;
   }
@@ -222,16 +217,16 @@ class HeadlessSidebarBody {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -249,7 +244,7 @@ class HeadlessSidebarBody {
 class HeadlessSidebarFooter {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -265,12 +260,12 @@ class HeadlessSidebarFooter {
       'border-zinc-950/5',
       'p-4',
       'dark:border-white/5',
-      '[&>[data-slot=section]+[data-slot=section]]:mt-2.5'
-    ]
+      '[&>[data-slot=section]+[data-slot=section]]:mt-2.5',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     return element;
   }
@@ -282,16 +277,16 @@ class HeadlessSidebarFooter {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -309,7 +304,7 @@ class HeadlessSidebarFooter {
 class HeadlessSidebarSection {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -319,15 +314,11 @@ class HeadlessSidebarSection {
 
   // Style configurations
   static styles = {
-    base: [
-      'flex',
-      'flex-col',
-      'gap-0.5'
-    ]
+    base: ['flex', 'flex-col', 'gap-0.5'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.setAttribute('data-slot', 'section');
     element.setAttribute('data-layout-group', this.layoutId);
     element.className = this.getClasses();
@@ -341,16 +332,16 @@ class HeadlessSidebarSection {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -368,7 +359,7 @@ class HeadlessSidebarSection {
 class HeadlessSidebarDivider {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -377,17 +368,11 @@ class HeadlessSidebarDivider {
 
   // Style configurations
   static styles = {
-    base: [
-      'my-4',
-      'border-t',
-      'border-zinc-950/5',
-      'lg:-mx-4',
-      'dark:border-white/5'
-    ]
+    base: ['my-4', 'border-t', 'border-zinc-950/5', 'lg:-mx-4', 'dark:border-white/5'],
   };
 
   createElement() {
-    const element = document.createElement("hr");
+    const element = document.createElement('hr');
     element.className = this.getClasses();
     return element;
   }
@@ -399,16 +384,16 @@ class HeadlessSidebarDivider {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -426,7 +411,7 @@ class HeadlessSidebarDivider {
 class HeadlessSidebarSpacer {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -435,14 +420,11 @@ class HeadlessSidebarSpacer {
 
   // Style configurations
   static styles = {
-    base: [
-      'mt-8',
-      'flex-1'
-    ]
+    base: ['mt-8', 'flex-1'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.setAttribute('aria-hidden', 'true');
     element.className = this.getClasses();
     return element;
@@ -455,16 +437,16 @@ class HeadlessSidebarSpacer {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -483,7 +465,7 @@ class HeadlessSidebarHeading {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -492,18 +474,11 @@ class HeadlessSidebarHeading {
 
   // Style configurations
   static styles = {
-    base: [
-      'mb-1',
-      'px-2',
-      'text-xs/6',
-      'font-medium',
-      'text-zinc-500',
-      'dark:text-zinc-400'
-    ]
+    base: ['mb-1', 'px-2', 'text-xs/6', 'font-medium', 'text-zinc-500', 'dark:text-zinc-400'],
   };
 
   createElement() {
-    const element = document.createElement("h3");
+    const element = document.createElement('h3');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -516,16 +491,16 @@ class HeadlessSidebarHeading {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -550,8 +525,8 @@ class HeadlessSidebarItem {
   constructor(options = {}) {
     this.options = {
       current: options.current || false,
-      className: options.className || "",
-      children: options.children || "",
+      className: options.className || '',
+      children: options.children || '',
       href: options.href || null,
       onClick: options.onClick || null,
       target: options.target || null,
@@ -606,11 +581,9 @@ class HeadlessSidebarItem {
       'dark:data-hover:*:data-[slot=icon]:fill-white',
       'dark:data-active:bg-white/5',
       'dark:data-active:*:data-[slot=icon]:fill-white',
-      'dark:data-current:*:data-[slot=icon]:fill-white'
+      'dark:data-current:*:data-[slot=icon]:fill-white',
     ],
-    wrapper: [
-      'relative'
-    ],
+    wrapper: ['relative'],
     indicator: [
       'absolute',
       'inset-y-2',
@@ -618,7 +591,7 @@ class HeadlessSidebarItem {
       'w-0.5',
       'rounded-full',
       'bg-zinc-950',
-      'dark:bg-white'
+      'dark:bg-white',
     ],
     touchTarget: [
       'absolute',
@@ -627,18 +600,18 @@ class HeadlessSidebarItem {
       'size-[max(100%,2.75rem)]',
       '-translate-x-1/2',
       '-translate-y-1/2',
-      'pointer-fine:hidden'
-    ]
+      'pointer-fine:hidden',
+    ],
   };
 
   createElement() {
     // Wrapper span
-    const wrapper = document.createElement("span");
+    const wrapper = document.createElement('span');
     wrapper.className = this.getWrapperClasses();
 
     // Current indicator (animated)
     if (this.options.current) {
-      const indicator = document.createElement("span");
+      const indicator = document.createElement('span');
       indicator.className = this.getIndicatorClasses();
       indicator.setAttribute('data-layout-id', 'current-indicator');
       wrapper.appendChild(indicator);
@@ -647,7 +620,7 @@ class HeadlessSidebarItem {
     // Main element (link or button)
     const isLink = this.options.href !== null;
     const element = document.createElement(isLink ? 'a' : 'button');
-    
+
     if (isLink) {
       element.href = this.options.href;
       if (this.options.target) {
@@ -695,7 +668,7 @@ class HeadlessSidebarItem {
     if (typeof this.options.children === 'string') {
       element.textContent = this.options.children;
     } else if (Array.isArray(this.options.children)) {
-      this.options.children.forEach(child => {
+      this.options.children.forEach((child) => {
         if (typeof child === 'string') {
           element.appendChild(document.createTextNode(child));
         } else {
@@ -708,10 +681,10 @@ class HeadlessSidebarItem {
   }
 
   addTouchTarget(element) {
-    const touchTarget = document.createElement("span");
+    const touchTarget = document.createElement('span');
     touchTarget.className = this.getTouchTargetClasses();
     touchTarget.setAttribute('aria-hidden', 'true');
-    
+
     // Insert at the beginning
     element.insertBefore(touchTarget, element.firstChild);
   }
@@ -723,28 +696,28 @@ class HeadlessSidebarItem {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getClasses() {
-    return HeadlessSidebarItem.styles.base.join(" ");
+    return HeadlessSidebarItem.styles.base.join(' ');
   }
 
   getIndicatorClasses() {
-    return HeadlessSidebarItem.styles.indicator.join(" ");
+    return HeadlessSidebarItem.styles.indicator.join(' ');
   }
 
   getTouchTargetClasses() {
-    return HeadlessSidebarItem.styles.touchTarget.join(" ");
+    return HeadlessSidebarItem.styles.touchTarget.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -753,11 +726,11 @@ class HeadlessSidebarItem {
 
   setCurrent(current) {
     this.options.current = current;
-    
+
     // Update indicator
     const existingIndicator = this.element.querySelector('[data-layout-id="current-indicator"]');
     if (current && !existingIndicator) {
-      const indicator = document.createElement("span");
+      const indicator = document.createElement('span');
       indicator.className = this.getIndicatorClasses();
       indicator.setAttribute('data-layout-id', 'current-indicator');
       this.element.insertBefore(indicator, this.element.firstChild);
@@ -786,7 +759,7 @@ class HeadlessSidebarLabel {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -795,13 +768,11 @@ class HeadlessSidebarLabel {
 
   // Style configurations
   static styles = {
-    base: [
-      'truncate'
-    ]
+    base: ['truncate'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -814,16 +785,16 @@ class HeadlessSidebarLabel {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -845,7 +816,7 @@ class HeadlessSidebarLabel {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessSidebar,
     HeadlessSidebarHeader,
@@ -856,6 +827,6 @@ if (typeof module !== "undefined" && module.exports) {
     HeadlessSidebarSpacer,
     HeadlessSidebarHeading,
     HeadlessSidebarItem,
-    HeadlessSidebarLabel
+    HeadlessSidebarLabel,
   };
 }

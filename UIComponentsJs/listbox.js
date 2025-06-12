@@ -9,12 +9,12 @@
  *   { id: 2, name: 'Banana' },
  *   { id: 3, name: 'Cherry' }
  * ];
- * 
+ *
  * const listbox = new HeadlessListbox({
  *   placeholder: 'Select a fruit...',
  *   onChange: (value) => console.log('Selected:', value)
  * });
- * 
+ *
  * options.forEach(option => {
  *   const optionComponent = new HeadlessListboxOption({
  *     value: option,
@@ -22,14 +22,14 @@
  *   });
  *   optionComponent.render(listbox.getOptionsContainer());
  * });
- * 
+ *
  * listbox.render('#container');
  *
  * // With custom option rendering
  * const listbox = new HeadlessListbox({
  *   placeholder: 'Choose an option...'
  * });
- * 
+ *
  * const option = new HeadlessListboxOption({
  *   value: { id: 1, name: 'Apple', color: 'red' },
  *   children: [
@@ -55,10 +55,10 @@
 class HeadlessListbox {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       placeholder: options.placeholder || null,
       autoFocus: options.autoFocus || false,
-      ariaLabel: options.ariaLabel || "",
+      ariaLabel: options.ariaLabel || '',
       onChange: options.onChange || null,
       invalid: options.invalid || false,
       disabled: options.disabled || false,
@@ -76,25 +76,25 @@ class HeadlessListbox {
 
   createElement() {
     // Main container
-    const container = document.createElement("div");
-    container.className = "relative";
+    const container = document.createElement('div');
+    container.className = 'relative';
 
     // Button element
-    this.button = document.createElement("button");
-    this.button.type = "button";
+    this.button = document.createElement('button');
+    this.button.type = 'button';
     this.button.setAttribute('data-slot', 'control');
     this.button.setAttribute('role', 'listbox');
     this.button.setAttribute('aria-expanded', 'false');
     this.button.setAttribute('aria-haspopup', 'listbox');
-    
+
     if (this.options.ariaLabel) {
       this.button.setAttribute('aria-label', this.options.ariaLabel);
     }
-    
+
     if (this.options.autoFocus) {
       this.button.autofocus = true;
     }
-    
+
     if (this.options.disabled) {
       this.button.disabled = true;
     }
@@ -104,19 +104,20 @@ class HeadlessListbox {
     this.button.addEventListener('keydown', (e) => this.handleKeyDown(e));
 
     // Selected option display
-    this.selectedDisplay = document.createElement("span");
+    this.selectedDisplay = document.createElement('span');
     this.selectedDisplay.className = this.getSelectedDisplayClasses();
     this.updateSelectedDisplay();
 
     // Chevron icon
-    const chevronContainer = document.createElement("span");
-    chevronContainer.className = "pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2";
-    
+    const chevronContainer = document.createElement('span');
+    chevronContainer.className =
+      'pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2';
+
     const chevronSvg = this.createChevronIcon();
     chevronContainer.appendChild(chevronSvg);
 
     // Options container
-    this.optionsContainer = document.createElement("div");
+    this.optionsContainer = document.createElement('div');
     this.optionsContainer.className = this.getOptionsClasses();
     this.optionsContainer.style.display = 'none';
     this.optionsContainer.setAttribute('role', 'listbox');
@@ -138,19 +139,22 @@ class HeadlessListbox {
   }
 
   createChevronIcon() {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute('class', 'size-5 stroke-zinc-500 group-data-disabled:stroke-zinc-600 sm:size-4 dark:stroke-zinc-400 forced-colors:stroke-[CanvasText]');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute(
+      'class',
+      'size-5 stroke-zinc-500 group-data-disabled:stroke-zinc-600 sm:size-4 dark:stroke-zinc-400 forced-colors:stroke-[CanvasText]'
+    );
     svg.setAttribute('viewBox', '0 0 16 16');
     svg.setAttribute('aria-hidden', 'true');
     svg.setAttribute('fill', 'none');
 
-    const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path1.setAttribute('d', 'M5.75 10.75L8 13L10.25 10.75');
     path1.setAttribute('stroke-width', '1.5');
     path1.setAttribute('stroke-linecap', 'round');
     path1.setAttribute('stroke-linejoin', 'round');
 
-    const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path2.setAttribute('d', 'M10.25 5.25L8 3L5.75 5.25');
     path2.setAttribute('stroke-width', '1.5');
     path2.setAttribute('stroke-linecap', 'round');
@@ -190,14 +194,14 @@ class HeadlessListbox {
       // Disabled state
       'data-disabled:opacity-50',
       'data-disabled:before:bg-zinc-950/5',
-      'data-disabled:before:shadow-none'
+      'data-disabled:before:shadow-none',
     ];
 
     if (this.options.className) {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getSelectedDisplayClasses() {
@@ -235,7 +239,7 @@ class HeadlessListbox {
       'dark:group-data-hover:border-white/20',
       // Background color
       'bg-transparent',
-      'dark:bg-white/5'
+      'dark:bg-white/5',
     ];
 
     // Invalid state
@@ -259,7 +263,7 @@ class HeadlessListbox {
       );
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getOptionsClasses() {
@@ -297,17 +301,17 @@ class HeadlessListbox {
       'absolute',
       'z-10',
       'w-full',
-      'mt-1'
-    ].join(" ");
+      'mt-1',
+    ].join(' ');
   }
 
   updateSelectedDisplay() {
     if (this.value) {
       // Clear existing content
       this.selectedDisplay.innerHTML = '';
-      
+
       // Find the selected option and clone its content
-      const selectedOption = this.optionElements.find(opt => opt.getValue() === this.value);
+      const selectedOption = this.optionElements.find((opt) => opt.getValue() === this.value);
       if (selectedOption) {
         const selectedContent = selectedOption.getSelectedContent();
         this.selectedDisplay.appendChild(selectedContent);
@@ -374,12 +378,12 @@ class HeadlessListbox {
     this.value = value;
     this.updateSelectedDisplay();
     this.close();
-    
+
     // Update selected state on options
-    this.optionElements.forEach(option => {
+    this.optionElements.forEach((option) => {
       option.setSelected(option.getValue() === value);
     });
-    
+
     if (this.options.onChange) {
       this.options.onChange(value);
     }
@@ -387,11 +391,11 @@ class HeadlessListbox {
 
   open() {
     if (this.options.disabled) return;
-    
+
     this.isOpen = true;
     this.optionsContainer.style.display = 'block';
     this.button.setAttribute('aria-expanded', 'true');
-    this.selectedIndex = this.optionElements.findIndex(opt => opt.getValue() === this.value);
+    this.selectedIndex = this.optionElements.findIndex((opt) => opt.getValue() === this.value);
     if (this.selectedIndex === -1 && this.optionElements.length > 0) {
       this.selectedIndex = 0;
     }
@@ -404,10 +408,10 @@ class HeadlessListbox {
     this.optionsContainer.style.display = 'none';
     this.button.setAttribute('aria-expanded', 'false');
     this.selectedIndex = -1;
-    
+
     // Remove focus from all options
-    this.optionElements.forEach(option => option.setFocus(false));
-    
+    this.optionElements.forEach((option) => option.setFocus(false));
+
     document.removeEventListener('click', this.handleClickOutside);
   }
 
@@ -420,12 +424,12 @@ class HeadlessListbox {
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -445,12 +449,12 @@ class HeadlessListbox {
   setValue(value) {
     this.value = value;
     this.updateSelectedDisplay();
-    
+
     // Update selected state on options
-    this.optionElements.forEach(option => {
+    this.optionElements.forEach((option) => {
       option.setSelected(option.getValue() === value);
     });
-    
+
     return this;
   }
 
@@ -477,8 +481,8 @@ class HeadlessListboxOption {
   constructor(options = {}) {
     this.options = {
       value: options.value,
-      children: options.children || "",
-      className: options.className || "",
+      children: options.children || '',
+      className: options.className || '',
       ...options,
     };
 
@@ -507,7 +511,7 @@ class HeadlessListboxOption {
       // Avatars
       '*:data-[slot=avatar]:-mx-0.5',
       '*:data-[slot=avatar]:size-6',
-      'sm:*:data-[slot=avatar]:size-5'
+      'sm:*:data-[slot=avatar]:size-5',
     ],
     container: [
       // Basic layout
@@ -540,21 +544,21 @@ class HeadlessListboxOption {
       'forced-colors:data-focus:bg-[Highlight]',
       'forced-colors:data-focus:text-[HighlightText]',
       // Disabled
-      'data-disabled:opacity-50'
-    ]
+      'data-disabled:opacity-50',
+    ],
   };
 
   createElement() {
     // For selected option display, just return the content
     if (this.options.selectedOption) {
-      const container = document.createElement("div");
+      const container = document.createElement('div');
       container.className = this.getClasses();
       this.addContent(container);
       return container;
     }
 
     // For dropdown option
-    const container = document.createElement("div");
+    const container = document.createElement('div');
     container.className = this.getContainerClasses();
     container.setAttribute('role', 'option');
     container.setAttribute('tabindex', '-1');
@@ -564,8 +568,8 @@ class HeadlessListboxOption {
     container.appendChild(checkIcon);
 
     // Content wrapper
-    const contentWrapper = document.createElement("span");
-    contentWrapper.className = this.getClasses() + " col-start-2";
+    const contentWrapper = document.createElement('span');
+    contentWrapper.className = this.getClasses() + ' col-start-2';
     this.addContent(contentWrapper);
     container.appendChild(contentWrapper);
 
@@ -591,7 +595,7 @@ class HeadlessListboxOption {
     if (typeof this.options.children === 'string') {
       container.textContent = this.options.children;
     } else if (Array.isArray(this.options.children)) {
-      this.options.children.forEach(child => {
+      this.options.children.forEach((child) => {
         if (typeof child === 'string') {
           container.appendChild(document.createTextNode(child));
         } else {
@@ -604,13 +608,16 @@ class HeadlessListboxOption {
   }
 
   createCheckIcon() {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute('class', 'relative hidden size-5 self-center stroke-current group-data-selected/option:inline sm:size-4');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute(
+      'class',
+      'relative hidden size-5 self-center stroke-current group-data-selected/option:inline sm:size-4'
+    );
     svg.setAttribute('viewBox', '0 0 16 16');
     svg.setAttribute('fill', 'none');
     svg.setAttribute('aria-hidden', 'true');
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M4 8.5l3 3L12 4');
     path.setAttribute('stroke-width', '1.5');
     path.setAttribute('stroke-linecap', 'round');
@@ -627,38 +634,38 @@ class HeadlessListboxOption {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getContainerClasses() {
-    return HeadlessListboxOption.styles.container.join(" ");
+    return HeadlessListboxOption.styles.container.join(' ');
   }
 
   getSelectedContent() {
-    const container = document.createElement("div");
+    const container = document.createElement('div');
     container.className = this.getClasses();
     this.addContent(container);
     return container;
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
-    
+
     // Register with parent listbox if it exists
     if (container.closest('.relative')) {
       const listboxElement = container.closest('.relative');
       // This is a bit hacky, but we need to find the listbox instance
       // In a real implementation, you might want to use a different approach
     }
-    
+
     return this;
   }
 
@@ -705,7 +712,7 @@ class HeadlessListboxLabel {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -714,17 +721,11 @@ class HeadlessListboxLabel {
 
   // Style configurations
   static styles = {
-    base: [
-      'ml-2.5',
-      'truncate',
-      'first:ml-0',
-      'sm:ml-2',
-      'sm:first:ml-0'
-    ]
+    base: ['ml-2.5', 'truncate', 'first:ml-0', 'sm:ml-2', 'sm:first:ml-0'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -737,16 +738,16 @@ class HeadlessListboxLabel {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -771,7 +772,7 @@ class HeadlessListboxDescription {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -789,19 +790,16 @@ class HeadlessListboxDescription {
       'before:w-2',
       'before:min-w-0',
       'before:shrink',
-      'dark:text-zinc-400'
+      'dark:text-zinc-400',
     ],
-    inner: [
-      'flex-1',
-      'truncate'
-    ]
+    inner: ['flex-1', 'truncate'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.className = this.getClasses();
 
-    const inner = document.createElement("span");
+    const inner = document.createElement('span');
     inner.className = this.getInnerClasses();
     inner.textContent = this.text;
 
@@ -816,20 +814,20 @@ class HeadlessListboxDescription {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getInnerClasses() {
-    return HeadlessListboxDescription.styles.inner.join(" ");
+    return HeadlessListboxDescription.styles.inner.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -854,11 +852,11 @@ class HeadlessListboxDescription {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessListbox,
     HeadlessListboxOption,
     HeadlessListboxLabel,
-    HeadlessListboxDescription
+    HeadlessListboxDescription,
   };
 }

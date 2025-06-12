@@ -7,8 +7,8 @@
     "message": "Hilft dir mit dem Doomscrollen aufzuhören. Scrollst du zu viel, stoppt die Extension dich",
     "description": "Was macht die extension."
   },
-  "popup_message":{
+  "popup_message": {
     "message": "Die App läuft im Hintergrund 🗣️🗣️🗣️",
     "description": "Mitteilung vom Popup."
   }
-}w
+}

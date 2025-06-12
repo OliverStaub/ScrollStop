@@ -12,20 +12,20 @@ jobs:
   validate-extension:
     name: Validate Extension Files
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Validate manifest.json syntax
         run: |
           if [ -f "Shared (Extension)/Resources/manifest.json" ]; then
@@ -36,7 +36,7 @@ jobs:
             echo "❌ manifest.json not found"
             exit 1
           fi
-      
+
       - name: Validate sites.json syntax
         run: |
           if [ -f "Shared (Extension)/Resources/sites.json" ]; then
@@ -47,46 +47,46 @@ jobs:
             echo "❌ sites.json not found"
             exit 1
           fi
-      
+
       - name: Check manifest file paths
         run: npm run build:check
-      
+
       - name: Validate manifest structure
         run: npm run validate:manifest
-      
+
       - name: Validate sites configuration
         run: npm run validate:sites
-      
+
       - name: Check for required manifest fields
         run: |
           echo "Checking required manifest fields..."
           MANIFEST="Shared (Extension)/Resources/manifest.json"
-          
+
           # Check required fields
           REQUIRED_FIELDS=("manifest_version" "name" "version" "description" "content_scripts" "permissions")
-          
+
           for field in "${REQUIRED_FIELDS[@]}"; do
             if ! jq -e ".$field" "$MANIFEST" > /dev/null; then
               echo "❌ Missing required field: $field"
               exit 1
             fi
           done
-          
+
           echo "✅ All required manifest fields present"
-      
+
       - name: Verify content script file references
         run: |
           echo "Verifying content script files exist..."
           MANIFEST="Shared (Extension)/Resources/manifest.json"
-          
+
           # Extract all JS files from content_scripts
           JS_FILES=$(jq -r '.content_scripts[].js[]?' "$MANIFEST" 2>/dev/null || echo "")
-          
+
           if [ -z "$JS_FILES" ]; then
             echo "⚠️  No content scripts found in manifest"
             exit 0
           fi
-          
+
           for file in $JS_FILES; do
             FULL_PATH="Shared (Extension)/Resources/$file"
             if [ ! -f "$FULL_PATH" ]; then
@@ -95,15 +95,15 @@ jobs:
             fi
             echo "✅ Found: $file"
           done
-      
+
       - name: Check for flat file paths in manifest
         run: |
           echo "Checking for directory paths in manifest (should be flat)..."
           MANIFEST="Shared (Extension)/Resources/manifest.json"
-          
+
           # Check if any JS files contain directory separators
           JS_FILES=$(jq -r '.content_scripts[].js[]?' "$MANIFEST" 2>/dev/null || echo "")
-          
+
           for file in $JS_FILES; do
             if [[ "$file" == *"/"* ]]; then
               echo "❌ Found directory path in manifest: $file"
@@ -111,127 +111,127 @@ jobs:
               exit 1
             fi
           done
-          
+
           echo "✅ All file paths are flat (no directories)"
-      
+
       - name: Validate sites.json structure
         run: |
           echo "Validating sites.json structure..."
           SITES_FILE="Shared (Extension)/Resources/sites.json"
-          
+
           # Check required top-level arrays
           if ! jq -e '.blockedSites' "$SITES_FILE" > /dev/null; then
             echo "❌ Missing blockedSites array"
             exit 1
           fi
-          
+
           if ! jq -e '.newsSites' "$SITES_FILE" > /dev/null; then
             echo "❌ Missing newsSites array"
             exit 1
           fi
-          
+
           # Check arrays are not empty
           BLOCKED_COUNT=$(jq '.blockedSites | length' "$SITES_FILE")
           NEWS_COUNT=$(jq '.newsSites | length' "$SITES_FILE")
-          
+
           if [ "$BLOCKED_COUNT" -eq 0 ]; then
             echo "❌ blockedSites array is empty"
             exit 1
           fi
-          
+
           if [ "$NEWS_COUNT" -eq 0 ]; then
             echo "❌ newsSites array is empty"
             exit 1
           fi
-          
+
           echo "✅ sites.json structure is valid ($BLOCKED_COUNT blocked sites, $NEWS_COUNT news sites)"
-      
+
       - name: Check for duplicate sites
         run: |
           echo "Checking for duplicate sites between blocked and news..."
           SITES_FILE="Shared (Extension)/Resources/sites.json"
-          
+
           # Get intersection of blocked and news sites
           DUPLICATES=$(jq -r '(.blockedSites + .newsSites) | group_by(.) | map(select(length > 1)) | flatten | unique | .[]' "$SITES_FILE" 2>/dev/null || echo "")
-          
+
           if [ -n "$DUPLICATES" ]; then
             echo "❌ Found duplicate sites:"
             echo "$DUPLICATES"
             exit 1
           fi
-          
+
           echo "✅ No duplicate sites found"
-      
+
       - name: Validate domain formats
         run: |
           echo "Validating domain formats..."
           SITES_FILE="Shared (Extension)/Resources/sites.json"
-          
+
           # Check blocked sites format
           INVALID_BLOCKED=$(jq -r '.blockedSites[] | select(test("^https?://") or test("[^a-zA-Z0-9.-]$"))' "$SITES_FILE" 2>/dev/null || echo "")
-          
+
           if [ -n "$INVALID_BLOCKED" ]; then
             echo "❌ Invalid blocked site domains:"
             echo "$INVALID_BLOCKED"
             exit 1
           fi
-          
+
           # Check news sites format
           INVALID_NEWS=$(jq -r '.newsSites[] | select(test("^https?://") or test("[^a-zA-Z0-9.-]$"))' "$SITES_FILE" 2>/dev/null || echo "")
-          
+
           if [ -n "$INVALID_NEWS" ]; then
             echo "❌ Invalid news site domains:"
             echo "$INVALID_NEWS"
             exit 1
           fi
-          
+
           echo "✅ All domains have valid format"
 
   lint-extension-files:
     name: Lint Extension Files
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Lint extension JavaScript files
         run: npm run lint -- 'Shared (Extension)/Resources/**/*.js'
-      
+
       - name: Check code formatting
         run: npm run format:check -- 'Shared (Extension)/Resources/**/*.js'
 
   test-extension-modules:
     name: Test Extension Modules
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run unit tests for changed modules
         run: |
           # Get changed extension files
           CHANGED_FILES=$(git diff --name-only origin/main...HEAD | grep "Shared (Extension)/Resources" | grep "\.js$" || echo "")
-          
+
           if [ -n "$CHANGED_FILES" ]; then
             echo "Running tests for changed extension files:"
             echo "$CHANGED_FILES"

@@ -140,7 +140,7 @@ export interface ITimeManager {
   getRemainingTime(hostname: string): Promise<number>;
   formatTime(milliseconds: number): string;
   cleanupExpiredBlocks(): Promise<void>;
-  
+
   // News time methods
   getNewsTimeData(): Promise<NewsTimeData>;
   setNewsTimeData(data: NewsTimeData): Promise<void>;
@@ -245,7 +245,11 @@ declare global {
 
 // Custom Event Types
 export interface ScrollStopCustomEvent extends CustomEvent {
-  detail: DoomscrollEventDetail | TimeBlockEventDetail | NewsTimeLimitEventDetail | NewsTimeBlockEventDetail;
+  detail:
+    | DoomscrollEventDetail
+    | TimeBlockEventDetail
+    | NewsTimeLimitEventDetail
+    | NewsTimeBlockEventDetail;
 }
 
 // Storage Constants

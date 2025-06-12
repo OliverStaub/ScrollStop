@@ -1,4 +1,4 @@
-if (typeof window.StorageHelper === "undefined") {
+if (typeof window.StorageHelper === 'undefined') {
   class StorageHelper {
     /**
      * Get blocked sites from storage
@@ -6,7 +6,7 @@ if (typeof window.StorageHelper === "undefined") {
      */
     static async getBlockedSites() {
       return new Promise((resolve) => {
-        browser.storage.local.get(["blockedSites"], (result) => {
+        browser.storage.local.get(['blockedSites'], (result) => {
           resolve(result.blockedSites || []);
         });
       });
@@ -31,7 +31,7 @@ if (typeof window.StorageHelper === "undefined") {
      */
     static async getTimeBlocks() {
       return new Promise((resolve) => {
-        browser.storage.local.get(["timeBlocks"], (result) => {
+        browser.storage.local.get(['timeBlocks'], (result) => {
           resolve(result.timeBlocks || {});
         });
       });
@@ -56,7 +56,7 @@ if (typeof window.StorageHelper === "undefined") {
      */
     static async getNewsSites() {
       return new Promise((resolve) => {
-        browser.storage.local.get(["newsSites"], (result) => {
+        browser.storage.local.get(['newsSites'], (result) => {
           resolve(result.newsSites || []);
         });
       });
@@ -85,7 +85,7 @@ if (typeof window.StorageHelper === "undefined") {
       const blockedSites = await this.getBlockedSites();
 
       return blockedSites.some((site) => {
-        const cleanSite = site.replace(/^https?:\/\//, "");
+        const cleanSite = site.replace(/^https?:\/\//, '');
         return url.includes(cleanSite) || hostname.includes(cleanSite);
       });
     }
@@ -100,7 +100,7 @@ if (typeof window.StorageHelper === "undefined") {
       const newsSites = await this.getNewsSites();
 
       return newsSites.some((site) => {
-        const cleanSite = site.replace(/^https?:\/\//, "");
+        const cleanSite = site.replace(/^https?:\/\//, '');
         return url.includes(cleanSite) || hostname.includes(cleanSite);
       });
     }
@@ -114,14 +114,14 @@ if (typeof window.StorageHelper === "undefined") {
     static async getCurrentSiteType(url, hostname) {
       const [isBlocked, isNews] = await Promise.all([
         this.isCurrentSiteBlocked(url, hostname),
-        this.isCurrentSiteNews(url, hostname)
+        this.isCurrentSiteNews(url, hostname),
       ]);
 
       return { isBlocked, isNews };
     }
   }
   // Export for use in other modules
-  if (typeof module !== "undefined" && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = StorageHelper;
   } else {
     window.StorageHelper = StorageHelper;

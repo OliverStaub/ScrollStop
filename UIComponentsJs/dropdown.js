@@ -7,7 +7,7 @@
  * const dropdown = new HeadlessDropdown();
  * const button = new HeadlessDropdownButton('Options');
  * button.render(dropdown.element);
- * 
+ *
  * const menu = new HeadlessDropdownMenu();
  * new HeadlessDropdownItem({
  *   children: 'Edit',
@@ -23,24 +23,24 @@
  * // Dropdown with sections and headers
  * const dropdown = new HeadlessDropdown();
  * const menu = new HeadlessDropdownMenu();
- * 
+ *
  * new HeadlessDropdownHeader().setContent('User Actions').render(menu.element);
- * 
+ *
  * const section1 = new HeadlessDropdownSection();
  * new HeadlessDropdownHeading('Account').render(section1.element);
  * new HeadlessDropdownItem({ children: 'Profile' }).render(section1.element);
  * new HeadlessDropdownItem({ children: 'Settings' }).render(section1.element);
  * section1.render(menu.element);
- * 
+ *
  * new HeadlessDropdownDivider().render(menu.element);
- * 
+ *
  * const section2 = new HeadlessDropdownSection();
- * new HeadlessDropdownItem({ 
+ * new HeadlessDropdownItem({
  *   href: '/logout',
  *   children: 'Sign out'
  * }).render(section2.element);
  * section2.render(menu.element);
- * 
+ *
  * menu.render(dropdown.element);
  * dropdown.render('#user-menu');
  *
@@ -65,7 +65,7 @@
 class HeadlessDropdown {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -76,9 +76,9 @@ class HeadlessDropdown {
   }
 
   createElement() {
-    const element = document.createElement("div");
-    element.className = "relative inline-block text-left";
-    
+    const element = document.createElement('div');
+    element.className = 'relative inline-block text-left';
+
     // Add click outside handler
     this.handleClickOutside = (e) => {
       if (!element.contains(e.target) && this.isOpen) {
@@ -90,12 +90,12 @@ class HeadlessDropdown {
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -153,7 +153,7 @@ class HeadlessDropdownButton {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       as: options.as || 'button',
       ...options,
     };
@@ -193,20 +193,20 @@ class HeadlessDropdownButton {
       'active:bg-zinc-900',
       'shadow-sm',
       'hover:shadow-md',
-      'active:shadow-sm'
-    ]
+      'active:shadow-sm',
+    ],
   };
 
   createElement() {
     const element = document.createElement(this.options.as === 'button' ? 'button' : 'div');
-    
+
     if (this.options.as === 'button') {
       element.type = 'button';
     }
-    
+
     element.textContent = this.text;
     element.className = this.getClasses();
-    
+
     element.addEventListener('click', () => {
       if (this.dropdown) {
         this.dropdown.toggle();
@@ -223,16 +223,16 @@ class HeadlessDropdownButton {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -262,7 +262,7 @@ class HeadlessDropdownMenu {
   constructor(options = {}) {
     this.options = {
       anchor: options.anchor || 'bottom',
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -306,12 +306,12 @@ class HeadlessDropdownMenu {
       // Position
       'absolute',
       'z-10',
-      'mt-2'
-    ]
+      'mt-2',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     element.style.display = 'none'; // Hidden by default
     element.setAttribute('role', 'menu');
@@ -325,16 +325,16 @@ class HeadlessDropdownMenu {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -362,8 +362,8 @@ class HeadlessDropdownMenu {
 class HeadlessDropdownItem {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
-      children: options.children || "",
+      className: options.className || '',
+      children: options.children || '',
       href: options.href || null,
       onClick: options.onClick || null,
       ...options,
@@ -424,14 +424,14 @@ class HeadlessDropdownItem {
       '*:data-[slot=avatar]:-ml-1',
       '*:data-[slot=avatar]:size-6',
       'sm:*:data-[slot=avatar]:mr-2',
-      'sm:*:data-[slot=avatar]:size-5'
-    ]
+      'sm:*:data-[slot=avatar]:size-5',
+    ],
   };
 
   createElement() {
     const isLink = this.options.href !== null;
     const element = document.createElement(isLink ? 'a' : 'button');
-    
+
     if (isLink) {
       element.href = this.options.href;
     } else {
@@ -445,7 +445,7 @@ class HeadlessDropdownItem {
     if (typeof this.options.children === 'string') {
       element.textContent = this.options.children;
     } else if (Array.isArray(this.options.children)) {
-      this.options.children.forEach(child => {
+      this.options.children.forEach((child) => {
         if (typeof child === 'string') {
           element.appendChild(document.createTextNode(child));
         } else {
@@ -479,16 +479,16 @@ class HeadlessDropdownItem {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -506,7 +506,7 @@ class HeadlessDropdownItem {
 class HeadlessDropdownHeader {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -515,17 +515,11 @@ class HeadlessDropdownHeader {
 
   // Style configurations
   static styles = {
-    base: [
-      'col-span-5',
-      'px-3.5',
-      'pt-2.5',
-      'pb-1',
-      'sm:px-3'
-    ]
+    base: ['col-span-5', 'px-3.5', 'pt-2.5', 'pb-1', 'sm:px-3'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     return element;
   }
@@ -537,16 +531,16 @@ class HeadlessDropdownHeader {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -574,7 +568,7 @@ class HeadlessDropdownHeader {
 class HeadlessDropdownSection {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -586,12 +580,12 @@ class HeadlessDropdownSection {
     base: [
       'col-span-full',
       'supports-[grid-template-columns:subgrid]:grid',
-      'supports-[grid-template-columns:subgrid]:grid-cols-[auto_1fr_1.5rem_0.5rem_auto]'
-    ]
+      'supports-[grid-template-columns:subgrid]:grid-cols-[auto_1fr_1.5rem_0.5rem_auto]',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     return element;
   }
@@ -603,16 +597,16 @@ class HeadlessDropdownSection {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -631,7 +625,7 @@ class HeadlessDropdownHeading {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -653,12 +647,12 @@ class HeadlessDropdownHeading {
       'text-zinc-500',
       'sm:px-3',
       'sm:text-xs/5',
-      'dark:text-zinc-400'
-    ]
+      'dark:text-zinc-400',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("h3");
+    const element = document.createElement('h3');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -671,16 +665,16 @@ class HeadlessDropdownHeading {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -704,7 +698,7 @@ class HeadlessDropdownHeading {
 class HeadlessDropdownDivider {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -722,12 +716,12 @@ class HeadlessDropdownDivider {
       'bg-zinc-950/5',
       'sm:mx-3',
       'dark:bg-white/10',
-      'forced-colors:bg-[CanvasText]'
-    ]
+      'forced-colors:bg-[CanvasText]',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("hr");
+    const element = document.createElement('hr');
     element.className = this.getClasses();
     return element;
   }
@@ -739,16 +733,16 @@ class HeadlessDropdownDivider {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -767,7 +761,7 @@ class HeadlessDropdownLabel {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -776,14 +770,11 @@ class HeadlessDropdownLabel {
 
   // Style configurations
   static styles = {
-    base: [
-      'col-start-2',
-      'row-start-1'
-    ]
+    base: ['col-start-2', 'row-start-1'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.textContent = this.text;
     element.setAttribute('data-slot', 'label');
     element.className = this.getClasses();
@@ -797,16 +788,16 @@ class HeadlessDropdownLabel {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -831,7 +822,7 @@ class HeadlessDropdownDescription {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -849,12 +840,12 @@ class HeadlessDropdownDescription {
       'group-data-focus:text-white',
       'sm:text-xs/5',
       'dark:text-zinc-400',
-      'forced-colors:group-data-focus:text-[HighlightText]'
-    ]
+      'forced-colors:group-data-focus:text-[HighlightText]',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.textContent = this.text;
     element.setAttribute('data-slot', 'description');
     element.className = this.getClasses();
@@ -868,16 +859,16 @@ class HeadlessDropdownDescription {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -901,8 +892,8 @@ class HeadlessDropdownDescription {
 class HeadlessDropdownShortcut {
   constructor(options = {}) {
     this.options = {
-      keys: options.keys || "",
-      className: options.className || "",
+      keys: options.keys || '',
+      className: options.className || '',
       ...options,
     };
 
@@ -911,12 +902,7 @@ class HeadlessDropdownShortcut {
 
   // Style configurations
   static styles = {
-    base: [
-      'col-start-5',
-      'row-start-1',
-      'flex',
-      'justify-self-end'
-    ],
+    base: ['col-start-5', 'row-start-1', 'flex', 'justify-self-end'],
     key: [
       'min-w-[2ch]',
       'text-center',
@@ -924,21 +910,19 @@ class HeadlessDropdownShortcut {
       'text-zinc-400',
       'capitalize',
       'group-data-focus:text-white',
-      'forced-colors:group-data-focus:text-[HighlightText]'
-    ]
+      'forced-colors:group-data-focus:text-[HighlightText]',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("kbd");
+    const element = document.createElement('kbd');
     element.className = this.getClasses();
 
     // Parse keys (can be string or array)
-    const keys = Array.isArray(this.options.keys) 
-      ? this.options.keys 
-      : this.options.keys.split('');
+    const keys = Array.isArray(this.options.keys) ? this.options.keys : this.options.keys.split('');
 
     keys.forEach((char, index) => {
-      const kbd = document.createElement("kbd");
+      const kbd = document.createElement('kbd');
       kbd.textContent = char;
       kbd.className = this.getKeyClasses(index, char);
       element.appendChild(kbd);
@@ -954,7 +938,7 @@ class HeadlessDropdownShortcut {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getKeyClasses(index, char) {
@@ -965,16 +949,16 @@ class HeadlessDropdownShortcut {
       classes.push('pl-1');
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -1002,7 +986,7 @@ class HeadlessDropdownShortcut {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessDropdown,
     HeadlessDropdownButton,
@@ -1014,6 +998,6 @@ if (typeof module !== "undefined" && module.exports) {
     HeadlessDropdownDivider,
     HeadlessDropdownLabel,
     HeadlessDropdownDescription,
-    HeadlessDropdownShortcut
+    HeadlessDropdownShortcut,
   };
 }

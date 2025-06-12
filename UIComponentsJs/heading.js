@@ -31,9 +31,7 @@ class HeadlessHeading {
   }
 
   static styles = {
-    base: [
-      'text-2xl/8 font-semibold text-zinc-950 sm:text-xl/8 dark:text-white'
-    ]
+    base: ['text-2xl/8 font-semibold text-zinc-950 sm:text-xl/8 dark:text-white'],
   };
 
   createElement() {
@@ -77,8 +75,8 @@ class HeadlessHeading {
   }
 
   addClass(className) {
-    this.options.className = this.options.className 
-      ? `${this.options.className} ${className}` 
+    this.options.className = this.options.className
+      ? `${this.options.className} ${className}`
       : className;
     this.element.classList.add(className);
     return this;
@@ -88,7 +86,7 @@ class HeadlessHeading {
     if (this.options.className) {
       this.options.className = this.options.className
         .split(' ')
-        .filter(cls => cls !== className)
+        .filter((cls) => cls !== className)
         .join(' ');
     }
     this.element.classList.remove(className);
@@ -133,9 +131,7 @@ class HeadlessSubheading {
   }
 
   static styles = {
-    base: [
-      'text-base/7 font-semibold text-zinc-950 sm:text-sm/6 dark:text-white'
-    ]
+    base: ['text-base/7 font-semibold text-zinc-950 sm:text-sm/6 dark:text-white'],
   };
 
   createElement() {
@@ -179,8 +175,8 @@ class HeadlessSubheading {
   }
 
   addClass(className) {
-    this.options.className = this.options.className 
-      ? `${this.options.className} ${className}` 
+    this.options.className = this.options.className
+      ? `${this.options.className} ${className}`
       : className;
     this.element.classList.add(className);
     return this;
@@ -190,7 +186,7 @@ class HeadlessSubheading {
     if (this.options.className) {
       this.options.className = this.options.className
         .split(' ')
-        .filter(cls => cls !== className)
+        .filter((cls) => cls !== className)
         .join(' ');
     }
     this.element.classList.remove(className);

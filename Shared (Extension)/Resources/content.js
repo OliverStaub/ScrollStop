@@ -44,7 +44,7 @@ class ScrollStopCoordinator {
 
       console.log('ScrollStop: Initialization completed successfully');
     } catch (error) {
-      console.error("Error initializing ScrollStop coordinator:", error);
+      console.error('Error initializing ScrollStop coordinator:', error);
       this.isInitialized = false; // Reset on failure
     }
   }
@@ -58,13 +58,13 @@ class ScrollStopCoordinator {
       const url = window.location.href;
       const hostname = window.location.hostname;
       const siteType = await StorageHelper.getCurrentSiteType(url, hostname);
-      
+
       if (siteType.isBlocked || siteType.isNews) {
         this.timerTracker = new TimerTracker();
         await this.timerTracker.initialize(siteType.isNews);
       }
     } catch (error) {
-      console.error("Error initializing timer tracker:", error);
+      console.error('Error initializing timer tracker:', error);
     }
   }
 
@@ -72,21 +72,12 @@ class ScrollStopCoordinator {
    * Set up event listeners for inter-module communication
    */
   setupEventListeners() {
-    window.addEventListener(
-      "doomscroll-detected",
-      this.handleDoomscrollDetected
-    );
-    window.addEventListener(
-      "doomscroll-animation-complete",
-      this.handleAnimationComplete
-    );
-    window.addEventListener(
-      "transition-screen-complete",
-      this.handleTransitionComplete
-    );
-    window.addEventListener("time-block-removed", this.handleTimeBlockRemoved);
-    window.addEventListener("choice-dialog-complete", this.handleChoiceComplete);
-    window.addEventListener("news-time-limit-exceeded", this.handleNewsTimeLimitExceeded);
+    window.addEventListener('doomscroll-detected', this.handleDoomscrollDetected);
+    window.addEventListener('doomscroll-animation-complete', this.handleAnimationComplete);
+    window.addEventListener('transition-screen-complete', this.handleTransitionComplete);
+    window.addEventListener('time-block-removed', this.handleTimeBlockRemoved);
+    window.addEventListener('choice-dialog-complete', this.handleChoiceComplete);
+    window.addEventListener('news-time-limit-exceeded', this.handleNewsTimeLimitExceeded);
   }
 
   /**
@@ -98,7 +89,7 @@ class ScrollStopCoordinator {
 
     try {
       console.log('ScrollStop: Checking current site:', hostname);
-      
+
       // Check if site is blocked or news site
       const siteType = await StorageHelper.getCurrentSiteType(url, hostname);
       console.log('ScrollStop: Site type:', siteType);
@@ -113,7 +104,7 @@ class ScrollStopCoordinator {
 
       // Always show choice dialog on every page load (no session persistence)
       console.log('ScrollStop: No session persistence - will show choice dialog');
-      
+
       // Clear any existing stored choice to ensure dialog always shows
       await ChoiceDialog.clearSessionChoice(hostname);
 
@@ -136,7 +127,7 @@ class ScrollStopCoordinator {
         this.showChoiceDialog();
       }
     } catch (error) {
-      console.error("Error checking current site:", error);
+      console.error('Error checking current site:', error);
     }
   }
 
@@ -160,7 +151,6 @@ class ScrollStopCoordinator {
    * Handle doomscroll detection event
    */
   async handleDoomscrollDetected(_event) {
-
     try {
       // Create time block immediately
       await TimeManager.createTimeBlock(this.currentHostname);
@@ -173,7 +163,7 @@ class ScrollStopCoordinator {
 
       await this.doomscrollAnimation.startAnimation();
     } catch (error) {
-      console.error("Error handling doomscroll detection:", error);
+      console.error('Error handling doomscroll detection:', error);
     }
   }
 
@@ -181,7 +171,6 @@ class ScrollStopCoordinator {
    * Handle animation completion event
    */
   handleAnimationComplete(_event) {
-
     // Show transition screen
     this.transitionScreen = new TransitionScreen({
       transitionDuration: 3000,
@@ -194,7 +183,6 @@ class ScrollStopCoordinator {
    * Handle transition screen completion event
    */
   handleTransitionComplete(_event) {
-
     // Show blocking screen
     this.showBlockingScreen();
   }
@@ -224,7 +212,7 @@ class ScrollStopCoordinator {
    */
   async handleNewsTimeLimitExceeded(_event) {
     console.log('ScrollStop: News time limit exceeded');
-    
+
     // Show blocking screen for news sites
     this.showBlockingScreen();
   }
@@ -238,17 +226,17 @@ class ScrollStopCoordinator {
       console.log('ScrollStop: Choice dialog already shown, skipping');
       return;
     }
-    
+
     try {
       console.log('ScrollStop: Creating choice dialog for:', this.currentHostname);
-      
+
       this.choiceDialog = new ChoiceDialog({
         siteTitle: this.currentHostname,
         onChoiceMade: (choice) => {
           console.log('ScrollStop: User chose:', choice);
           this.userChoice = choice;
           this.proceedWithChoice(choice);
-        }
+        },
       });
 
       console.log('ScrollStop: Showing choice dialog');
@@ -282,12 +270,12 @@ class ScrollStopCoordinator {
           this.startDoomscrollDetection();
         }
         break;
-      
+
       case 'timer-only':
         // Only show timer, no blocking
         await this.initializeTimerOnly();
         break;
-      
+
       case 'block':
         // Initialize timer first, then immediately block the site
         await this.initializeTimerTracker();
@@ -300,7 +288,7 @@ class ScrollStopCoordinator {
         }
         this.showBlockingScreen();
         break;
-      
+
       default:
         console.warn('Unknown choice:', choice);
         // Default to continue
@@ -322,13 +310,13 @@ class ScrollStopCoordinator {
         this.timerTracker = new TimerTracker();
         await this.timerTracker.initialize();
       }
-      
+
       // Set timer to timer-only mode to prevent hiding
       if (this.timerTracker.setTimerOnlyMode) {
         this.timerTracker.setTimerOnlyMode(true);
       }
     } catch (error) {
-      console.error("Error initializing timer-only mode:", error);
+      console.error('Error initializing timer-only mode:', error);
     }
   }
 
@@ -368,30 +356,12 @@ class ScrollStopCoordinator {
     }
 
     // Remove event listeners
-    window.removeEventListener(
-      "doomscroll-detected",
-      this.handleDoomscrollDetected
-    );
-    window.removeEventListener(
-      "doomscroll-animation-complete",
-      this.handleAnimationComplete
-    );
-    window.removeEventListener(
-      "transition-screen-complete",
-      this.handleTransitionComplete
-    );
-    window.removeEventListener(
-      "time-block-removed",
-      this.handleTimeBlockRemoved
-    );
-    window.removeEventListener(
-      "choice-dialog-complete",
-      this.handleChoiceComplete
-    );
-    window.removeEventListener(
-      "news-time-limit-exceeded",
-      this.handleNewsTimeLimitExceeded
-    );
+    window.removeEventListener('doomscroll-detected', this.handleDoomscrollDetected);
+    window.removeEventListener('doomscroll-animation-complete', this.handleAnimationComplete);
+    window.removeEventListener('transition-screen-complete', this.handleTransitionComplete);
+    window.removeEventListener('time-block-removed', this.handleTimeBlockRemoved);
+    window.removeEventListener('choice-dialog-complete', this.handleChoiceComplete);
+    window.removeEventListener('news-time-limit-exceeded', this.handleNewsTimeLimitExceeded);
 
     this.isInitialized = false;
   }
@@ -400,7 +370,7 @@ class ScrollStopCoordinator {
    * Handle messages from background script
    */
   handleMessage(message, sender, sendResponse) {
-    if (message.action === "checkBlockedSite") {
+    if (message.action === 'checkBlockedSite') {
       this.checkCurrentSite().then(() => {
         if (sendResponse) {
           sendResponse({ success: true });
@@ -425,8 +395,8 @@ function initializeScrollStop() {
   scrollStopCoordinator.initialize();
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initializeScrollStop);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeScrollStop);
 } else {
   // DOM already loaded, initialize immediately
   initializeScrollStop();

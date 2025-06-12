@@ -12,7 +12,7 @@
  *   href: '/page/1',
  *   children: 'Previous'
  * }).render(pagination.element);
- * 
+ *
  * const list = new HeadlessPaginationList();
  * new HeadlessPaginationPage({
  *   href: '/page/1',
@@ -29,7 +29,7 @@
  *   children: '10'
  * }).render(list.element);
  * list.render(pagination.element);
- * 
+ *
  * new HeadlessPaginationNext({
  *   href: '/page/3'
  * }).render(pagination.element);
@@ -50,8 +50,8 @@
 class HeadlessPagination {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
-      ariaLabel: options.ariaLabel || "Page navigation",
+      className: options.className || '',
+      ariaLabel: options.ariaLabel || 'Page navigation',
       ...options,
     };
 
@@ -60,14 +60,11 @@ class HeadlessPagination {
 
   // Style configurations
   static styles = {
-    base: [
-      'flex',
-      'gap-x-2'
-    ]
+    base: ['flex', 'gap-x-2'],
   };
 
   createElement() {
-    const element = document.createElement("nav");
+    const element = document.createElement('nav');
     element.setAttribute('aria-label', this.options.ariaLabel);
     element.className = this.getClasses();
     return element;
@@ -80,16 +77,16 @@ class HeadlessPagination {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -108,7 +105,7 @@ class HeadlessPaginationPrevious {
   constructor(options = {}) {
     this.options = {
       href: options.href || null,
-      className: options.className || "",
+      className: options.className || '',
       children: options.children || 'Previous',
       onClick: options.onClick || null,
       ...options,
@@ -119,14 +116,11 @@ class HeadlessPaginationPrevious {
 
   // Style configurations
   static styles = {
-    base: [
-      'grow',
-      'basis-0'
-    ]
+    base: ['grow', 'basis-0'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.className = this.getClasses();
 
     // Create the button/link
@@ -138,14 +132,14 @@ class HeadlessPaginationPrevious {
 
   createButton() {
     const isDisabled = this.options.href === null;
-    const button = document.createElement(isDisabled ? "button" : "a");
+    const button = document.createElement(isDisabled ? 'button' : 'a');
 
     // Set attributes
     button.setAttribute('aria-label', 'Previous page');
-    
+
     if (isDisabled) {
       button.disabled = true;
-      button.type = "button";
+      button.type = 'button';
     } else {
       button.href = this.options.href;
     }
@@ -155,7 +149,7 @@ class HeadlessPaginationPrevious {
 
     // Add click handler
     if (this.options.onClick) {
-      button.addEventListener("click", this.options.onClick);
+      button.addEventListener('click', this.options.onClick);
     }
 
     // Add icon
@@ -170,14 +164,14 @@ class HeadlessPaginationPrevious {
   }
 
   createIcon() {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'stroke-current');
     svg.setAttribute('data-slot', 'icon');
     svg.setAttribute('viewBox', '0 0 16 16');
     svg.setAttribute('fill', 'none');
     svg.setAttribute('aria-hidden', 'true');
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M2.75 8H13.25M2.75 8L5.25 5.5M2.75 8L5.25 10.5');
     path.setAttribute('stroke-width', '1.5');
     path.setAttribute('stroke-linecap', 'round');
@@ -194,7 +188,7 @@ class HeadlessPaginationPrevious {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getButtonClasses(disabled) {
@@ -227,23 +221,23 @@ class HeadlessPaginationPrevious {
       'active:bg-zinc-950/5',
       'dark:text-white',
       'dark:hover:bg-white/10',
-      'dark:active:bg-white/10'
+      'dark:active:bg-white/10',
     ];
 
     if (disabled) {
       classes.push('opacity-50', 'cursor-not-allowed');
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -274,7 +268,7 @@ class HeadlessPaginationNext {
   constructor(options = {}) {
     this.options = {
       href: options.href || null,
-      className: options.className || "",
+      className: options.className || '',
       children: options.children || 'Next',
       onClick: options.onClick || null,
       ...options,
@@ -285,16 +279,11 @@ class HeadlessPaginationNext {
 
   // Style configurations
   static styles = {
-    base: [
-      'flex',
-      'grow',
-      'basis-0',
-      'justify-end'
-    ]
+    base: ['flex', 'grow', 'basis-0', 'justify-end'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.className = this.getClasses();
 
     // Create the button/link
@@ -306,14 +295,14 @@ class HeadlessPaginationNext {
 
   createButton() {
     const isDisabled = this.options.href === null;
-    const button = document.createElement(isDisabled ? "button" : "a");
+    const button = document.createElement(isDisabled ? 'button' : 'a');
 
     // Set attributes
     button.setAttribute('aria-label', 'Next page');
-    
+
     if (isDisabled) {
       button.disabled = true;
-      button.type = "button";
+      button.type = 'button';
     } else {
       button.href = this.options.href;
     }
@@ -323,7 +312,7 @@ class HeadlessPaginationNext {
 
     // Add click handler
     if (this.options.onClick) {
-      button.addEventListener("click", this.options.onClick);
+      button.addEventListener('click', this.options.onClick);
     }
 
     // Add text
@@ -338,14 +327,14 @@ class HeadlessPaginationNext {
   }
 
   createIcon() {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'stroke-current');
     svg.setAttribute('data-slot', 'icon');
     svg.setAttribute('viewBox', '0 0 16 16');
     svg.setAttribute('fill', 'none');
     svg.setAttribute('aria-hidden', 'true');
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M13.25 8L2.75 8M13.25 8L10.75 10.5M13.25 8L10.75 5.5');
     path.setAttribute('stroke-width', '1.5');
     path.setAttribute('stroke-linecap', 'round');
@@ -362,7 +351,7 @@ class HeadlessPaginationNext {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getButtonClasses(disabled) {
@@ -395,23 +384,23 @@ class HeadlessPaginationNext {
       'active:bg-zinc-950/5',
       'dark:text-white',
       'dark:hover:bg-white/10',
-      'dark:active:bg-white/10'
+      'dark:active:bg-white/10',
     ];
 
     if (disabled) {
       classes.push('opacity-50', 'cursor-not-allowed');
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -441,7 +430,7 @@ class HeadlessPaginationNext {
 class HeadlessPaginationList {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -450,16 +439,11 @@ class HeadlessPaginationList {
 
   // Style configurations
   static styles = {
-    base: [
-      'hidden',
-      'items-baseline',
-      'gap-x-2',
-      'sm:flex'
-    ]
+    base: ['hidden', 'items-baseline', 'gap-x-2', 'sm:flex'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.className = this.getClasses();
     return element;
   }
@@ -471,16 +455,16 @@ class HeadlessPaginationList {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -498,10 +482,10 @@ class HeadlessPaginationList {
 class HeadlessPaginationPage {
   constructor(options = {}) {
     this.options = {
-      href: options.href || "",
-      className: options.className || "",
+      href: options.href || '',
+      className: options.className || '',
       current: options.current || false,
-      children: options.children || "",
+      children: options.children || '',
       onClick: options.onClick || null,
       ...options,
     };
@@ -510,10 +494,10 @@ class HeadlessPaginationPage {
   }
 
   createElement() {
-    const button = document.createElement("a");
+    const button = document.createElement('a');
     button.href = this.options.href;
     button.setAttribute('aria-label', `Page ${this.options.children}`);
-    
+
     if (this.options.current) {
       button.setAttribute('aria-current', 'page');
     }
@@ -523,12 +507,12 @@ class HeadlessPaginationPage {
 
     // Add click handler
     if (this.options.onClick) {
-      button.addEventListener("click", this.options.onClick);
+      button.addEventListener('click', this.options.onClick);
     }
 
     // Create inner span
-    const span = document.createElement("span");
-    span.className = "-mx-0.5";
+    const span = document.createElement('span');
+    span.className = '-mx-0.5';
     span.textContent = this.options.children;
     button.appendChild(span);
 
@@ -568,7 +552,7 @@ class HeadlessPaginationPage {
       'active:bg-zinc-950/5',
       'dark:text-white',
       'dark:hover:bg-white/10',
-      'dark:active:bg-white/10'
+      'dark:active:bg-white/10',
     ];
 
     if (this.options.current) {
@@ -579,16 +563,16 @@ class HeadlessPaginationPage {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -617,7 +601,7 @@ class HeadlessPaginationPage {
 class HeadlessPaginationGap {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       children: options.children || '…', // hellip character
       ...options,
     };
@@ -634,12 +618,12 @@ class HeadlessPaginationGap {
       'font-semibold',
       'text-zinc-950',
       'select-none',
-      'dark:text-white'
-    ]
+      'dark:text-white',
+    ],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.setAttribute('aria-hidden', 'true');
     element.textContent = this.options.children;
     element.className = this.getClasses();
@@ -653,16 +637,16 @@ class HeadlessPaginationGap {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -678,13 +662,13 @@ class HeadlessPaginationGap {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessPagination,
     HeadlessPaginationPrevious,
     HeadlessPaginationNext,
     HeadlessPaginationList,
     HeadlessPaginationPage,
-    HeadlessPaginationGap
+    HeadlessPaginationGap,
   };
 }

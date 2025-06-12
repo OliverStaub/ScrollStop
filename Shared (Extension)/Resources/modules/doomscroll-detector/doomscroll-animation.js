@@ -1,7 +1,7 @@
 // modules/doomscroll-detector/doomscroll-animation.js
 // Module for handling the doomscroll warning animation
 
-if (typeof window.DoomscrollAnimation === "undefined") {
+if (typeof window.DoomscrollAnimation === 'undefined') {
   class DoomscrollAnimation {
     constructor(config = {}) {
       this.config = {
@@ -43,7 +43,7 @@ if (typeof window.DoomscrollAnimation === "undefined") {
           this.completeAnimation();
         }, this.config.SCREEN_DECAY_TIME * 1000);
       } catch (error) {
-        console.error("Error in doomscroll animation:", error);
+        console.error('Error in doomscroll animation:', error);
         this.cleanup();
       }
     }
@@ -56,10 +56,10 @@ if (typeof window.DoomscrollAnimation === "undefined") {
         return; // Already created
       }
 
-      this.warningElement = document.createElement("div");
-      this.warningElement.id = "doomscroll-warning";
-      this.warningElement.className = "doomscroll-warning";
-      this.warningElement.textContent = "DOOMSCROLL!";
+      this.warningElement = document.createElement('div');
+      this.warningElement.id = 'doomscroll-warning';
+      this.warningElement.className = 'doomscroll-warning';
+      this.warningElement.textContent = 'DOOMSCROLL!';
 
       // Apply styles
       this.applyWarningStyles();
@@ -71,7 +71,9 @@ if (typeof window.DoomscrollAnimation === "undefined") {
      * Apply styles to warning element
      */
     applyWarningStyles() {
-      if (!this.warningElement) {return;}
+      if (!this.warningElement) {
+        return;
+      }
 
       this.warningElement.style.cssText = `
         height: 100vh;
@@ -101,7 +103,7 @@ if (typeof window.DoomscrollAnimation === "undefined") {
      */
     storeOriginalContent() {
       this.originalContent = Array.from(document.body.children).filter(
-        (child) => child.id !== "doomscroll-warning"
+        (child) => child.id !== 'doomscroll-warning'
       );
     }
 
@@ -127,12 +129,14 @@ if (typeof window.DoomscrollAnimation === "undefined") {
      * Toggle warning element visibility for flashing effect
      */
     toggleWarningVisibility() {
-      if (!this.warningElement) {return;}
+      if (!this.warningElement) {
+        return;
+      }
 
       if (!this.isWarningVisible) {
-        this.warningElement.style.opacity = "1";
+        this.warningElement.style.opacity = '1';
       } else {
-        this.warningElement.style.opacity = "0";
+        this.warningElement.style.opacity = '0';
       }
       this.isWarningVisible = !this.isWarningVisible;
     }
@@ -142,7 +146,7 @@ if (typeof window.DoomscrollAnimation === "undefined") {
      */
     fadeOutContent() {
       this.originalContent.forEach((child) => {
-        child.style.opacity = "0";
+        child.style.opacity = '0';
       });
     }
 
@@ -158,7 +162,7 @@ if (typeof window.DoomscrollAnimation === "undefined") {
 
       // Dispatch completion event
       window.dispatchEvent(
-        new CustomEvent("doomscroll-animation-complete", {
+        new CustomEvent('doomscroll-animation-complete', {
           detail: {
             hostname: window.location.hostname,
           },
@@ -213,7 +217,7 @@ if (typeof window.DoomscrollAnimation === "undefined") {
   }
 
   // Export for use in other modules
-  if (typeof module !== "undefined" && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = DoomscrollAnimation;
   } else {
     window.DoomscrollAnimation = DoomscrollAnimation;

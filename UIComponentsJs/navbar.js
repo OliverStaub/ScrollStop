@@ -5,7 +5,7 @@
  *
  * // Basic navbar
  * const navbar = new HeadlessNavbar();
- * 
+ *
  * const section = new HeadlessNavbarSection();
  * new HeadlessNavbarItem({
  *   children: 'Home',
@@ -17,34 +17,34 @@
  *   href: '/about'
  * }).render(section.element);
  * section.render(navbar.element);
- * 
+ *
  * new HeadlessNavbarSpacer().render(navbar.element);
- * 
+ *
  * const rightSection = new HeadlessNavbarSection();
  * new HeadlessNavbarItem({
  *   children: 'Login',
  *   href: '/login'
  * }).render(rightSection.element);
  * rightSection.render(navbar.element);
- * 
+ *
  * navbar.render('#container');
  *
  * // With dividers
  * const navbar = new HeadlessNavbar();
  * const section = new HeadlessNavbarSection();
- * 
+ *
  * new HeadlessNavbarItem({
  *   children: 'Dashboard',
  *   href: '/dashboard'
  * }).render(section.element);
- * 
+ *
  * new HeadlessNavbarDivider().render(section.element);
- * 
+ *
  * new HeadlessNavbarItem({
  *   children: 'Settings',
  *   href: '/settings'
  * }).render(section.element);
- * 
+ *
  * section.render(navbar.element);
  *
  * // Button-style items
@@ -67,7 +67,7 @@
 class HeadlessNavbar {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -76,17 +76,11 @@ class HeadlessNavbar {
 
   // Style configurations
   static styles = {
-    base: [
-      'flex',
-      'flex-1',
-      'items-center',
-      'gap-4',
-      'py-2.5'
-    ]
+    base: ['flex', 'flex-1', 'items-center', 'gap-4', 'py-2.5'],
   };
 
   createElement() {
-    const element = document.createElement("nav");
+    const element = document.createElement('nav');
     element.className = this.getClasses();
     return element;
   }
@@ -98,16 +92,16 @@ class HeadlessNavbar {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -125,7 +119,7 @@ class HeadlessNavbar {
 class HeadlessNavbarDivider {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -134,16 +128,11 @@ class HeadlessNavbarDivider {
 
   // Style configurations
   static styles = {
-    base: [
-      'h-6',
-      'w-px',
-      'bg-zinc-950/10',
-      'dark:bg-white/10'
-    ]
+    base: ['h-6', 'w-px', 'bg-zinc-950/10', 'dark:bg-white/10'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.setAttribute('aria-hidden', 'true');
     element.className = this.getClasses();
     return element;
@@ -156,16 +145,16 @@ class HeadlessNavbarDivider {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -183,7 +172,7 @@ class HeadlessNavbarDivider {
 class HeadlessNavbarSection {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -193,15 +182,11 @@ class HeadlessNavbarSection {
 
   // Style configurations
   static styles = {
-    base: [
-      'flex',
-      'items-center',
-      'gap-3'
-    ]
+    base: ['flex', 'items-center', 'gap-3'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.className = this.getClasses();
     element.setAttribute('data-layout-group', this.layoutId);
     return element;
@@ -214,16 +199,16 @@ class HeadlessNavbarSection {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -241,7 +226,7 @@ class HeadlessNavbarSection {
 class HeadlessNavbarSpacer {
   constructor(options = {}) {
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -250,14 +235,11 @@ class HeadlessNavbarSpacer {
 
   // Style configurations
   static styles = {
-    base: [
-      '-ml-4',
-      'flex-1'
-    ]
+    base: ['-ml-4', 'flex-1'],
   };
 
   createElement() {
-    const element = document.createElement("div");
+    const element = document.createElement('div');
     element.setAttribute('aria-hidden', 'true');
     element.className = this.getClasses();
     return element;
@@ -270,16 +252,16 @@ class HeadlessNavbarSpacer {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -298,8 +280,8 @@ class HeadlessNavbarItem {
   constructor(options = {}) {
     this.options = {
       current: options.current || false,
-      className: options.className || "",
-      children: options.children || "",
+      className: options.className || '',
+      children: options.children || '',
       href: options.href || null,
       onClick: options.onClick || null,
       target: options.target || null,
@@ -351,11 +333,9 @@ class HeadlessNavbarItem {
       'dark:data-hover:bg-white/5',
       'dark:data-hover:*:data-[slot=icon]:fill-white',
       'dark:data-active:bg-white/5',
-      'dark:data-active:*:data-[slot=icon]:fill-white'
+      'dark:data-active:*:data-[slot=icon]:fill-white',
     ],
-    wrapper: [
-      'relative'
-    ],
+    wrapper: ['relative'],
     indicator: [
       'absolute',
       'inset-x-2',
@@ -363,7 +343,7 @@ class HeadlessNavbarItem {
       'h-0.5',
       'rounded-full',
       'bg-zinc-950',
-      'dark:bg-white'
+      'dark:bg-white',
     ],
     touchTarget: [
       'absolute',
@@ -372,18 +352,18 @@ class HeadlessNavbarItem {
       'size-[max(100%,2.75rem)]',
       '-translate-x-1/2',
       '-translate-y-1/2',
-      'pointer-fine:hidden'
-    ]
+      'pointer-fine:hidden',
+    ],
   };
 
   createElement() {
     // Wrapper span
-    const wrapper = document.createElement("span");
+    const wrapper = document.createElement('span');
     wrapper.className = this.getWrapperClasses();
 
     // Current indicator (animated)
     if (this.options.current) {
-      const indicator = document.createElement("span");
+      const indicator = document.createElement('span');
       indicator.className = this.getIndicatorClasses();
       indicator.setAttribute('data-layout-id', 'current-indicator');
       wrapper.appendChild(indicator);
@@ -392,7 +372,7 @@ class HeadlessNavbarItem {
     // Main element (link or button)
     const isLink = this.options.href !== null;
     const element = document.createElement(isLink ? 'a' : 'button');
-    
+
     if (isLink) {
       element.href = this.options.href;
       if (this.options.target) {
@@ -440,7 +420,7 @@ class HeadlessNavbarItem {
     if (typeof this.options.children === 'string') {
       element.textContent = this.options.children;
     } else if (Array.isArray(this.options.children)) {
-      this.options.children.forEach(child => {
+      this.options.children.forEach((child) => {
         if (typeof child === 'string') {
           element.appendChild(document.createTextNode(child));
         } else {
@@ -453,10 +433,10 @@ class HeadlessNavbarItem {
   }
 
   addTouchTarget(element) {
-    const touchTarget = document.createElement("span");
+    const touchTarget = document.createElement('span');
     touchTarget.className = this.getTouchTargetClasses();
     touchTarget.setAttribute('aria-hidden', 'true');
-    
+
     // Insert at the beginning
     element.insertBefore(touchTarget, element.firstChild);
   }
@@ -468,28 +448,28 @@ class HeadlessNavbarItem {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   getClasses() {
-    return HeadlessNavbarItem.styles.base.join(" ");
+    return HeadlessNavbarItem.styles.base.join(' ');
   }
 
   getIndicatorClasses() {
-    return HeadlessNavbarItem.styles.indicator.join(" ");
+    return HeadlessNavbarItem.styles.indicator.join(' ');
   }
 
   getTouchTargetClasses() {
-    return HeadlessNavbarItem.styles.touchTarget.join(" ");
+    return HeadlessNavbarItem.styles.touchTarget.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -498,11 +478,11 @@ class HeadlessNavbarItem {
 
   setCurrent(current) {
     this.options.current = current;
-    
+
     // Update indicator
     const existingIndicator = this.element.querySelector('[data-layout-id="current-indicator"]');
     if (current && !existingIndicator) {
-      const indicator = document.createElement("span");
+      const indicator = document.createElement('span');
       indicator.className = this.getIndicatorClasses();
       indicator.setAttribute('data-layout-id', 'current-indicator');
       this.element.insertBefore(indicator, this.element.firstChild);
@@ -531,7 +511,7 @@ class HeadlessNavbarLabel {
   constructor(text, options = {}) {
     this.text = text;
     this.options = {
-      className: options.className || "",
+      className: options.className || '',
       ...options,
     };
 
@@ -540,13 +520,11 @@ class HeadlessNavbarLabel {
 
   // Style configurations
   static styles = {
-    base: [
-      'truncate'
-    ]
+    base: ['truncate'],
   };
 
   createElement() {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
     element.textContent = this.text;
     element.className = this.getClasses();
     return element;
@@ -559,16 +537,16 @@ class HeadlessNavbarLabel {
       classes.push(this.options.className);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   }
 
   render(container) {
-    if (typeof container === "string") {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
     if (!container) {
-      throw new Error("Container not found");
+      throw new Error('Container not found');
     }
 
     container.appendChild(this.element);
@@ -590,13 +568,13 @@ class HeadlessNavbarLabel {
 }
 
 // Export for use in modules
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     HeadlessNavbar,
     HeadlessNavbarDivider,
     HeadlessNavbarSection,
     HeadlessNavbarSpacer,
     HeadlessNavbarItem,
-    HeadlessNavbarLabel
+    HeadlessNavbarLabel,
   };
 }

@@ -1,7 +1,7 @@
 // modules/transition-screen/transition-screen.js
 // Module for showing the transition screen between animation and blocking
 
-if (typeof window.TransitionScreen === "undefined") {
+if (typeof window.TransitionScreen === 'undefined') {
   class TransitionScreen {
     constructor(config = {}) {
       this.config = {
@@ -27,7 +27,7 @@ if (typeof window.TransitionScreen === "undefined") {
           this.complete();
         }, this.config.TRANSITION_DURATION);
       } catch (error) {
-        console.error("Error showing transition screen:", error);
+        console.error('Error showing transition screen:', error);
         this.cleanup();
       }
     }
@@ -41,11 +41,11 @@ if (typeof window.TransitionScreen === "undefined") {
       }
 
       // Find and update existing warning element, or create new one
-      this.transitionElement = document.getElementById("doomscroll-warning");
+      this.transitionElement = document.getElementById('doomscroll-warning');
 
       if (!this.transitionElement) {
-        this.transitionElement = document.createElement("div");
-        this.transitionElement.id = "transition-screen";
+        this.transitionElement = document.createElement('div');
+        this.transitionElement.id = 'transition-screen';
         document.body.appendChild(this.transitionElement);
       }
 
@@ -57,7 +57,9 @@ if (typeof window.TransitionScreen === "undefined") {
      * Apply styles to transition element
      */
     applyTransitionStyles() {
-      if (!this.transitionElement) {return;}
+      if (!this.transitionElement) {
+        return;
+      }
 
       this.transitionElement.style.cssText = `
         height: 100vh;
@@ -83,7 +85,9 @@ if (typeof window.TransitionScreen === "undefined") {
      * Update transition screen content
      */
     updateTransitionContent() {
-      if (!this.transitionElement) {return;}
+      if (!this.transitionElement) {
+        return;
+      }
 
       this.transitionElement.innerHTML = `
         <div style="max-width: 600px; width: 100%; padding: 2rem;">
@@ -119,7 +123,7 @@ if (typeof window.TransitionScreen === "undefined") {
      * Update countdown display
      */
     updateCountdownDisplay() {
-      const countdownElement = document.getElementById("countdown-number");
+      const countdownElement = document.getElementById('countdown-number');
       if (countdownElement) {
         countdownElement.textContent = this.remainingSeconds;
       }
@@ -143,7 +147,7 @@ if (typeof window.TransitionScreen === "undefined") {
 
       // Dispatch completion event
       window.dispatchEvent(
-        new CustomEvent("transition-screen-complete", {
+        new CustomEvent('transition-screen-complete', {
           detail: {
             hostname: window.location.hostname,
           },
@@ -178,10 +182,11 @@ if (typeof window.TransitionScreen === "undefined") {
      * @param {string} message - Custom message to display
      */
     updateMessage(message) {
-      if (!this.transitionElement) {return;}
+      if (!this.transitionElement) {
+        return;
+      }
 
-      const messageElement =
-        this.transitionElement.querySelector("div:nth-child(3)");
+      const messageElement = this.transitionElement.querySelector('div:nth-child(3)');
       if (messageElement) {
         messageElement.textContent = message;
       }
@@ -189,7 +194,7 @@ if (typeof window.TransitionScreen === "undefined") {
   }
 
   // Export for use in other modules
-  if (typeof module !== "undefined" && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = TransitionScreen;
   } else {
     window.TransitionScreen = TransitionScreen;

@@ -220,48 +220,137 @@ ScrollStop/
 - **`choice-dialog.js`**: User choice interface
 - **`blocking-screen.js`**: Full-page blocking with countdown
 
-## 🤝 Contributing
+## 🚀 CI/CD Pipeline Documentation
 
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Run tests**: `npm test` (required!)
-4. **Commit changes**: `git commit -m 'Add amazing feature'`
-5. **Push to branch**: `git push origin feature/amazing-feature`
-6. **Create Pull Request**
+Our comprehensive GitHub Actions pipeline ensures code quality and reliability across all platforms.
 
-All PRs automatically run:
+### Pipeline Overview
 
-- ✅ Linting and formatting checks
-- ✅ Unit and integration tests
-- ✅ Security scans
-- ✅ Extension validation
-- ✅ Cross-platform builds
+The CI/CD system consists of 6 parallel jobs that run on every push and pull request:
+
+#### 1. **lint-and-test** (Primary Pipeline)
+
+**Purpose**: Code quality validation and testing  
+**Runtime**: ~2-3 minutes (with caching)
+
+```yaml
+- ESLint code quality checks
+- Prettier formatting validation
+- Manifest.json structure validation
+- Sites.json configuration validation
+- File path verification (critical for Xcode builds)
+- Unit tests (TimeManager, StorageHelper, TimerTracker)
+- Integration tests (full extension workflow)
+- Test coverage generation and Codecov upload
+```
+
+#### 2. **build-macos**
+
+**Purpose**: macOS Safari extension build verification  
+**Runtime**: ~3-4 minutes
+
+```yaml
+- Xcode latest-stable setup
+- ScrollStop (macOS) scheme build
+- Release configuration compilation
+- Artifact archival (7-day retention)
+```
+
+#### 3. **build-ios**
+
+**Purpose**: iOS Safari extension build verification  
+**Runtime**: ~3-4 minutes
+
+```yaml
+- Xcode latest-stable setup
+- ScrollStop (iOS) scheme build
+- iOS generic platform targeting
+- Release configuration compilation
+- Artifact archival (7-day retention)
+```
+
+#### 4. **security-scan**
+
+**Purpose**: Security vulnerability detection  
+**Runtime**: ~1-2 minutes
+
+```yaml
+- Semgrep security analysis (JavaScript, secrets, security-audit)
+- SARIF report generation and upload
+- TruffleHog secret detection with verification
+- CodeQL integration for GitHub Security tab
+```
+
+#### 5. **dependency-scan**
+
+**Purpose**: Dependency security and licensing  
+**Runtime**: ~1-2 minutes
+
+```yaml
+- npm audit for known vulnerabilities
+- Dependency review for license compliance
+- Package version conflict detection
+```
+
+#### 6. **performance-test**
+
+**Purpose**: Performance monitoring (placeholder)  
+**Runtime**: ~30 seconds
+
+```yaml
+- Performance test framework (to be implemented)
+- Memory leak detection (to be implemented)
+- Extension load time monitoring (planned)
+```
+
+### Caching Strategy
+
+**npm Dependencies**: Dual-layer caching for optimal speed
+
+- `setup-node@v4` built-in npm cache
+- `actions/cache@v4` for node_modules
+- Cache key: `runner.os-node-hashFiles('package-lock.json')`
+- **Performance**: 5 minutes → 30 seconds on cache hits
+
+### Feature Branch Workflow
+
+**Development Process**:
+
+1. Create feature branch: `git checkout -b feature/feature-name`
+2. Make changes and run `npm run precommit`
+3. Push branch: `git push origin feature/feature-name`
+4. Create Pull Request → Triggers full CI/CD validation
+5. Review results, fix any failures
+6. Merge after all checks pass
+
+**Benefits**:
+
+- ✅ Catches issues before main branch
+- ✅ Ensures all tests pass before merge
+- ✅ Validates cross-platform builds
+- ✅ Security scanning on every change
+- ✅ Code quality enforcement
+
+### Pipeline Triggers
+
+- **Push to main/develop**: Full pipeline execution
+- **Pull Request to main**: Full pipeline + dependency review
+- **Manual dispatch**: Available for all workflows
+
+### Status Monitoring
+
+Monitor pipeline status via:
+
+- GitHub Actions tab
+- README badges (CI/CD Pipeline, Extension Validation)
+- Email notifications on failures
+- Codecov reports for test coverage trends
 
 ## 📄 License
 
 This project is proprietary software. All rights reserved.
 
-**Commercial License**: This software is intended for commercial distribution via the Apple App Store. Unauthorized copying, distribution, or modification is prohibited without explicit written permission from the author.
-
-## 🤖 Built with AI
-
-This project was developed with significant assistance from **Claude Code**, Anthropic's AI coding assistant. Major portions of the codebase, including:
-
-- 🧪 **Complete test suite** (unit & integration tests)
-- 🚀 **CI/CD pipeline** (GitHub Actions workflows)
-- 📰 **News site tracking system**
-- ⏱️ **Timer tracker functionality**
-- 🎨 **UI components and styling**
-- 📋 **Code quality tools** (ESLint, Prettier, validation scripts)
-
-...were designed and implemented with Claude Code's assistance.
-
-**Human contributions**: Project concept, requirements definition, UI/UX feedback, and final code review.
-
-## Credits
-
-**Author**: Oliver Staub  
-**AI Development Partner**: Claude Code by Anthropic  
+**Commercial License**: This software is intended for commercial distribution via the Apple App Store. Unauthorized copying, distribution, or modification is prohibited without explicit written permission from the author.  
 **Year**: 2024
 
 This project was developed from scratch specifically for Safari, with custom implementations for cross-platform compatibility and news tracking functionality.

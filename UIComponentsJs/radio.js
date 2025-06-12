@@ -190,12 +190,12 @@ class HeadlessRadio {
     radio.addEventListener('change', (e) => {
       this.options.checked = e.target.checked;
       this.updateDataAttributes();
-      
+
       // Update other radios in the same group
       if (e.target.checked) {
         this.updateRadioGroup();
       }
-      
+
       if (this.options.onChange) {
         this.options.onChange(e.target.value, e);
       }
@@ -229,7 +229,7 @@ class HeadlessRadio {
   getClasses() {
     const classes = [...HeadlessRadio.styles.base];
     const colorClasses = HeadlessRadio.styles.colors[this.options.color];
-    
+
     if (Array.isArray(colorClasses)) {
       classes.push(...colorClasses);
     } else {
@@ -243,7 +243,7 @@ class HeadlessRadio {
     return [
       'size-full rounded-full border-[4.5px] border-transparent bg-(--radio-indicator) bg-clip-padding',
       // Forced colors mode
-      'forced-colors:border-[Canvas] forced-colors:group-data-checked:border-[Highlight]'
+      'forced-colors:border-[Canvas] forced-colors:group-data-checked:border-[Highlight]',
     ].join(' ');
   }
 
@@ -264,7 +264,7 @@ class HeadlessRadio {
   updateRadioGroup() {
     // Find all radio buttons with the same name and update their state
     const radios = document.querySelectorAll(`input[type="radio"][name="${this.name}"]`);
-    radios.forEach(radio => {
+    radios.forEach((radio) => {
       const label = radio.closest('label');
       if (label) {
         if (radio.checked) {
@@ -368,12 +368,12 @@ class HeadlessRadio {
           if (config.options?.onChange) {
             config.options.onChange(value, event);
           }
-          
+
           // Call the group's onChange if it exists
           if (groupOptions.onChange) {
             groupOptions.onChange(value, event);
           }
-        }
+        },
       };
 
       const radioInstance = new HeadlessRadio(config.text, name, radioOptions);
@@ -391,20 +391,20 @@ class HeadlessRadio {
       element: group,
       radios: radioInstances,
       getSelected: () => {
-        const selectedRadio = radioInstances.find(radio => radio.isChecked());
+        const selectedRadio = radioInstances.find((radio) => radio.isChecked());
         return selectedRadio ? selectedRadio.getValue() : null;
       },
       setSelected: (value) => {
-        radioInstances.forEach(radio => {
+        radioInstances.forEach((radio) => {
           radio.setChecked(radio.getValue() === value);
         });
       },
       disable: () => {
-        radioInstances.forEach(radio => radio.setDisabled(true));
+        radioInstances.forEach((radio) => radio.setDisabled(true));
       },
       enable: () => {
-        radioInstances.forEach(radio => radio.setDisabled(false));
-      }
+        radioInstances.forEach((radio) => radio.setDisabled(false));
+      },
     };
   }
 }
