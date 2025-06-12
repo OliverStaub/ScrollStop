@@ -211,6 +211,34 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 **User Impact:**
 The app now transforms from a simple blocking tool into a personalized productivity assistant that knows the user's specific goals, tasks, and relationships, making it much easier to break the scrolling habit by providing meaningful, actionable alternatives.
 
+### GitHub Pages Component Integration Lessons (Session Summary)
+
+**Critical Web Component Styling Rules:**
+
+**NEVER override TailwindUI/HeadlessUI component styles with aggressive CSS:**
+- Components have sophisticated built-in dark/light mode styling (e.g., `text-zinc-950 dark:text-white`)
+- Custom CSS with `!important` rules breaks component functionality
+- Components are designed to handle their own theming automatically
+
+**Proper Implementation:**
+- Let components manage their own styling through their built-in classes
+- Use system dark mode detection: `window.matchMedia('(prefers-color-scheme: dark)')`
+- Apply `dark` class to `document.documentElement` for proper Tailwind dark mode
+- Add minimal custom CSS only for branding (accent colors, fonts)
+- Test components in isolation to verify proper rendering
+
+**Common Mistakes to Avoid:**
+- Forcing text colors with `!important` overrides
+- Overriding component `data-slot` attributes with custom styles  
+- Fighting component's natural theming system
+- Not testing dark/light mode transitions
+
+**Best Practices:**
+- Create test pages to verify component functionality
+- Use component's built-in color and styling options
+- Respect component design systems and let them work as intended
+- Focus custom styling on layout and branding, not core component appearance
+
 ## Design System
 
 ### Glassmorphism Color Scheme
