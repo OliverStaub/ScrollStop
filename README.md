@@ -342,9 +342,46 @@ The CI/CD system consists of 6 parallel jobs that run on every push and pull req
 Monitor pipeline status via:
 
 - GitHub Actions tab
-- README badges (CI/CD Pipeline, Extension Validation)
+- README badges (CI/CD Pipeline, SonarCloud Quality Gate)
 - Email notifications on failures
 - Codecov reports for test coverage trends
+
+## 🔧 Third-Party Service Setup
+
+### SonarCloud Configuration
+
+To enable SonarCloud code quality analysis:
+
+1. **Create SonarCloud Account**: Go to [sonarcloud.io](https://sonarcloud.io) and sign in with GitHub
+2. **Import Repository**: Add your GitHub repository to SonarCloud
+3. **Configure Project**: 
+   - Project Key: `oliverstaub_ScrollStop`
+   - Organization: `oliverstaub`
+4. **Generate Token**: 
+   - Go to My Account → Security → Generate Token
+   - Copy the token value
+5. **Add GitHub Secret**:
+   - Repository Settings → Secrets and Variables → Actions
+   - Add secret: `SONAR_TOKEN` with your token value
+6. **Quality Gate**: The workflow uses `continue-on-error: true` so missing token won't fail builds
+
+### Codecov Configuration
+
+To enable test coverage reporting:
+
+1. **Create Codecov Account**: Go to [codecov.io](https://codecov.io) and sign in with GitHub
+2. **Add Repository**: Import your GitHub repository to Codecov
+3. **Get Token** (optional for public repos):
+   - Copy the repository upload token from Codecov dashboard
+   - Add as GitHub secret: `CODECOV_TOKEN`
+4. **Coverage Reports**: The workflow automatically uploads `coverage/lcov.info` after tests
+
+### Cost Optimization Notes
+
+- **macOS/iOS builds**: Run only on pull requests (10x cost savings)
+- **Regular pushes**: Run Ubuntu-based jobs only (lint, test, security)
+- **Pull requests**: Full validation including cross-platform builds
+- **Estimated savings**: ~80% reduction in GitHub Actions minutes
 
 ## 📄 License
 
