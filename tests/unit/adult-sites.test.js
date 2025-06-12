@@ -55,8 +55,6 @@ describe('Adult Sites Blocking', () => {
           'clips4sale.com',
           'imlive.com',
           'flirt4free.com',
-          'reddit.com/r/gonewild',
-          'reddit.com/r/nsfw',
         ],
         blockedSites: ['facebook.com', 'twitter.com'],
         newsSites: ['cnn.com', 'bbc.com'],
@@ -436,7 +434,7 @@ describe('Adult Sites Blocking', () => {
 
       // Check for variety of site types
       expect(adultSites.some((site) => site.includes('xvideos'))).toBe(true);
-      expect(adultSites.some((site) => site.includes('reddit.com/r/'))).toBe(true);
+      expect(adultSites.some((site) => site.includes('cam'))).toBe(true);
     });
   });
 

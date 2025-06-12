@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ScrollStop is a Safari Web Extension that prevents doomscrolling on social media sites. It monitors scroll behavior on blocked sites (Facebook, Twitter/X, Instagram, Reddit, etc.) and implements a blocking mechanism when excessive scrolling is detected.
+ScrollStop is a Safari Web Extension that prevents doomscrolling and excessive browsing across three categories of sites: social media, news, and adult content. It monitors scroll behavior and implements intelligent blocking mechanisms with category-specific durations.
 
 ## Build Commands
 
@@ -31,7 +31,7 @@ The extension uses a modular event-driven architecture:
 **Core Modules:**
 
 - `content.js` - Main coordinator (`ScrollStopCoordinator`) that orchestrates all modules
-- `background.js` - Loads blocked sites from `sites.json` and handles extension lifecycle
+- `background.js` - Loads all site categories from `sites.json` and handles extension lifecycle
 - `SafariWebExtensionHandler.swift` - Native Swift handler for browser-native communication
 
 **Detection & Blocking Modules:**
@@ -43,8 +43,8 @@ The extension uses a modular event-driven architecture:
 
 **Utility Modules:**
 
-- `storage-helper.js` - Browser storage management
-- `time-manager.js` - Time-based blocking logic
+- `storage-helper.js` - Browser storage management with multi-category site detection
+- `time-manager.js` - Category-aware time-based blocking logic with variable durations
 
 ### Event Flow
 
@@ -59,6 +59,29 @@ The extension uses a modular event-driven architecture:
 - **Modular initialization** with cleanup methods for each component
 - **Shared configuration** through `sites.json` for blocked domains
 - **Time-based blocking** with automatic removal and page reload
+
+### Site Categories & Blocking Durations
+
+ScrollStop monitors three distinct categories of sites with different blocking behaviors:
+
+**1. Social Media Sites (60-minute blocks)**
+
+- Facebook, Twitter/X, Instagram, Reddit, TikTok, YouTube, LinkedIn, etc.
+- Triggers on excessive scrolling (4000px threshold)
+- Standard 60-minute individual site blocks
+
+**2. News Sites (20-minute daily limit, 60-minute blocks)**
+
+- CNN, BBC, Reuters, NYTimes, German/Swiss/Austrian news outlets
+- Cumulative time tracking across ALL news sites
+- 20-minute daily limit → 60-minute block for all news sites
+
+**3. Adult Sites (4-hour blocks)**
+
+- 89+ sites including major platforms, streaming, cam sites, hentai
+- Timer tracking and choice dialog on access
+- Extended 4-hour block duration as stronger deterrent
+- Comprehensive blocklist: Pornhub, OnlyFans, Xvideos, cam sites, etc.
 
 ### iOS Welcome Walkthrough
 
@@ -94,6 +117,7 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 
 - **UI Components Policy**: Only use UIComponentsJS components for all web UI elements. No other UI frameworks or plain HTML/CSS elements. iOS app uses SwiftUI natively.
 - **Choice Dialog Feature**: When accessing blocked sites, users see a dialog with 3 options: Continue with ScrollStop (full functionality), Timer Only (no blocking), or Block Now (immediate block). Appears on every page reload.
+- **Adult Sites Blocking**: Third site category with 4-hour block duration (vs 1-hour for social/news). Comprehensive 89+ site blocklist including major platforms, streaming, cam sites, and hentai. Timer tracking and choice dialog work identically to other categories.
 - **Precommit Workflow**: ALWAYS run `npm run precommit` before committing. This automatically formats code with Prettier, then runs full validation (ESLint, tests, manifest validation). Never commit without this.
 - **Feature Branch Workflow**: When working with Claude Code, create feature branches for new development. Create pull requests to trigger CI/CD validation before merging to main. This ensures all tests pass and code quality is maintained.
 - **npm Caching**: CI pipeline uses comprehensive caching strategy (setup-node + actions/cache) to reduce npm install time from ~5 minutes to ~30 seconds on cache hits.
