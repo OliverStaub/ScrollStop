@@ -6,14 +6,8 @@
     "jest": true,
     "node": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:jest/recommended",
-    "prettier"
-  ],
-  "plugins": [
-    "jest"
-  ],
+  "extends": ["eslint:recommended", "plugin:jest/recommended", "prettier"],
+  "plugins": ["jest"],
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module"

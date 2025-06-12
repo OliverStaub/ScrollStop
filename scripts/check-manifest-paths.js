@@ -39,20 +39,24 @@ function checkManifestPaths() {
       if (script.js && Array.isArray(script.js)) {
         script.js.forEach((jsFile) => {
           allReferencedFiles.add(jsFile);
-          
+
           // Check for directory paths
           if (jsFile.includes('/')) {
-            errors.push(`content_scripts[${index}].js: "${jsFile}" contains directory path. Build process requires flat filenames only.`);
+            errors.push(
+              `content_scripts[${index}].js: "${jsFile}" contains directory path. Build process requires flat filenames only.`
+            );
           }
         });
       }
-      
+
       if (script.css && Array.isArray(script.css)) {
         script.css.forEach((cssFile) => {
           allReferencedFiles.add(cssFile);
-          
+
           if (cssFile.includes('/')) {
-            errors.push(`content_scripts[${index}].css: "${cssFile}" contains directory path. Build process requires flat filenames only.`);
+            errors.push(
+              `content_scripts[${index}].css: "${cssFile}" contains directory path. Build process requires flat filenames only.`
+            );
           }
         });
       }
@@ -64,18 +68,22 @@ function checkManifestPaths() {
     if (manifest.background.scripts && Array.isArray(manifest.background.scripts)) {
       manifest.background.scripts.forEach((script) => {
         allReferencedFiles.add(script);
-        
+
         if (script.includes('/')) {
-          errors.push(`background.scripts: "${script}" contains directory path. Build process requires flat filenames only.`);
+          errors.push(
+            `background.scripts: "${script}" contains directory path. Build process requires flat filenames only.`
+          );
         }
       });
     }
-    
+
     if (manifest.background.service_worker) {
       allReferencedFiles.add(manifest.background.service_worker);
-      
+
       if (manifest.background.service_worker.includes('/')) {
-        errors.push(`background.service_worker: "${manifest.background.service_worker}" contains directory path. Build process requires flat filenames only.`);
+        errors.push(
+          `background.service_worker: "${manifest.background.service_worker}" contains directory path. Build process requires flat filenames only.`
+        );
       }
     }
   }
@@ -86,9 +94,11 @@ function checkManifestPaths() {
       // Manifest v2 format
       manifest.web_accessible_resources.forEach((resource) => {
         allReferencedFiles.add(resource);
-        
+
         if (!resource.includes('*') && resource.includes('/')) {
-          warnings.push(`web_accessible_resources: "${resource}" contains directory path. Consider if this will work with build process.`);
+          warnings.push(
+            `web_accessible_resources: "${resource}" contains directory path. Consider if this will work with build process.`
+          );
         }
       });
     } else if (typeof manifest.web_accessible_resources === 'object') {
@@ -97,9 +107,11 @@ function checkManifestPaths() {
         if (resourceGroup.resources && Array.isArray(resourceGroup.resources)) {
           resourceGroup.resources.forEach((resource) => {
             allReferencedFiles.add(resource);
-            
+
             if (!resource.includes('*') && resource.includes('/')) {
-              warnings.push(`web_accessible_resources: "${resource}" contains directory path. Consider if this will work with build process.`);
+              warnings.push(
+                `web_accessible_resources: "${resource}" contains directory path. Consider if this will work with build process.`
+              );
             }
           });
         }
@@ -108,17 +120,21 @@ function checkManifestPaths() {
   }
 
   // Verify that referenced files exist (only flat files)
-  const referencedFlatFiles = Array.from(allReferencedFiles).filter(file => !file.includes('/') && !file.includes('*'));
-  
+  const referencedFlatFiles = Array.from(allReferencedFiles).filter(
+    (file) => !file.includes('/') && !file.includes('*')
+  );
+
   referencedFlatFiles.forEach((file) => {
     const filePath = path.join(RESOURCES_DIR, file);
-    
+
     if (!fs.existsSync(filePath)) {
       // File doesn't exist as flat file, check if it exists in subdirectories
       const found = findFileInDirectories(RESOURCES_DIR, file);
-      
+
       if (found.length > 0) {
-        warnings.push(`File "${file}" referenced in manifest exists in subdirectory: ${found[0]}. Build process should flatten this.`);
+        warnings.push(
+          `File "${file}" referenced in manifest exists in subdirectory: ${found[0]}. Build process should flatten this.`
+        );
       } else {
         errors.push(`File "${file}" referenced in manifest does not exist anywhere in resources.`);
       }
@@ -128,11 +144,11 @@ function checkManifestPaths() {
   // Check for potential file name conflicts in subdirectories
   const allFiles = getAllFiles(RESOURCES_DIR);
   const fileNames = new Map();
-  
+
   allFiles.forEach((filePath) => {
     const fileName = path.basename(filePath);
     const relativePath = path.relative(RESOURCES_DIR, filePath);
-    
+
     if (!fileNames.has(fileName)) {
       fileNames.set(fileName, []);
     }
@@ -150,7 +166,9 @@ function checkManifestPaths() {
   if (errors.length > 0) {
     console.error('\n❌ Manifest path validation failed:');
     errors.forEach((error) => console.error(`  • ${error}`));
-    console.error('\n💡 Fix: Ensure all files referenced in manifest.json use flat filenames (no directories).');
+    console.error(
+      '\n💡 Fix: Ensure all files referenced in manifest.json use flat filenames (no directories).'
+    );
     console.error('   The build process flattens all files into a single directory.');
     process.exit(1);
   }
@@ -167,14 +185,14 @@ function checkManifestPaths() {
 
 function findFileInDirectories(baseDir, fileName) {
   const found = [];
-  
+
   function search(dir) {
     const items = fs.readdirSync(dir);
-    
+
     items.forEach((item) => {
       const itemPath = path.join(dir, item);
       const stat = fs.statSync(itemPath);
-      
+
       if (stat.isDirectory()) {
         search(itemPath);
       } else if (item === fileName) {
@@ -182,21 +200,21 @@ function findFileInDirectories(baseDir, fileName) {
       }
     });
   }
-  
+
   search(baseDir);
   return found;
 }
 
 function getAllFiles(dir) {
   const files = [];
-  
+
   function collect(currentDir) {
     const items = fs.readdirSync(currentDir);
-    
+
     items.forEach((item) => {
       const itemPath = path.join(currentDir, item);
       const stat = fs.statSync(itemPath);
-      
+
       if (stat.isDirectory()) {
         collect(itemPath);
       } else {
@@ -204,7 +222,7 @@ function getAllFiles(dir) {
       }
     });
   }
-  
+
   collect(dir);
   return files;
 }

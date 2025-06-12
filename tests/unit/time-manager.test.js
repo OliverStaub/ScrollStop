@@ -2,17 +2,20 @@
 const path = require('path');
 
 // Import the TimeManager module
-const TimeManagerPath = path.join(__dirname, '../../Shared (Extension)/Resources/modules/utils/time-manager.js');
+const TimeManagerPath = path.join(
+  __dirname,
+  '../../Shared (Extension)/Resources/modules/utils/time-manager.js'
+);
 let TimeManager;
 
 describe('TimeManager', () => {
   beforeEach(async () => {
     // Reset global state
     delete global.window.TimeManager;
-    
+
     // Mock current time
     jest.spyOn(Date, 'now').mockReturnValue(1640995200000); // Fixed timestamp
-    
+
     // Load the module
     const moduleCode = require('fs').readFileSync(TimeManagerPath, 'utf8');
     eval(moduleCode);
@@ -26,9 +29,9 @@ describe('TimeManager', () => {
   describe('Social Media Time Blocks', () => {
     test('should create time block for hostname', async () => {
       const hostname = 'facebook.com';
-      
+
       await TimeManager.createTimeBlock(hostname);
-      
+
       expect(browser.storage.local.set).toHaveBeenCalledWith({
         timeBlocks: {
           [hostname]: {
@@ -42,8 +45,8 @@ describe('TimeManager', () => {
     test('should detect if site is time blocked', async () => {
       const hostname = 'facebook.com';
       const currentTime = 1640995200000;
-      const blockTime = currentTime - (30 * 60 * 1000); // 30 minutes ago
-      
+      const blockTime = currentTime - 30 * 60 * 1000; // 30 minutes ago
+
       browser.storage.local.get.mockResolvedValueOnce({
         timeBlocks: {
           [hostname]: {
@@ -60,8 +63,8 @@ describe('TimeManager', () => {
     test('should remove expired time blocks', async () => {
       const hostname = 'facebook.com';
       const currentTime = 1640995200000;
-      const expiredTime = currentTime - (70 * 60 * 1000); // 70 minutes ago (expired)
-      
+      const expiredTime = currentTime - 70 * 60 * 1000; // 70 minutes ago (expired)
+
       browser.storage.local.get.mockResolvedValueOnce({
         timeBlocks: {
           [hostname]: {
@@ -79,8 +82,8 @@ describe('TimeManager', () => {
     test('should calculate remaining time correctly', async () => {
       const hostname = 'facebook.com';
       const currentTime = 1640995200000;
-      const blockTime = currentTime - (30 * 60 * 1000); // 30 minutes ago
-      
+      const blockTime = currentTime - 30 * 60 * 1000; // 30 minutes ago
+
       browser.storage.local.get.mockResolvedValueOnce({
         timeBlocks: {
           [hostname]: {
@@ -99,9 +102,9 @@ describe('TimeManager', () => {
   describe('News Time Tracking', () => {
     test('should initialize news time data for new day', async () => {
       browser.storage.local.get.mockResolvedValueOnce({});
-      
+
       const data = await TimeManager.getNewsTimeData();
-      
+
       expect(data).toEqual({
         dailyStart: 1640995200000,
         totalTime: 0,
@@ -112,7 +115,7 @@ describe('TimeManager', () => {
 
     test('should reset daily tracking for new day', async () => {
       const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
-      
+
       browser.storage.local.get.mockResolvedValueOnce({
         newsTimeData: {
           dailyStart: yesterday,
@@ -121,16 +124,16 @@ describe('TimeManager', () => {
           blockedUntil: 0,
         },
       });
-      
+
       const data = await TimeManager.getNewsTimeData();
-      
+
       expect(data.totalTime).toBe(0); // Should reset
       expect(new Date(data.dailyStart).toDateString()).toBe(new Date().toDateString());
     });
 
     test('should create news time block when limit exceeded', async () => {
       const timeSpent = 21 * 60 * 1000; // 21 minutes (exceeds 20min limit)
-      
+
       browser.storage.local.get.mockResolvedValueOnce({
         newsTimeData: {
           dailyStart: Date.now(),
@@ -141,7 +144,7 @@ describe('TimeManager', () => {
       });
 
       const limitExceeded = await TimeManager.addNewsTime(timeSpent);
-      
+
       expect(limitExceeded).toBe(true);
       expect(browser.storage.local.set).toHaveBeenCalledWith({
         newsTimeData: expect.objectContaining({
@@ -153,7 +156,7 @@ describe('TimeManager', () => {
 
     test('should not create block when under limit', async () => {
       const timeSpent = 10 * 60 * 1000; // 10 minutes (under 20min limit)
-      
+
       browser.storage.local.get.mockResolvedValueOnce({
         newsTimeData: {
           dailyStart: Date.now(),
@@ -164,7 +167,7 @@ describe('TimeManager', () => {
       });
 
       const limitExceeded = await TimeManager.addNewsTime(timeSpent);
-      
+
       expect(limitExceeded).toBe(false);
       expect(browser.storage.local.set).toHaveBeenCalledWith({
         newsTimeData: expect.objectContaining({
@@ -176,8 +179,8 @@ describe('TimeManager', () => {
 
     test('should check if news sites are blocked', async () => {
       const currentTime = 1640995200000;
-      const blockTime = currentTime + (30 * 60 * 1000); // Blocked for 30 more minutes
-      
+      const blockTime = currentTime + 30 * 60 * 1000; // Blocked for 30 more minutes
+
       browser.storage.local.get.mockResolvedValueOnce({
         newsTimeData: {
           dailyStart: currentTime,
@@ -193,8 +196,8 @@ describe('TimeManager', () => {
 
     test('should remove expired news blocks', async () => {
       const currentTime = 1640995200000;
-      const expiredTime = currentTime - (10 * 60 * 1000); // Expired 10 minutes ago
-      
+      const expiredTime = currentTime - 10 * 60 * 1000; // Expired 10 minutes ago
+
       browser.storage.local.get.mockResolvedValueOnce({
         newsTimeData: {
           dailyStart: currentTime,
@@ -232,8 +235,8 @@ describe('TimeManager', () => {
 
     test('should get remaining news block time', async () => {
       const currentTime = 1640995200000;
-      const blockUntil = currentTime + (45 * 60 * 1000); // 45 minutes remaining
-      
+      const blockUntil = currentTime + 45 * 60 * 1000; // 45 minutes remaining
+
       browser.storage.local.get.mockResolvedValueOnce({
         newsTimeData: {
           dailyStart: currentTime,

@@ -34,7 +34,7 @@ function validateSites() {
 
   // Check required top-level arrays
   const requiredArrays = ['blockedSites', 'newsSites'];
-  
+
   requiredArrays.forEach((arrayName) => {
     if (!sites[arrayName]) {
       errors.push(`Missing required array: ${arrayName}`);
@@ -54,7 +54,8 @@ function validateSites() {
 
   // Validate domain formats
   function validateDomainList(domains, listName) {
-    const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.([a-zA-Z]{2,}|[a-zA-Z]{2,}\.[a-zA-Z]{2,})$/;
+    const domainRegex =
+      /^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.([a-zA-Z]{2,}|[a-zA-Z]{2,}\.[a-zA-Z]{2,})$/;
     const invalidDomains = [];
     const suspiciousDomains = [];
 
@@ -142,7 +143,13 @@ function validateSites() {
   }
 
   // Check for well-known domains in appropriate lists
-  const knownSocialMedia = ['facebook.com', 'twitter.com', 'instagram.com', 'tiktok.com', 'youtube.com'];
+  const knownSocialMedia = [
+    'facebook.com',
+    'twitter.com',
+    'instagram.com',
+    'tiktok.com',
+    'youtube.com',
+  ];
   const knownNews = ['cnn.com', 'bbc.com', 'nytimes.com', 'reuters.com'];
 
   if (sites.newsSites) {
@@ -164,8 +171,10 @@ function validateSites() {
     const germanSites = sites.newsSites.filter((domain) => domain.endsWith('.de'));
     const swissSites = sites.newsSites.filter((domain) => domain.endsWith('.ch'));
     const austrianSites = sites.newsSites.filter((domain) => domain.endsWith('.at'));
-    const usSites = sites.newsSites.filter((domain) => 
-      domain.endsWith('.com') && ['cnn.com', 'nytimes.com', 'washingtonpost.com', 'usatoday.com'].includes(domain)
+    const usSites = sites.newsSites.filter(
+      (domain) =>
+        domain.endsWith('.com') &&
+        ['cnn.com', 'nytimes.com', 'washingtonpost.com', 'usatoday.com'].includes(domain)
     );
 
     console.log(`📊 Geographic distribution:`);
@@ -188,11 +197,11 @@ function validateSites() {
   }
 
   console.log('\n✅ Sites validation passed!');
-  
+
   if (sites.blockedSites) {
     console.log(`🚫 Blocked sites: ${sites.blockedSites.length}`);
   }
-  
+
   if (sites.newsSites) {
     console.log(`📰 News sites: ${sites.newsSites.length}`);
   }

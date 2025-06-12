@@ -51,7 +51,9 @@ function validateManifest() {
 
   // Validate manifest version
   if (manifest.manifest_version !== 2) {
-    warnings.push(`Manifest version is ${manifest.manifest_version}, Safari extensions typically use version 2`);
+    warnings.push(
+      `Manifest version is ${manifest.manifest_version}, Safari extensions typically use version 2`
+    );
   }
 
   // Validate content scripts
@@ -63,14 +65,16 @@ function validateManifest() {
         if (!script.matches || !Array.isArray(script.matches)) {
           errors.push(`content_scripts[${index}] missing or invalid 'matches' array`);
         }
-        
+
         if (!script.js || !Array.isArray(script.js)) {
           errors.push(`content_scripts[${index}] missing or invalid 'js' array`);
         } else {
           // Check that all JS files use flat paths (no directories)
           script.js.forEach((jsFile) => {
             if (jsFile.includes('/')) {
-              errors.push(`content_scripts[${index}] file "${jsFile}" contains directory path. Use flat filenames only due to build process.`);
+              errors.push(
+                `content_scripts[${index}] file "${jsFile}" contains directory path. Use flat filenames only due to build process.`
+              );
             }
           });
         }
@@ -96,16 +100,14 @@ function validateManifest() {
   if (manifest.version) {
     const versionRegex = /^\d+\.\d+\.\d+(\.\d+)?$/;
     if (!versionRegex.test(manifest.version)) {
-      warnings.push(`Version '${manifest.version}' should follow semantic versioning (e.g., 1.0.0)`);
+      warnings.push(
+        `Version '${manifest.version}' should follow semantic versioning (e.g., 1.0.0)`
+      );
     }
   }
 
   // Check for recommended fields
-  const recommendedFields = [
-    'background',
-    'web_accessible_resources',
-    'host_permissions',
-  ];
+  const recommendedFields = ['background', 'web_accessible_resources', 'host_permissions'];
 
   recommendedFields.forEach((field) => {
     if (!manifest[field]) {
@@ -119,7 +121,9 @@ function validateManifest() {
     if (manifest.background.scripts && Array.isArray(manifest.background.scripts)) {
       manifest.background.scripts.forEach((script) => {
         if (script.includes('/')) {
-          errors.push(`Background script "${script}" contains directory path. Use flat filenames only.`);
+          errors.push(
+            `Background script "${script}" contains directory path. Use flat filenames only.`
+          );
         }
       });
     }
@@ -140,9 +144,12 @@ function validateManifest() {
   console.log('\n✅ Manifest validation passed!');
   console.log(`📦 Extension: ${manifest.name} v${manifest.version}`);
   console.log(`📝 Description: ${manifest.description}`);
-  
+
   if (manifest.content_scripts) {
-    const totalScripts = manifest.content_scripts.reduce((count, script) => count + script.js.length, 0);
+    const totalScripts = manifest.content_scripts.reduce(
+      (count, script) => count + script.js.length,
+      0
+    );
     console.log(`📜 Content scripts: ${totalScripts} files`);
   }
 }

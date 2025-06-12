@@ -1,7 +1,10 @@
 // Unit tests for TimerTracker module
 const path = require('path');
 
-const TimerTrackerPath = path.join(__dirname, '../../Shared (Extension)/Resources/modules/timer-tracker/timer-tracker.js');
+const TimerTrackerPath = path.join(
+  __dirname,
+  '../../Shared (Extension)/Resources/modules/timer-tracker/timer-tracker.js'
+);
 let TimerTracker;
 
 // Mock GlassmorphismTimer
@@ -17,15 +20,15 @@ describe('TimerTracker', () => {
   beforeEach(async () => {
     // Reset global state
     delete global.window.TimerTracker;
-    
+
     // Load the module
     const moduleCode = require('fs').readFileSync(TimerTrackerPath, 'utf8');
     eval(moduleCode);
     TimerTracker = global.window.TimerTracker;
-    
+
     // Create fresh instance for each test
     timerTracker = new TimerTracker();
-    
+
     // Mock current date
     jest.spyOn(Date, 'now').mockReturnValue(1640995200000);
     jest.spyOn(Date.prototype, 'toDateString').mockReturnValue('2022-01-01');
@@ -121,7 +124,7 @@ describe('TimerTracker', () => {
     test('should add news time when in news mode', async () => {
       // Setup news mode
       timerTracker.isNewsMode = true;
-      
+
       // Mock TimeManager
       global.TimeManager = {
         addNewsTime: jest.fn().mockResolvedValue(false),
@@ -137,7 +140,7 @@ describe('TimerTracker', () => {
 
     test('should trigger news limit exceeded event', async () => {
       timerTracker.isNewsMode = true;
-      
+
       global.TimeManager = {
         addNewsTime: jest.fn().mockResolvedValue(true), // Limit exceeded
       };
@@ -220,7 +223,10 @@ describe('TimerTracker', () => {
 
       expect(timerTracker.dragOffset).toEqual({ x: 100, y: 100 });
       expect(timerTracker.initialMousePos).toEqual({ x: 100, y: 100 });
-      expect(document.addEventListener).toHaveBeenCalledWith('mousemove', timerTracker.handleMouseMove);
+      expect(document.addEventListener).toHaveBeenCalledWith(
+        'mousemove',
+        timerTracker.handleMouseMove
+      );
     });
 
     test('should update position during drag', () => {
@@ -292,7 +298,7 @@ describe('TimerTracker', () => {
       timerTracker.accumulatedTime = 1800; // 30 minutes
       timerTracker.startTime = 1640995200000;
       timerTracker.isActive = true;
-      
+
       jest.spyOn(Date, 'now').mockReturnValue(1640995320000); // +120 seconds
 
       const totalTime = timerTracker.getCurrentTotalTime();

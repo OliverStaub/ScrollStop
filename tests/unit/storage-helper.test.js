@@ -1,14 +1,17 @@
 // Unit tests for StorageHelper module
 const path = require('path');
 
-const StorageHelperPath = path.join(__dirname, '../../Shared (Extension)/Resources/modules/utils/storage-helper.js');
+const StorageHelperPath = path.join(
+  __dirname,
+  '../../Shared (Extension)/Resources/modules/utils/storage-helper.js'
+);
 let StorageHelper;
 
 describe('StorageHelper', () => {
   beforeEach(async () => {
     // Reset global state
     delete global.window.StorageHelper;
-    
+
     // Load the module
     const moduleCode = require('fs').readFileSync(StorageHelperPath, 'utf8');
     eval(moduleCode);
@@ -21,7 +24,7 @@ describe('StorageHelper', () => {
       browser.storage.local.get.mockResolvedValueOnce({ blockedSites: mockSites });
 
       const sites = await StorageHelper.getBlockedSites();
-      
+
       expect(browser.storage.local.get).toHaveBeenCalledWith(['blockedSites']);
       expect(sites).toEqual(mockSites);
     });
@@ -30,15 +33,15 @@ describe('StorageHelper', () => {
       browser.storage.local.get.mockResolvedValueOnce({});
 
       const sites = await StorageHelper.getBlockedSites();
-      
+
       expect(sites).toEqual([]);
     });
 
     test('should set blocked sites in storage', async () => {
       const mockSites = ['facebook.com', 'twitter.com'];
-      
+
       await StorageHelper.setBlockedSites(mockSites);
-      
+
       expect(browser.storage.local.set).toHaveBeenCalledWith({ blockedSites: mockSites });
     });
 
@@ -50,7 +53,7 @@ describe('StorageHelper', () => {
         'https://facebook.com/feed',
         'facebook.com'
       );
-      
+
       expect(isBlocked).toBe(true);
     });
 
@@ -62,7 +65,7 @@ describe('StorageHelper', () => {
         'https://facebook.com/feed',
         'facebook.com'
       );
-      
+
       expect(isBlocked).toBe(true);
     });
 
@@ -74,7 +77,7 @@ describe('StorageHelper', () => {
         'https://google.com/search',
         'google.com'
       );
-      
+
       expect(isBlocked).toBe(false);
     });
   });
@@ -85,7 +88,7 @@ describe('StorageHelper', () => {
       browser.storage.local.get.mockResolvedValueOnce({ newsSites: mockNewsSites });
 
       const sites = await StorageHelper.getNewsSites();
-      
+
       expect(browser.storage.local.get).toHaveBeenCalledWith(['newsSites']);
       expect(sites).toEqual(mockNewsSites);
     });
@@ -94,7 +97,7 @@ describe('StorageHelper', () => {
       browser.storage.local.get.mockResolvedValueOnce({});
 
       const sites = await StorageHelper.getNewsSites();
-      
+
       expect(sites).toEqual([]);
     });
 
@@ -106,7 +109,7 @@ describe('StorageHelper', () => {
         'https://cnn.com/politics/article',
         'cnn.com'
       );
-      
+
       expect(isNews).toBe(true);
     });
 
@@ -118,7 +121,7 @@ describe('StorageHelper', () => {
         'https://spiegel.de/politik/artikel',
         'spiegel.de'
       );
-      
+
       expect(isNews).toBe(true);
     });
 
@@ -130,7 +133,7 @@ describe('StorageHelper', () => {
         'https://facebook.com/feed',
         'facebook.com'
       );
-      
+
       expect(isNews).toBe(false);
     });
   });
@@ -145,7 +148,7 @@ describe('StorageHelper', () => {
         'https://facebook.com/feed',
         'facebook.com'
       );
-      
+
       expect(siteType).toEqual({
         isBlocked: true,
         isNews: false,
@@ -161,7 +164,7 @@ describe('StorageHelper', () => {
         'https://cnn.com/politics',
         'cnn.com'
       );
-      
+
       expect(siteType).toEqual({
         isBlocked: false,
         isNews: true,
@@ -177,7 +180,7 @@ describe('StorageHelper', () => {
         'https://google.com/search',
         'google.com'
       );
-      
+
       expect(siteType).toEqual({
         isBlocked: false,
         isNews: false,
@@ -190,11 +193,8 @@ describe('StorageHelper', () => {
         .mockResolvedValueOnceWith({ blockedSites: ['example.com'] })
         .mockResolvedValueOnceWith({ newsSites: ['example.com'] });
 
-      const siteType = await StorageHelper.getCurrentSiteType(
-        'https://example.com',
-        'example.com'
-      );
-      
+      const siteType = await StorageHelper.getCurrentSiteType('https://example.com', 'example.com');
+
       expect(siteType).toEqual({
         isBlocked: true,
         isNews: true,
@@ -210,7 +210,7 @@ describe('StorageHelper', () => {
       browser.storage.local.get.mockResolvedValueOnce({ timeBlocks: mockTimeBlocks });
 
       const timeBlocks = await StorageHelper.getTimeBlocks();
-      
+
       expect(browser.storage.local.get).toHaveBeenCalledWith(['timeBlocks']);
       expect(timeBlocks).toEqual(mockTimeBlocks);
     });
@@ -219,7 +219,7 @@ describe('StorageHelper', () => {
       browser.storage.local.get.mockResolvedValueOnce({});
 
       const timeBlocks = await StorageHelper.getTimeBlocks();
-      
+
       expect(timeBlocks).toEqual({});
     });
 
@@ -227,9 +227,9 @@ describe('StorageHelper', () => {
       const mockTimeBlocks = {
         'facebook.com': { timestamp: Date.now(), siteName: 'facebook.com' },
       };
-      
+
       await StorageHelper.setTimeBlocks(mockTimeBlocks);
-      
+
       expect(browser.storage.local.set).toHaveBeenCalledWith({ timeBlocks: mockTimeBlocks });
     });
   });

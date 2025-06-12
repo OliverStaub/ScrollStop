@@ -19,10 +19,10 @@ global.browser = {
           scrollstop_accumulated_time: 0,
           scrollstop_last_reset_date: new Date().toDateString(),
         };
-        
+
         if (Array.isArray(keys)) {
           const result = {};
-          keys.forEach(key => {
+          keys.forEach((key) => {
             if (mockData[key] !== undefined) {
               result[key] = mockData[key];
             }
@@ -78,7 +78,7 @@ global.document.createElement = jest.fn().mockImplementation((tagName) => {
     parentNode: null,
     children: [],
   };
-  
+
   // Mock getBoundingClientRect for drag tests
   element.getBoundingClientRect = jest.fn().mockReturnValue({
     left: 0,
@@ -88,7 +88,7 @@ global.document.createElement = jest.fn().mockImplementation((tagName) => {
     width: 100,
     height: 50,
   });
-  
+
   return element;
 });
 

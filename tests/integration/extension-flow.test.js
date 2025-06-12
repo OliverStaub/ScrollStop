@@ -18,12 +18,12 @@ describe('Extension Integration Flow', () => {
     // Reset DOM
     document.body.innerHTML = '';
     document.head.innerHTML = '';
-    
+
     // Reset global state
     delete global.window.ScrollStopCoordinator;
     delete global.window.TimeManager;
     delete global.window.StorageHelper;
-    
+
     // Mock window location
     Object.defineProperty(window, 'location', {
       value: {
@@ -144,10 +144,10 @@ describe('Extension Integration Flow', () => {
 
     test('should handle doomscroll detection event', async () => {
       await coordinator.initialize();
-      
+
       // Mock TimeManager methods
       global.TimeManager.createTimeBlock = jest.fn();
-      
+
       // Mock DoomscrollAnimation
       global.DoomscrollAnimation = jest.fn().mockImplementation(() => ({
         startAnimation: jest.fn(),
@@ -225,7 +225,7 @@ describe('Extension Integration Flow', () => {
       const event = new CustomEvent('news-time-limit-exceeded', {
         detail: { sessionTime: 1200000 }, // 20 minutes
       });
-      
+
       await coordinator.handleNewsTimeLimitExceeded(event);
 
       expect(BlockingScreen).toHaveBeenCalled();

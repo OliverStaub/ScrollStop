@@ -11,24 +11,28 @@ A Safari Web Extension that prevents doomscrolling on social media sites and tra
 ## ✨ Features
 
 ### 🚫 Social Media Blocking
+
 - **Scroll Detection**: Monitors scrolling behavior on social media sites (Facebook, Twitter/X, Instagram, Reddit, TikTok, etc.)
 - **4000px Threshold**: Triggers warning and blocking after excessive scrolling
 - **60-Minute Blocks**: Individual site blocking with countdown timer
 - **Choice Dialog**: Choose between full functionality, timer-only, or immediate block
 
-### 📰 News Site Tracking  
+### 📰 News Site Tracking
+
 - **Time Tracking**: Monitors time spent across all news sites (CNN, BBC, Spiegel, NZZ, etc.)
 - **20-Minute Daily Limit**: Cumulative tracking across all news sources
 - **1-Hour Block**: Blocks all news sites when daily limit exceeded
 - **International Support**: Includes German, Swiss, and Austrian news outlets
 
 ### ⏱️ Timer Tracker
+
 - **Persistent Timer**: Draggable timer showing accumulated daily time
 - **Cross-Platform**: Works on both social media and news sites
 - **Daily Reset**: Automatically resets at midnight
 - **Click to Hide**: Hide timer until next page reload
 
 ### 🎨 Modern UI
+
 - **Glassmorphism Design**: Beautiful blur effects and transparency
 - **Choice Dialog**: Clean 3-option interface on site visits
 - **Blocking Screen**: Personalized suggestions and countdown timer
@@ -46,6 +50,7 @@ ScrollStop provides intelligent protection against both doomscrolling and excess
 ## 🚀 Installation
 
 ### Requirements
+
 - macOS 11.0+ or iOS 14.0+
 - Safari 14.0+
 - Xcode 13.0+ (for building)
@@ -53,22 +58,26 @@ ScrollStop provides intelligent protection against both doomscrolling and excess
 ### Building from Source
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/oliverstaub/ScrollStop.git
    cd ScrollStop
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Run tests and validation**:
+
    ```bash
    npm test
    ```
 
 4. **Open in Xcode**:
+
    ```bash
    open ScrollStop.xcodeproj
    ```
@@ -91,7 +100,7 @@ npm test
 # Run only unit tests
 npm run test:unit
 
-# Run only integration tests  
+# Run only integration tests
 npm run test:integration
 
 # Run tests in watch mode during development
@@ -126,7 +135,7 @@ npm run validate
 # Validate manifest.json structure
 npm run validate:manifest
 
-# Validate sites.json configuration  
+# Validate sites.json configuration
 npm run validate:sites
 
 # Check manifest file paths (critical for build)
@@ -141,17 +150,21 @@ npm run build:check
 npm run precommit
 ```
 
-This runs the complete validation suite:
-- ✅ ESLint code quality checks
-- ✅ Prettier code formatting  
-- ✅ Unit and integration tests
-- ✅ Manifest and sites validation
-- ✅ File path verification
+This runs the complete validation and formatting suite:
+
+- 🎨 **Prettier code formatting** (auto-fixes formatting issues)
+- ✅ **ESLint code quality checks**
+- ✅ **Prettier format validation**
+- ✅ **Unit and integration tests**
+- ✅ **Manifest and sites validation**
+- ✅ **File path verification**
+
+**Note**: Prettier will automatically fix formatting issues before validation, ensuring consistent code style across the entire codebase.
 
 ### 🔧 Development Workflow
 
 1. **Make your changes** to the extension code
-2. **Run tests**: `npm test` 
+2. **Run tests**: `npm test`
 3. **Validate code**: `npm run validate`
 4. **Test in Safari**: Build and test the extension
 5. **Commit changes**: Tests run automatically via GitHub Actions
@@ -160,6 +173,7 @@ This runs the complete validation suite:
 ### 📊 Test Coverage
 
 Our test suite covers:
+
 - **Unit Tests**: Core modules (TimeManager, StorageHelper, TimerTracker)
 - **Integration Tests**: Full extension flow and site detection
 - **Validation Tests**: Manifest structure and sites configuration
@@ -177,6 +191,7 @@ Target coverage: **>80%** for all critical paths.
 ## 🏗️ Architecture
 
 ### Project Structure
+
 ```
 ScrollStop/
 ├── Shared (App)/           # iOS/macOS host app resources
@@ -197,6 +212,7 @@ ScrollStop/
 ```
 
 ### Key Modules
+
 - **`content.js`**: Main coordinator orchestrating all modules
 - **`time-manager.js`**: Handles time blocks and news time tracking
 - **`storage-helper.js`**: Cross-browser storage abstraction
@@ -214,6 +230,7 @@ ScrollStop/
 6. **Create Pull Request**
 
 All PRs automatically run:
+
 - ✅ Linting and formatting checks
 - ✅ Unit and integration tests
 - ✅ Security scans
@@ -231,7 +248,7 @@ This project is proprietary software. All rights reserved.
 This project was developed with significant assistance from **Claude Code**, Anthropic's AI coding assistant. Major portions of the codebase, including:
 
 - 🧪 **Complete test suite** (unit & integration tests)
-- 🚀 **CI/CD pipeline** (GitHub Actions workflows)  
+- 🚀 **CI/CD pipeline** (GitHub Actions workflows)
 - 📰 **News site tracking system**
 - ⏱️ **Timer tracker functionality**
 - 🎨 **UI components and styling**
