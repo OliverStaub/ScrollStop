@@ -3,238 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About ScrollStop</title>
-    <style>
-        :root {
-            color-scheme: light dark;
+    <title>ScrollStop - Break Free from Endless Scrolling</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        accent: '#34c759'
+                    }
+                }
+            }
         }
-        
+    </script>
+    <script src="jscomponents/heading.js"></script>
+    <script src="jscomponents/text.js"></script>
+    <script src="jscomponents/badge.js"></script>
+    <script src="jscomponents/button.js"></script>
+    <script src="jscomponents/divider.js"></script>
+    <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            line-height: 1.6;
-            background: #f8f9fa;
-            color: #333;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #1a1a1a;
-                color: #e0e0e0;
-            }
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem;
-            background: linear-gradient(135deg, #2a9d8f 0%, #264653 100%);
-            color: white;
-            border-radius: 12px;
-        }
-        
-        .header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            font-weight: 300;
-        }
-        
-        .version {
-            opacity: 0.9;
-            font-size: 1.1rem;
-            margin-top: 0.5rem;
-        }
-        
-        .content {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .content {
-                background: #2d2d2d;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            }
-        }
-        
-        .content h2 {
-            color: #2a9d8f;
-            font-size: 1.5rem;
-            margin-top: 0;
-            margin-bottom: 1rem;
-        }
-        
-        .content h3 {
-            color: #2a9d8f;
-            font-size: 1.2rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .feature {
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #2a9d8f;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .feature {
-                background: #1a1a1a;
-            }
-        }
-        
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .feature h4 {
-            margin: 0 0 0.5rem 0;
-            color: #2a9d8f;
-        }
-        
-        .credits {
-            background: #e9f7ef;
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid #2a9d8f;
-            margin: 2rem 0;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .credits {
-                background: #1a2f1a;
-                border-color: #2a9d8f;
-            }
-        }
-        
-        .credits strong {
-            color: #2a9d8f;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-            opacity: 0.7;
-            font-size: 0.9rem;
-        }
-        
-        a {
-            color: #2a9d8f;
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
-        
-        .back-button {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: #2a9d8f;
-            color: white;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background-color 0.2s;
-            margin-top: 2rem;
-        }
-        
-        .back-button:hover {
-            background: #238a7a;
-            text-decoration: none;
         }
     </style>
 </head>
-<body>
-    <div class="header">
-        <h1>🌱 ScrollStop</h1>
-        <div class="version">Version 1.0</div>
-    </div>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+    <!-- Hero Section -->
+    <div class="container mx-auto px-6 py-12">
+        <div class="text-center mb-16">
+            <div id="main-title" class="mb-4"></div>
+            <div id="subtitle" class="text-xl text-gray-600 dark:text-gray-300 mb-8"></div>
+            <div id="hero-badges" class="flex justify-center gap-3 mb-8"></div>
+            <div id="hero-description" class="max-w-2xl mx-auto"></div>
+        </div>
 
-    <div class="content">
-        <h2>Break Free from Endless Scrolling</h2>
-        <p>ScrollStop is a Safari extension designed to help you reclaim your time and mental well-being by preventing endless scrolling and doomscrolling habits on social media websites.</p>
-        
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">🎯</div>
-                <h4>Smart Detection</h4>
-                <p>Automatically detects excessive scrolling behavior on popular social media sites.</p>
+        <!-- Features Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            <div class="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <div class="text-4xl mb-4">🎯</div>
+                <div id="feature-1-title" class="mb-2"></div>
+                <div id="feature-1-desc" class="text-sm"></div>
             </div>
-            <div class="feature">
-                <div class="feature-icon">⏰</div>
-                <h4>60-Minute Block</h4>
-                <p>Blocks access to the site for 60 minutes when doomscrolling is detected.</p>
+            <div class="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <div class="text-4xl mb-4">⏰</div>
+                <div id="feature-2-title" class="mb-2"></div>
+                <div id="feature-2-desc" class="text-sm"></div>
             </div>
-            <div class="feature">
-                <div class="feature-icon">🌱</div>
-                <h4>Mindful Suggestions</h4>
-                <p>Provides alternative activities to help you spend your time more productively.</p>
+            <div class="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <div class="text-4xl mb-4">📰</div>
+                <div id="feature-3-title" class="mb-2"></div>
+                <div id="feature-3-desc" class="text-sm"></div>
             </div>
-            <div class="feature">
-                <div class="feature-icon">🛡️</div>
-                <h4>Privacy First</h4>
-                <p>All blocking happens locally on your device. No data is sent to external servers.</p>
+            <div class="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <div class="text-4xl mb-4">🛡️</div>
+                <div id="feature-4-title" class="mb-2"></div>
+                <div id="feature-4-desc" class="text-sm"></div>
             </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 mb-16">
+            <div id="how-it-works-title" class="text-center mb-8"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
+                    <div id="step-1-title" class="mb-2"></div>
+                    <div id="step-1-desc" class="text-sm"></div>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
+                    <div id="step-2-title" class="mb-2"></div>
+                    <div id="step-2-desc" class="text-sm"></div>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
+                    <div id="step-3-title" class="mb-2"></div>
+                    <div id="step-3-desc" class="text-sm"></div>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">4</div>
+                    <div id="step-4-title" class="mb-2"></div>
+                    <div id="step-4-desc" class="text-sm"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supported Sites -->
+        <div class="text-center mb-16">
+            <div id="supported-sites-title" class="mb-8"></div>
+            <div id="site-badges" class="flex flex-wrap justify-center gap-3 mb-8"></div>
+            <div id="supported-sites-desc"></div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="text-center bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-800 dark:to-gray-900 text-white rounded-2xl p-12">
+            <div id="cta-title" class="mb-4"></div>
+            <div id="cta-desc" class="mb-8"></div>
+            <div id="cta-buttons" class="flex justify-center gap-4"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <div id="footer-text" class="text-gray-600 dark:text-gray-400"></div>
         </div>
     </div>
 
-    <div class="content">
-        <h3>How It Works</h3>
-        <ol>
-            <li><strong>Monitor:</strong> ScrollStop monitors your scrolling behavior on blocked sites</li>
-            <li><strong>Detect:</strong> When excessive scrolling is detected, a warning animation appears</li>
-            <li><strong>Block:</strong> The site is blocked for 60 minutes with a countdown timer</li>
-            <li><strong>Redirect:</strong> You're encouraged to do something more productive instead</li>
-        </ol>
-        
-        <h3>Supported Sites</h3>
-        <p>ScrollStop currently blocks doomscrolling on these popular social media platforms:</p>
-        <ul>
-            <li>Facebook</li>
-            <li>Twitter/X</li>
-            <li>Instagram</li>
-            <li>Reddit</li>
-            <li>TikTok</li>
-            <li>YouTube</li>
-            <li>LinkedIn</li>
-            <li>Pinterest</li>
-            <li>And more...</li>
-        </ul>
-    </div>
+    <script>
+        // Initialize components
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hero section
+            new HeadlessHeading('🌱 ScrollStop', { level: 1 }).render('#main-title');
+            new HeadlessText('Break Free from Endless Scrolling').render('#subtitle');
+            
+            // Hero badges
+            new HeadlessBadge('Safari Extension', { color: 'zinc' }).render('#hero-badges');
+            new HeadlessBadge('Privacy First', { color: 'green' }).render('#hero-badges');
+            new HeadlessBadge('Free & Open Source', { color: 'zinc' }).render('#hero-badges');
+            
+            new HeadlessText('ScrollStop is a Safari extension designed to help you reclaim your time and mental well-being by preventing endless scrolling on social media sites and tracking news reading habits.').render('#hero-description');
 
-    <div class="credits">
-        <h3>Credits & Attribution</h3>
-        <p>This Safari extension is based on the Chrome extension <strong>"Doomscroll Blocker"</strong> by <strong>Jason Zhang</strong>, originally released in 2024 under the Apache License 2.0.</p>
-        
-        <p><strong>Original Chrome Extension:</strong><br>
-        Author: Jason Zhang<br>
-        License: Apache License 2.0<br>
-        Year: 2024</p>
-        
-        <p><strong>Safari Extension Adaptation:</strong><br>
-        Developer: Oliver Staub<br>
-        Year: 2025</p>
-    </div>
+            // Features
+            new HeadlessHeading('Smart Detection', { level: 3 }).render('#feature-1-title');
+            new HeadlessText('Automatically detects excessive scrolling behavior on popular social media sites.').render('#feature-1-desc');
+            
+            new HeadlessHeading('Time Blocking', { level: 3 }).render('#feature-2-title');
+            new HeadlessText('Blocks access for 60 minutes when doomscrolling is detected, with persistent timer tracking.').render('#feature-2-desc');
+            
+            new HeadlessHeading('News Tracking', { level: 3 }).render('#feature-3-title');
+            new HeadlessText('Monitors news reading time with 20-minute daily limits and smart blocking.').render('#feature-3-desc');
+            
+            new HeadlessHeading('Privacy First', { level: 3 }).render('#feature-4-title');
+            new HeadlessText('All blocking happens locally on your device. No data is sent to external servers.').render('#feature-4-desc');
 
-    <div class="footer">
-        <p>Made with 💚 to help you touch grass</p>
-        <p>&copy; 2025 Oliver Staub</p>
-    </div>
+            // How it works
+            new HeadlessHeading('How It Works', { level: 2 }).render('#how-it-works-title');
+            
+            new HeadlessHeading('Monitor', { level: 4 }).render('#step-1-title');
+            new HeadlessText('ScrollStop monitors your scrolling behavior and time spent on blocked sites').render('#step-1-desc');
+            
+            new HeadlessHeading('Detect', { level: 4 }).render('#step-2-title');
+            new HeadlessText('When excessive scrolling or time limits are reached, a warning animation appears').render('#step-2-desc');
+            
+            new HeadlessHeading('Block', { level: 4 }).render('#step-3-title');
+            new HeadlessText('The site is blocked with a countdown timer and alternative activity suggestions').render('#step-3-desc');
+            
+            new HeadlessHeading('Redirect', { level: 4 }).render('#step-4-title');
+            new HeadlessText('You\\'re encouraged to do something more productive with personalized suggestions').render('#step-4-desc');
+
+            // Supported sites
+            new HeadlessHeading('Supported Sites', { level: 2 }).render('#supported-sites-title');
+            
+            const socialSites = ['Facebook', 'Twitter/X', 'Instagram', 'Reddit', 'TikTok', 'YouTube', 'LinkedIn', 'Pinterest'];
+            socialSites.forEach(site => {
+                new HeadlessBadge(site, { color: 'zinc' }).render('#site-badges');
+            });
+            
+            new HeadlessText('Plus comprehensive news sites including major publications from US, Germany, Switzerland, and Austria.').render('#supported-sites-desc');
+
+            // CTA
+            new HeadlessHeading('Ready to Reclaim Your Time?', { level: 2 }).render('#cta-title');
+            new HeadlessText('ScrollStop is available as a Safari Web Extension for both iOS and macOS. Take control of your digital habits today.').render('#cta-desc');
+            
+            new HeadlessButton('Available on App Store', { 
+                color: 'green',
+                href: '#',
+                className: 'mr-2'
+            }).render('#cta-buttons');
+            
+            new HeadlessButton('View on GitHub', { 
+                color: 'white',
+                href: 'https://github.com/OliverStaub/ScrollStop'
+            }).render('#cta-buttons');
+
+            // Footer
+            new HeadlessText('© 2025 Oliver Staub. Made with 💚 to help you touch grass.').render('#footer-text');
+        });
+    </script>
 </body>
 </html>
