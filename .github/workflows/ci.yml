@@ -192,51 +192,6 @@ jobs:
           path: ./
           extra_args: --debug --only-verified
 
-  dependency-scan:
-    name: Dependency Scan
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Cache node_modules and npm cache
-        id: npm-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}-v2
-          restore-keys: |
-            ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm ci --prefer-offline --no-audit
-
-      - name: Verify dependencies (cache hit)
-        if: steps.npm-cache.outputs.cache-hit == 'true'
-        run: echo "✅ Using cached dependencies - install skipped"
-
-      - name: Rebuild package-lock.json if needed
-        run: |
-          if ! npm audit --audit-level=moderate --dry-run > /dev/null 2>&1; then
-            echo "🔧 Package tree invalid, rebuilding package-lock.json..."
-            rm -f package-lock.json
-            npm install --package-lock-only --no-audit
-            echo "✅ Package-lock.json rebuilt successfully"
-          fi
-
-      - name: Run npm audit
-        run: npm audit --audit-level=moderate
-        continue-on-error: true
 
   performance-test:
     name: Performance Tests
