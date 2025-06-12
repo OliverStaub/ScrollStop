@@ -354,10 +354,10 @@ To enable SonarCloud code quality analysis:
 
 1. **Create SonarCloud Account**: Go to [sonarcloud.io](https://sonarcloud.io) and sign in with GitHub
 2. **Import Repository**: Add your GitHub repository to SonarCloud
-3. **Configure Project**: 
+3. **Configure Project**:
    - Project Key: `oliverstaub_ScrollStop`
    - Organization: `oliverstaub`
-4. **Generate Token**: 
+4. **Generate Token**:
    - Go to My Account → Security → Generate Token
    - Copy the token value
 5. **Add GitHub Secret**:
