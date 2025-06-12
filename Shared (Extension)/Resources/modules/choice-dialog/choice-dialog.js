@@ -199,43 +199,103 @@ class ChoiceDialog {
       </h2>
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <button id="ss-continue" style="
-          background: rgba(52, 199, 89, 0.9);
-          color: white;
-          border: 1px solid rgba(52, 199, 89, 1);
-          padding: 12px 16px;
-          border-radius: 12px;
-          font-size: 14px;
-          cursor: pointer;
-          width: 100%;
-          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(8px);
-          transition: all 0.2s ease;
+          background: rgba(52, 199, 89, 0.9) !important;
+          color: white !important;
+          border: 1px solid rgba(52, 199, 89, 1) !important;
+          padding: 12px 16px !important;
+          border-radius: 12px !important;
+          font-size: 14px !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+          font-weight: normal !important;
+          line-height: 1.2 !important;
+          text-align: center !important;
+          vertical-align: middle !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          width: 100% !important;
+          height: auto !important;
+          min-height: 44px !important;
+          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6) !important;
+          backdrop-filter: blur(8px) !important;
+          transition: all 0.2s ease !important;
+          box-sizing: border-box !important;
+          margin: 0 !important;
+          text-decoration: none !important;
+          text-transform: none !important;
+          letter-spacing: normal !important;
+          word-spacing: normal !important;
+          text-indent: 0 !important;
+          text-rendering: auto !important;
+          appearance: none !important;
+          -webkit-appearance: none !important;
         ">Continue with ScrollStop</button>
         <button id="ss-timer" style="
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          padding: 12px 16px;
-          border-radius: 12px;
-          font-size: 14px;
-          cursor: pointer;
-          width: 100%;
-          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(8px);
-          transition: all 0.2s ease;
+          background: rgba(255, 255, 255, 0.1) !important;
+          color: white !important;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
+          padding: 12px 16px !important;
+          border-radius: 12px !important;
+          font-size: 14px !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+          font-weight: normal !important;
+          line-height: 1.2 !important;
+          text-align: center !important;
+          vertical-align: middle !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          width: 100% !important;
+          height: auto !important;
+          min-height: 44px !important;
+          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6) !important;
+          backdrop-filter: blur(8px) !important;
+          transition: all 0.2s ease !important;
+          box-sizing: border-box !important;
+          margin: 0 !important;
+          text-decoration: none !important;
+          text-transform: none !important;
+          letter-spacing: normal !important;
+          word-spacing: normal !important;
+          text-indent: 0 !important;
+          text-rendering: auto !important;
+          appearance: none !important;
+          -webkit-appearance: none !important;
         ">Timer Only</button>
         <button id="ss-block" style="
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          padding: 12px 16px;
-          border-radius: 12px;
-          font-size: 14px;
-          cursor: pointer;
-          width: 100%;
-          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(8px);
-          transition: all 0.2s ease;
+          background: rgba(255, 255, 255, 0.1) !important;
+          color: white !important;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
+          padding: 12px 16px !important;
+          border-radius: 12px !important;
+          font-size: 14px !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+          font-weight: normal !important;
+          line-height: 1.2 !important;
+          text-align: center !important;
+          vertical-align: middle !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          width: 100% !important;
+          height: auto !important;
+          min-height: 44px !important;
+          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6) !important;
+          backdrop-filter: blur(8px) !important;
+          transition: all 0.2s ease !important;
+          box-sizing: border-box !important;
+          margin: 0 !important;
+          text-decoration: none !important;
+          text-transform: none !important;
+          letter-spacing: normal !important;
+          word-spacing: normal !important;
+          text-indent: 0 !important;
+          text-rendering: auto !important;
+          appearance: none !important;
+          -webkit-appearance: none !important;
         ">Block Now</button>
       </div>
     `;
@@ -261,16 +321,24 @@ class ChoiceDialog {
       this.handleChoice('block', resolve);
     });
 
-    // Hover effects for all buttons
+    // Hover effects for all buttons with improved alignment preservation
     [continueBtn, timerBtn, blockBtn].forEach((button) => {
       button.addEventListener('mouseenter', () => {
-        button.style.transform = 'scale(1.02)';
-        button.style.boxShadow = '0px 6px 20px rgba(0, 0, 0, 0.3)';
+        button.style.setProperty('transform', 'scale(1.02)', 'important');
+        button.style.setProperty('box-shadow', '0px 6px 20px rgba(0, 0, 0, 0.3)', 'important');
+        // Ensure text alignment is preserved during hover
+        button.style.setProperty('display', 'flex', 'important');
+        button.style.setProperty('align-items', 'center', 'important');
+        button.style.setProperty('justify-content', 'center', 'important');
       });
 
       button.addEventListener('mouseleave', () => {
-        button.style.transform = 'scale(1.0)';
-        button.style.boxShadow = 'none';
+        button.style.setProperty('transform', 'scale(1.0)', 'important');
+        button.style.setProperty('box-shadow', 'none', 'important');
+        // Maintain text alignment after hover
+        button.style.setProperty('display', 'flex', 'important');
+        button.style.setProperty('align-items', 'center', 'important');
+        button.style.setProperty('justify-content', 'center', 'important');
       });
     });
 
