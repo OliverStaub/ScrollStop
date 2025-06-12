@@ -59,7 +59,7 @@ class ScrollStopCoordinator {
       const hostname = window.location.hostname;
       const siteType = await StorageHelper.getCurrentSiteType(url, hostname);
 
-      if (siteType.isBlocked || siteType.isNews) {
+      if (siteType.isBlocked || siteType.isNews || siteType.isAdult) {
         this.timerTracker = new TimerTracker();
         await this.timerTracker.initialize(siteType.isNews);
       }
@@ -94,7 +94,7 @@ class ScrollStopCoordinator {
       const siteType = await StorageHelper.getCurrentSiteType(url, hostname);
       console.log('ScrollStop: Site type:', siteType);
 
-      if (!siteType.isBlocked && !siteType.isNews) {
+      if (!siteType.isBlocked && !siteType.isNews && !siteType.isAdult) {
         this.cleanup();
         return;
       }

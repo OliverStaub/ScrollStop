@@ -76,6 +76,31 @@ if (typeof window.StorageHelper === 'undefined') {
     }
 
     /**
+     * Get adult sites from storage
+     * @returns {Promise<string[]>} Array of adult site domains
+     */
+    static async getAdultSites() {
+      return new Promise((resolve) => {
+        browser.storage.local.get(['adultSites'], (result) => {
+          resolve(result.adultSites || []);
+        });
+      });
+    }
+
+    /**
+     * Set adult sites in storage
+     * @param {string[]} sites - Array of adult site domains
+     * @returns {Promise<void>}
+     */
+    static async setAdultSites(sites) {
+      return new Promise((resolve) => {
+        browser.storage.local.set({ adultSites: sites }, () => {
+          resolve();
+        });
+      });
+    }
+
+    /**
      * Check if current site is in blocked sites list
      * @param {string} url - Current page URL
      * @param {string} hostname - Current page hostname
@@ -106,18 +131,34 @@ if (typeof window.StorageHelper === 'undefined') {
     }
 
     /**
-     * Check if current site is either blocked or news site
+     * Check if current site is an adult site
      * @param {string} url - Current page URL
      * @param {string} hostname - Current page hostname
-     * @returns {Promise<{isBlocked: boolean, isNews: boolean}>} Site type info
+     * @returns {Promise<boolean>} True if site is an adult site
+     */
+    static async isCurrentSiteAdult(url, hostname) {
+      const adultSites = await this.getAdultSites();
+
+      return adultSites.some((site) => {
+        const cleanSite = site.replace(/^https?:\/\//, '');
+        return url.includes(cleanSite) || hostname.includes(cleanSite);
+      });
+    }
+
+    /**
+     * Check if current site is blocked, news, or adult site
+     * @param {string} url - Current page URL
+     * @param {string} hostname - Current page hostname
+     * @returns {Promise<{isBlocked: boolean, isNews: boolean, isAdult: boolean}>} Site type info
      */
     static async getCurrentSiteType(url, hostname) {
-      const [isBlocked, isNews] = await Promise.all([
+      const [isBlocked, isNews, isAdult] = await Promise.all([
         this.isCurrentSiteBlocked(url, hostname),
         this.isCurrentSiteNews(url, hostname),
+        this.isCurrentSiteAdult(url, hostname),
       ]);
 
-      return { isBlocked, isNews };
+      return { isBlocked, isNews, isAdult };
     }
   }
   // Export for use in other modules

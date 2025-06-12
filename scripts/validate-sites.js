@@ -33,7 +33,7 @@ function validateSites() {
   const warnings = [];
 
   // Check required top-level arrays
-  const requiredArrays = ['blockedSites', 'newsSites'];
+  const requiredArrays = ['blockedSites', 'newsSites', 'adultSites'];
 
   requiredArrays.forEach((arrayName) => {
     if (!sites[arrayName]) {
@@ -106,6 +106,10 @@ function validateSites() {
     validateDomainList(sites.newsSites, 'newsSites');
   }
 
+  if (sites.adultSites) {
+    validateDomainList(sites.adultSites, 'adultSites');
+  }
+
   // Check for duplicates within each list
   function checkDuplicates(domains, listName) {
     const seen = new Set();
@@ -132,13 +136,32 @@ function validateSites() {
     checkDuplicates(sites.newsSites, 'newsSites');
   }
 
-  // Check for overlap between blocked and news sites
+  if (sites.adultSites) {
+    checkDuplicates(sites.adultSites, 'adultSites');
+  }
+
+  // Check for overlap between site categories
   if (sites.blockedSites && sites.newsSites) {
     const blocked = new Set(sites.blockedSites);
     const overlapping = sites.newsSites.filter((domain) => blocked.has(domain));
-
     if (overlapping.length > 0) {
       warnings.push(`Sites appear in both blockedSites and newsSites: ${overlapping.join(', ')}`);
+    }
+  }
+
+  if (sites.blockedSites && sites.adultSites) {
+    const blocked = new Set(sites.blockedSites);
+    const overlapping = sites.adultSites.filter((domain) => blocked.has(domain));
+    if (overlapping.length > 0) {
+      warnings.push(`Sites appear in both blockedSites and adultSites: ${overlapping.join(', ')}`);
+    }
+  }
+
+  if (sites.newsSites && sites.adultSites) {
+    const news = new Set(sites.newsSites);
+    const overlapping = sites.adultSites.filter((domain) => news.has(domain));
+    if (overlapping.length > 0) {
+      warnings.push(`Sites appear in both newsSites and adultSites: ${overlapping.join(', ')}`);
     }
   }
 
@@ -206,7 +229,14 @@ function validateSites() {
     console.log(`📰 News sites: ${sites.newsSites.length}`);
   }
 
-  const totalSites = (sites.blockedSites?.length || 0) + (sites.newsSites?.length || 0);
+  if (sites.adultSites) {
+    console.log(`🔞 Adult sites: ${sites.adultSites.length}`);
+  }
+
+  const totalSites =
+    (sites.blockedSites?.length || 0) +
+    (sites.newsSites?.length || 0) +
+    (sites.adultSites?.length || 0);
   console.log(`📊 Total tracked sites: ${totalSites}`);
 }
 

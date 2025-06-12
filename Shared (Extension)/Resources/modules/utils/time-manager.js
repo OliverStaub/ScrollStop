@@ -3,6 +3,56 @@ if (typeof window.TimeManager === 'undefined') {
     static BLOCK_DURATION = 60 * 60 * 1000; // 60 minutes in milliseconds
     static NEWS_TIME_LIMIT = 20 * 60 * 1000; // 20 minutes in milliseconds
     static NEWS_BLOCK_DURATION = 60 * 60 * 1000; // 60 minutes in milliseconds
+    static ADULT_BLOCK_DURATION = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
+
+    /**
+     * Get site category for a hostname
+     * @param {string} hostname - The hostname to check
+     * @returns {Promise<string>} Site category: 'blocked', 'news', 'adult', or null
+     */
+    static async getSiteCategory(hostname) {
+      try {
+        const sitesData = await browser.storage.local.get([
+          'blockedSites',
+          'newsSites',
+          'adultSites',
+        ]);
+
+        if (
+          sitesData.blockedSites &&
+          sitesData.blockedSites.some((site) => hostname.includes(site))
+        ) {
+          return 'blocked';
+        }
+        if (sitesData.newsSites && sitesData.newsSites.some((site) => hostname.includes(site))) {
+          return 'news';
+        }
+        if (sitesData.adultSites && sitesData.adultSites.some((site) => hostname.includes(site))) {
+          return 'adult';
+        }
+
+        return null;
+      } catch (error) {
+        console.error('Error getting site category:', error);
+        return null;
+      }
+    }
+
+    /**
+     * Get block duration for a site category
+     * @param {string} category - Site category: 'blocked', 'news', 'adult'
+     * @returns {number} Block duration in milliseconds
+     */
+    static getBlockDuration(category) {
+      switch (category) {
+        case 'adult':
+          return this.ADULT_BLOCK_DURATION;
+        case 'blocked':
+        case 'news':
+        default:
+          return this.BLOCK_DURATION;
+      }
+    }
 
     /**
      * Check if a site is currently time-blocked
@@ -18,7 +68,9 @@ if (typeof window.TimeManager === 'undefined') {
       }
 
       const now = Date.now();
-      const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
+      const category = await this.getSiteCategory(hostname);
+      const blockDuration = this.getBlockDuration(category);
+      const timeRemaining = blockInfo.timestamp + blockDuration - now;
 
       if (timeRemaining > 0) {
         return true;
@@ -36,10 +88,12 @@ if (typeof window.TimeManager === 'undefined') {
      */
     static async createTimeBlock(hostname) {
       const timeBlocks = await StorageHelper.getTimeBlocks();
+      const category = await this.getSiteCategory(hostname);
 
       timeBlocks[hostname] = {
         timestamp: Date.now(),
         siteName: hostname,
+        category: category,
       };
 
       await StorageHelper.setTimeBlocks(timeBlocks);
@@ -47,7 +101,12 @@ if (typeof window.TimeManager === 'undefined') {
       // Dispatch event for other modules to listen to
       window.dispatchEvent(
         new CustomEvent('time-block-created', {
-          detail: { hostname, timestamp: timeBlocks[hostname].timestamp },
+          detail: {
+            hostname,
+            timestamp: timeBlocks[hostname].timestamp,
+            category: category,
+            duration: this.getBlockDuration(category),
+          },
         })
       );
     }
@@ -87,7 +146,9 @@ if (typeof window.TimeManager === 'undefined') {
       }
 
       const now = Date.now();
-      const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
+      const category = blockInfo.category || (await this.getSiteCategory(hostname));
+      const blockDuration = this.getBlockDuration(category);
+      const timeRemaining = blockInfo.timestamp + blockDuration - now;
 
       return Math.max(0, timeRemaining);
     }
@@ -260,7 +321,9 @@ if (typeof window.TimeManager === 'undefined') {
       let hasChanges = false;
 
       for (const [hostname, blockInfo] of Object.entries(timeBlocks)) {
-        const timeRemaining = blockInfo.timestamp + this.BLOCK_DURATION - now;
+        const category = blockInfo.category || (await this.getSiteCategory(hostname));
+        const blockDuration = this.getBlockDuration(category);
+        const timeRemaining = blockInfo.timestamp + blockDuration - now;
 
         if (timeRemaining <= 0) {
           delete timeBlocks[hostname];

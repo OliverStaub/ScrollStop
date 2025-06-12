@@ -1,7 +1,8 @@
 let blockedSites = [];
 let newsSites = [];
+let adultSites = [];
 
-// Load blocked and news sites from JSON file
+// Load blocked, news, and adult sites from JSON file
 function loadSites() {
   const sitesUrl = browser.runtime.getURL('sites.json');
   console.log('Loading sites from:', sitesUrl);
@@ -11,13 +12,16 @@ function loadSites() {
     .then((data) => {
       blockedSites = [...data.blockedSites];
       newsSites = [...data.newsSites];
+      adultSites = [...data.adultSites];
       console.log('Loaded blocked sites:', blockedSites);
       console.log('Loaded news sites:', newsSites);
+      console.log('Loaded adult sites:', adultSites);
 
       // Store the lists for content scripts
       browser.storage.local.set({
         blockedSites: blockedSites,
         newsSites: newsSites,
+        adultSites: adultSites,
       });
     })
     .catch((error) => {
@@ -44,6 +48,10 @@ browser.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
 
   if (request.action === 'getNewsSites') {
     return Promise.resolve({ newsSites: newsSites });
+  }
+
+  if (request.action === 'getAdultSites') {
+    return Promise.resolve({ adultSites: adultSites });
   }
 
   return false;
