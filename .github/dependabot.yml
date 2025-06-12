@@ -4,49 +4,49 @@
 version: 2
 updates:
   # Enable npm dependency updates
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
     open-pull-requests-limit: 5
     commit-message:
-      prefix: "deps"
-      include: "scope"
+      prefix: 'deps'
+      include: 'scope'
     # Group minor and patch updates together to reduce PR noise
     groups:
       dev-dependencies:
         patterns:
-          - "@types/*"
-          - "@eslint/*"
-          - "eslint*"
-          - "prettier"
-          - "jest*"
+          - '@types/*'
+          - '@eslint/*'
+          - 'eslint*'
+          - 'prettier'
+          - 'jest*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
       test-dependencies:
         patterns:
-          - "puppeteer*"
-          - "@puppeteer/*"
+          - 'puppeteer*'
+          - '@puppeteer/*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
     # Pin major version updates to avoid breaking changes
     ignore:
-      - dependency-name: "eslint"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "jest"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "puppeteer"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'jest'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'puppeteer'
+        update-types: ['version-update:semver-major']
 
   # Monitor GitHub Actions for security updates
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     commit-message:
-      prefix: "ci"
-      include: "scope"
+      prefix: 'ci'
+      include: 'scope'
