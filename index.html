@@ -25,22 +25,38 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
         }
-        /* Override component text colors for better visibility */
-        [data-slot="text"] {
+        /* Force visible text colors on all components */
+        [data-slot="text"], 
+        [data-slot="text"] *,
+        p, p *,
+        span, span * {
             color: #374151 !important; /* gray-700 */
         }
-        .dark [data-slot="text"] {
+        .dark [data-slot="text"], 
+        .dark [data-slot="text"] *,
+        .dark p, .dark p *,
+        .dark span, .dark span * {
             color: #d1d5db !important; /* gray-300 */
         }
-        [data-slot="heading"] {
+        [data-slot="heading"],
+        [data-slot="heading"] *,
+        h1, h1 *, h2, h2 *, h3, h3 *, h4, h4 *, h5, h5 *, h6, h6 * {
             color: #111827 !important; /* gray-900 */
         }
-        .dark [data-slot="heading"] {
+        .dark [data-slot="heading"],
+        .dark [data-slot="heading"] *,
+        .dark h1, .dark h1 *, .dark h2, .dark h2 *, .dark h3, .dark h3 *, 
+        .dark h4, .dark h4 *, .dark h5, .dark h5 *, .dark h6, .dark h6 * {
             color: #f9fafb !important; /* gray-50 */
         }
-        /* Ensure badge text is visible */
-        .badge-text {
+        /* Force badge text visibility */
+        .badge-text,
+        .badge-text * {
             color: inherit !important;
+        }
+        /* Force all text to be visible - last resort */
+        body * {
+            visibility: visible !important;
         }
     </style>
 </head>
