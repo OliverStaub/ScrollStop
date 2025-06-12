@@ -87,15 +87,24 @@ if (typeof window.BlockingScreen === "undefined") {
       if (!this.blockingElement) return;
 
       const suggestionsHTML = await this.getSuggestionsHTML();
+      
+      // Check if this is a news site
+      const isNews = await StorageHelper.isCurrentSiteNews(window.location.href, this.hostname);
+      
+      const emoji = isNews ? "📰" : "🌱";
+      const title = isNews ? "News Break Time!" : "Time to Touch Grass!";
+      const message = isNews 
+        ? "You've spent 20 minutes reading news today. Take a break for 60 minutes."
+        : "You've been scrolling too much. This site is blocked for 60 minutes.";
 
       this.blockingElement.innerHTML = `
         <div style="max-width: 600px; width: 100%;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🌱</div>
+          <div style="font-size: 4rem; margin-bottom: 1rem;">${emoji}</div>
           <h1 style="font-size: 3rem; margin: 0 0 1rem 0; font-weight: 700;">
-            Time to Touch Grass!
+            ${title}
           </h1>
           <p style="font-size: 1.5rem; margin: 0 0 2rem 0; opacity: 0.9; line-height: 1.4;">
-            You've been scrolling too much. This site is blocked for 60 minutes.
+            ${message}
           </p>
           
           <div id="countdown-display" style="
@@ -109,7 +118,7 @@ if (typeof window.BlockingScreen === "undefined") {
               Loading...
             </div>
             <div style="font-size: 1.2rem; opacity: 0.8;">
-              until you can access this site again
+              until you can access ${isNews ? "news sites" : "this site"} again
             </div>
           </div>
           
@@ -346,11 +355,23 @@ if (typeof window.BlockingScreen === "undefined") {
      */
     async updateCountdown() {
       try {
-        const remainingTime = await TimeManager.getRemainingTime(this.hostname);
+        // Check if this is a news site
+        const isNews = await StorageHelper.isCurrentSiteNews(window.location.href, this.hostname);
+        
+        let remainingTime;
+        if (isNews) {
+          remainingTime = await TimeManager.getRemainingNewsBlockTime();
+        } else {
+          remainingTime = await TimeManager.getRemainingTime(this.hostname);
+        }
 
         if (remainingTime <= 0) {
           // Time's up! Remove block and reload
-          await TimeManager.removeTimeBlock(this.hostname);
+          if (isNews) {
+            await TimeManager.removeNewsTimeBlock();
+          } else {
+            await TimeManager.removeTimeBlock(this.hostname);
+          }
           window.location.reload();
           return;
         }

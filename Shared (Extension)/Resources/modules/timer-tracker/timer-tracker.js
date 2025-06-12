@@ -85,9 +85,12 @@ class TimerTracker {
 
   /**
    * Initialize the timer tracker
+   * @param {boolean} isNewsMode - Whether this is tracking news site time
    */
-  async initialize() {
+  async initialize(isNewsMode = false) {
     try {
+      this.isNewsMode = isNewsMode;
+      
       // Check and handle daily reset
       await this.checkDailyReset();
       
@@ -510,6 +513,22 @@ class TimerTracker {
       const sessionTime = Math.floor((Date.now() - this.startTime) / 1000);
       this.accumulatedTime += sessionTime;
       await this.saveAccumulatedTime();
+      
+      // If this is news mode, also track in TimeManager
+      if (this.isNewsMode) {
+        const sessionTimeMs = sessionTime * 1000;
+        const limitExceeded = await TimeManager.addNewsTime(sessionTimeMs);
+        
+        if (limitExceeded) {
+          // News time limit exceeded, show blocking screen
+          console.log('News time limit exceeded, triggering block');
+          window.dispatchEvent(
+            new CustomEvent("news-time-limit-exceeded", {
+              detail: { sessionTime: sessionTimeMs },
+            })
+          );
+        }
+      }
     }
   }
 
@@ -562,7 +581,7 @@ class TimerTracker {
   /**
    * Handle page unload - save current session
    */
-  handleBeforeUnload() {
+  async handleBeforeUnload() {
     if (this.isActive && this.startTime) {
       const sessionTime = Math.floor((Date.now() - this.startTime) / 1000);
       this.accumulatedTime += sessionTime;
@@ -572,6 +591,12 @@ class TimerTracker {
         StorageWrapper.set({
           [this.STORAGE_KEYS.ACCUMULATED_TIME]: this.accumulatedTime
         });
+        
+        // If this is news mode, also track in TimeManager
+        if (this.isNewsMode) {
+          const sessionTimeMs = sessionTime * 1000;
+          await TimeManager.addNewsTime(sessionTimeMs);
+        }
       } catch (error) {
         console.error('Error saving time on unload:', error);
       }

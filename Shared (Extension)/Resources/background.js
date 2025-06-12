@@ -1,31 +1,37 @@
 let blockedSites = [];
+let newsSites = [];
 
-// Load blocked sites from JSON file
-function loadBlockedSites() {
+// Load blocked and news sites from JSON file
+function loadSites() {
   const sitesUrl = browser.runtime.getURL("sites.json");
-  console.log("Loading blocked sites from:", sitesUrl);
+  console.log("Loading sites from:", sitesUrl);
 
   fetch(sitesUrl)
     .then((response) => response.json())
     .then((data) => {
       blockedSites = [...data.blockedSites];
+      newsSites = [...data.newsSites];
       console.log("Loaded blocked sites:", blockedSites);
+      console.log("Loaded news sites:", newsSites);
 
-      // Store the list for content scripts
-      browser.storage.local.set({ blockedSites: blockedSites });
+      // Store the lists for content scripts
+      browser.storage.local.set({ 
+        blockedSites: blockedSites,
+        newsSites: newsSites
+      });
     })
     .catch((error) => {
-      console.error("Error loading blocked sites:", error);
+      console.error("Error loading sites:", error);
     });
 }
 
 // Load sites on startup
-loadBlockedSites();
+loadSites();
 
 // Reload sites on install/update
 browser.runtime.onInstalled.addListener(() => {
-  console.log("Extension installed/updated - reloading blocked sites");
-  loadBlockedSites();
+  console.log("Extension installed/updated - reloading sites");
+  loadSites();
 });
 
 // Handle messages from content scripts
@@ -34,6 +40,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.action === "getBlockedSites") {
     return Promise.resolve({ blockedSites: blockedSites });
+  }
+  
+  if (request.action === "getNewsSites") {
+    return Promise.resolve({ newsSites: newsSites });
   }
 });
 

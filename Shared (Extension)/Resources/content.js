@@ -20,6 +20,7 @@ class ScrollStopCoordinator {
     this.handleTransitionComplete = this.handleTransitionComplete.bind(this);
     this.handleTimeBlockRemoved = this.handleTimeBlockRemoved.bind(this);
     this.handleChoiceComplete = this.handleChoiceComplete.bind(this);
+    this.handleNewsTimeLimitExceeded = this.handleNewsTimeLimitExceeded.bind(this);
   }
 
   /**
@@ -49,18 +50,18 @@ class ScrollStopCoordinator {
   }
 
   /**
-   * Initialize timer tracker for all social media sites
+   * Initialize timer tracker for all tracked sites (social media and news)
    */
   async initializeTimerTracker() {
     try {
-      // Check if current site is a tracked social media site
+      // Check if current site is tracked (either blocked or news site)
       const url = window.location.href;
       const hostname = window.location.hostname;
-      const isTrackedSite = await StorageHelper.isCurrentSiteBlocked(url, hostname);
+      const siteType = await StorageHelper.getCurrentSiteType(url, hostname);
       
-      if (isTrackedSite) {
+      if (siteType.isBlocked || siteType.isNews) {
         this.timerTracker = new TimerTracker();
-        await this.timerTracker.initialize();
+        await this.timerTracker.initialize(siteType.isNews);
       }
     } catch (error) {
       console.error("Error initializing timer tracker:", error);
@@ -85,6 +86,7 @@ class ScrollStopCoordinator {
     );
     window.addEventListener("time-block-removed", this.handleTimeBlockRemoved);
     window.addEventListener("choice-dialog-complete", this.handleChoiceComplete);
+    window.addEventListener("news-time-limit-exceeded", this.handleNewsTimeLimitExceeded);
   }
 
   /**
@@ -97,14 +99,17 @@ class ScrollStopCoordinator {
     try {
       console.log('ScrollStop: Checking current site:', hostname);
       
-      // Check if site is in blocked list
-      const isBlocked = await StorageHelper.isCurrentSiteBlocked(url, hostname);
-      console.log('ScrollStop: Site is blocked:', isBlocked);
+      // Check if site is blocked or news site
+      const siteType = await StorageHelper.getCurrentSiteType(url, hostname);
+      console.log('ScrollStop: Site type:', siteType);
 
-      if (!isBlocked) {
+      if (!siteType.isBlocked && !siteType.isNews) {
         this.cleanup();
         return;
       }
+
+      // Store site type for later use
+      this.currentSiteType = siteType;
 
       // Always show choice dialog on every page load (no session persistence)
       console.log('ScrollStop: No session persistence - will show choice dialog');
@@ -116,7 +121,14 @@ class ScrollStopCoordinator {
       const isTimeBlocked = await TimeManager.isTimeBlocked(hostname);
       console.log('ScrollStop: Site is time-blocked:', isTimeBlocked);
 
-      if (isTimeBlocked) {
+      // For news sites, also check news-specific time block
+      let isNewsTimeBlocked = false;
+      if (siteType.isNews) {
+        isNewsTimeBlocked = await TimeManager.isNewsTimeBlocked();
+        console.log('ScrollStop: News sites time-blocked:', isNewsTimeBlocked);
+      }
+
+      if (isTimeBlocked || isNewsTimeBlocked) {
         this.showBlockingScreen();
       } else {
         // Show choice dialog before proceeding
@@ -208,6 +220,16 @@ class ScrollStopCoordinator {
   }
 
   /**
+   * Handle news time limit exceeded event
+   */
+  async handleNewsTimeLimitExceeded(event) {
+    console.log('ScrollStop: News time limit exceeded');
+    
+    // Show blocking screen for news sites
+    this.showBlockingScreen();
+  }
+
+  /**
    * Show choice dialog to user
    */
   showChoiceDialog() {
@@ -255,7 +277,10 @@ class ScrollStopCoordinator {
       case 'continue':
         // Full ScrollStop functionality - initialize timer then start detection
         await this.initializeTimerTracker();
-        this.startDoomscrollDetection();
+        // Only start doomscroll detection for blocked sites, not news sites
+        if (this.currentSiteType && this.currentSiteType.isBlocked) {
+          this.startDoomscrollDetection();
+        }
         break;
       
       case 'timer-only':
@@ -266,7 +291,13 @@ class ScrollStopCoordinator {
       case 'block':
         // Initialize timer first, then immediately block the site
         await this.initializeTimerTracker();
-        await TimeManager.createTimeBlock(this.currentHostname);
+        if (this.currentSiteType && this.currentSiteType.isNews) {
+          // For news sites, create news time block
+          await TimeManager.createNewsTimeBlock();
+        } else {
+          // For social media sites, create regular time block
+          await TimeManager.createTimeBlock(this.currentHostname);
+        }
         this.showBlockingScreen();
         break;
       
@@ -274,7 +305,9 @@ class ScrollStopCoordinator {
         console.warn('Unknown choice:', choice);
         // Default to continue
         await this.initializeTimerTracker();
-        this.startDoomscrollDetection();
+        if (this.currentSiteType && this.currentSiteType.isBlocked) {
+          this.startDoomscrollDetection();
+        }
         break;
     }
   }
@@ -354,6 +387,10 @@ class ScrollStopCoordinator {
     window.removeEventListener(
       "choice-dialog-complete",
       this.handleChoiceComplete
+    );
+    window.removeEventListener(
+      "news-time-limit-exceeded",
+      this.handleNewsTimeLimitExceeded
     );
 
     this.isInitialized = false;
