@@ -1,7 +1,7 @@
 # ScrollStop
 
 [![CI/CD Pipeline](https://github.com/oliverstaub/ScrollStop/actions/workflows/ci.yml/badge.svg)](https://github.com/oliverstaub/ScrollStop/actions/workflows/ci.yml)
-[![Extension Validation](https://github.com/oliverstaub/ScrollStop/actions/workflows/extension-validation.yml/badge.svg)](https://github.com/oliverstaub/ScrollStop/actions/workflows/extension-validation.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=oliverstaub_ScrollStop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=oliverstaub_ScrollStop)
 [![codecov](https://codecov.io/gh/oliverstaub/ScrollStop/branch/main/graph/badge.svg)](https://codecov.io/gh/oliverstaub/ScrollStop)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](#license)
 [![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-FF6B35.svg)](https://claude.ai/code)
