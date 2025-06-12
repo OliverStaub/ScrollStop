@@ -84,6 +84,7 @@ jobs:
     name: Build macOS Extension
     runs-on: macos-latest
     needs: lint-and-test
+    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout code
@@ -117,6 +118,7 @@ jobs:
     name: Build iOS Extension
     runs-on: macos-latest
     needs: lint-and-test
+    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout code
@@ -347,6 +349,13 @@ jobs:
           elif [[ "${{ needs.build-ios.result }}" == "failure" ]]; then
             echo "❌ iOS build failed"
             exit 1
+          elif [[ "${{ needs.security-scan.result }}" == "failure" ]]; then
+            echo "❌ Security scan failed"
+            exit 1
           else
             echo "✅ All checks passed"
+            if [[ "${{ github.event_name }}" == "push" ]]; then
+              echo "📱 Build jobs skipped for push events (cost optimization)"
+              echo "🔀 Builds will run on pull requests"
+            fi
           fi
