@@ -91,14 +91,28 @@ function checkManifestPaths() {
   // Check web accessible resources
   if (manifest.web_accessible_resources) {
     if (Array.isArray(manifest.web_accessible_resources)) {
-      // Manifest v2 format
+      // Manifest v2 or v3 format
       manifest.web_accessible_resources.forEach((resource) => {
-        allReferencedFiles.add(resource);
+        // Handle both string resources and object resources
+        if (typeof resource === 'string') {
+          allReferencedFiles.add(resource);
 
-        if (!resource.includes('*') && resource.includes('/')) {
-          warnings.push(
-            `web_accessible_resources: "${resource}" contains directory path. Consider if this will work with build process.`
-          );
+          if (!resource.includes('*') && resource.includes('/')) {
+            warnings.push(
+              `web_accessible_resources: "${resource}" contains directory path. Consider if this will work with build process.`
+            );
+          }
+        } else if (typeof resource === 'object' && resource.resources) {
+          // Manifest v3 format with object containing resources array
+          resource.resources.forEach((res) => {
+            allReferencedFiles.add(res);
+
+            if (!res.includes('*') && res.includes('/')) {
+              warnings.push(
+                `web_accessible_resources: "${res}" contains directory path. Consider if this will work with build process.`
+              );
+            }
+          });
         }
       });
     } else if (typeof manifest.web_accessible_resources === 'object') {
