@@ -59,7 +59,6 @@ class TimerTracker {
     this.isDragging = false;
     this.hasDragged = false;
     this.mouseDownTime = 0;
-    this.isTimerOnlyMode = false;
 
     // Storage keys
     this.STORAGE_KEYS = {
@@ -687,23 +686,6 @@ class TimerTracker {
     return this.accumulatedTime + currentSessionTime;
   }
 
-  /**
-   * Set timer-only mode (prevents hiding on click)
-   */
-  setTimerOnlyMode(enabled) {
-    this.isTimerOnlyMode = enabled;
-
-    // Update timer appearance to indicate mode
-    const container = document.getElementById('scrollstop-timer-container');
-    if (container && enabled) {
-      // Add visual indicator for timer-only mode
-      container.style.opacity = '0.9';
-      container.title = 'Timer Only Mode - Tracking time without blocking';
-    } else if (container) {
-      container.style.opacity = '1';
-      container.title = 'Click to hide timer';
-    }
-  }
 
   /**
    * Reset timer (for testing purposes)
