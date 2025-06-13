@@ -29,6 +29,8 @@
         "timer-tracker.js",
         "button.js",
         "dialog.js",
+        "swipe-cards.js",
+        "activity-timer.js",
         "choice-dialog.js",
         "doomscroll-detector.js",
         "doomscroll-animation.js",
