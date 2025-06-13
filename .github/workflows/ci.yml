@@ -289,4 +289,3 @@ jobs:
             -Dsonar.sources=Shared\ \(Extension\)/Resources
             -Dsonar.tests=tests
             -Dsonar.exclusions=**/*.test.js,**/node_modules/**,**/coverage/**
-
