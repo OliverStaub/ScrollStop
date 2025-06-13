@@ -9,6 +9,8 @@ class ScrollStopCoordinator {
     this.blockingScreen = null;
     this.timerTracker = null;
     this.choiceDialog = null;
+    this.periodicReminder = null;
+    this.grayscaleFilter = null;
 
     this.isInitialized = false;
     this.currentHostname = window.location.hostname;
@@ -298,6 +300,16 @@ class ScrollStopCoordinator {
         }
         break;
     }
+
+    // Start periodic reminder for all choices (except when immediately blocked)
+    if (choice !== 'block') {
+      this.startPeriodicReminder();
+    }
+
+    // Start grayscale filter tracking for all choices (except when immediately blocked)
+    if (choice !== 'block') {
+      this.startGrayscaleFilter();
+    }
   }
 
   /**
@@ -317,6 +329,45 @@ class ScrollStopCoordinator {
       }
     } catch (error) {
       console.error('Error initializing timer-only mode:', error);
+    }
+  }
+
+  /**
+   * Start periodic reminder system (5-minute intervals)
+   */
+  startPeriodicReminder() {
+    try {
+      console.log('ScrollStop: Starting periodic reminder system');
+
+      if (!this.periodicReminder) {
+        this.periodicReminder = new window.PeriodicReminder({
+          reminderInterval: 5 * 60 * 1000, // 5 minutes
+        });
+      }
+
+      this.periodicReminder.initialize(this.currentSiteType, this);
+    } catch (error) {
+      console.error('Error starting periodic reminder:', error);
+    }
+  }
+
+  /**
+   * Start grayscale filter system (5-minute limit, 1-hour filter)
+   */
+  startGrayscaleFilter() {
+    try {
+      console.log('ScrollStop: Starting grayscale filter tracking');
+
+      if (!this.grayscaleFilter) {
+        this.grayscaleFilter = new window.GrayscaleFilter({
+          timeLimit: 5 * 60 * 1000, // 5 minutes
+          filterDuration: 60 * 60 * 1000, // 1 hour
+        });
+      }
+
+      this.grayscaleFilter.initialize(this.currentSiteType);
+    } catch (error) {
+      console.error('Error starting grayscale filter:', error);
     }
   }
 
@@ -353,6 +404,16 @@ class ScrollStopCoordinator {
     if (this.choiceDialog) {
       this.choiceDialog.cleanup();
       this.choiceDialog = null;
+    }
+
+    if (this.periodicReminder) {
+      this.periodicReminder.cleanup();
+      this.periodicReminder = null;
+    }
+
+    if (this.grayscaleFilter) {
+      this.grayscaleFilter.cleanup();
+      this.grayscaleFilter = null;
     }
 
     // Remove event listeners
