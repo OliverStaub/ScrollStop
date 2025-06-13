@@ -59,13 +59,16 @@ if (typeof window.BlockingScreen === 'undefined') {
     }
 
     /**
-     * Apply modern B&W styles to blocking screen element
+     * Apply modern B&W styles to blocking screen element with dark mode support
      */
     applyModernStyles() {
       if (!this.blockingElement) {
         return;
       }
 
+      // Detect dark mode
+      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
       this.blockingElement.style.cssText = `
         height: 100vh;
         width: 100vw;
@@ -73,7 +76,8 @@ if (typeof window.BlockingScreen === 'undefined') {
         top: 0;
         left: 0;
         z-index: 9999999;
-        background: #f8fafc;
+        background: ${isDarkMode ? '#1f2937' : '#f8fafc'};
+        color: ${isDarkMode ? '#f9fafb' : '#1f2937'};
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         overflow-y: auto;
         box-sizing: border-box;
@@ -91,6 +95,9 @@ if (typeof window.BlockingScreen === 'undefined') {
       // Check if this is a news site
       const isNews = await StorageHelper.isCurrentSiteNews(window.location.href, this.hostname);
       const siteName = this.hostname.replace('www.', '').split('.')[0];
+      
+      // Detect dark mode for styling
+      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
       this.blockingElement.innerHTML = `
         <div style="
@@ -107,17 +114,24 @@ if (typeof window.BlockingScreen === 'undefined') {
             text-align: center;
           ">
             <!-- Header Section -->
-            <div style="margin-bottom: 48px;">
+            <div style="margin-bottom: 32px;">
+              <!-- ScrollStop Title -->
               <div style="
-                font-size: 4rem; 
-                margin-bottom: 24px; 
-                opacity: 0.7;
-              ">⏸️</div>
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: ${isDarkMode ? '#34d399' : '#059669'};
+                margin-bottom: 20px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                opacity: 0.9;
+              ">
+                ScrollStop
+              </div>
               
               <h1 style="
                 font-size: 2.5rem; 
                 font-weight: 700; 
-                color: #1f2937; 
+                color: ${isDarkMode ? '#f9fafb' : '#1f2937'}; 
                 margin: 0 0 16px 0;
                 line-height: 1.2;
               ">
@@ -126,8 +140,8 @@ if (typeof window.BlockingScreen === 'undefined') {
               
               <p style="
                 font-size: 1.2rem; 
-                color: #6b7280; 
-                margin: 0 0 24px 0;
+                color: ${isDarkMode ? '#d1d5db' : '#6b7280'}; 
+                margin: 0 0 20px 0;
                 line-height: 1.5;
               ">
                 ${
@@ -137,18 +151,19 @@ if (typeof window.BlockingScreen === 'undefined') {
                 }
               </p>
 
-              <!-- Countdown Timer -->
+              <!-- Countdown Timer (replaces the big icon) -->
               <div id="countdown-container" style="
-                background: white;
-                border: 1px solid #e5e7eb;
+                background: ${isDarkMode ? '#374151' : 'white'};
+                border: 1px solid ${isDarkMode ? '#4b5563' : '#e5e7eb'};
                 border-radius: 16px;
-                padding: 24px;
-                margin: 24px 0;
+                padding: 20px;
+                margin: 20px 0;
+                text-align: center;
               ">
                 <div style="
-                  font-size: 2.5rem; 
+                  font-size: 3.5rem; 
                   font-weight: 700; 
-                  color: #374151;
+                  color: ${isDarkMode ? '#34d399' : '#059669'};
                   margin-bottom: 8px;
                   font-variant-numeric: tabular-nums;
                 " id="time-remaining">
@@ -156,7 +171,7 @@ if (typeof window.BlockingScreen === 'undefined') {
                 </div>
                 <div style="
                   font-size: 0.9rem; 
-                  color: #9ca3af;
+                  color: ${isDarkMode ? '#d1d5db' : '#9ca3af'};
                   text-transform: uppercase;
                   letter-spacing: 0.05em;
                 ">
@@ -166,22 +181,22 @@ if (typeof window.BlockingScreen === 'undefined') {
             </div>
 
             <!-- Activities Section -->
-            <div id="activities-section" style="margin-top: 32px;">
+            <div id="activities-section" style="margin-top: 20px;">
               <h2 style="
                 font-size: 1.3rem; 
                 font-weight: 600; 
-                color: #374151; 
-                margin: 0 0 24px 0;
+                color: ${isDarkMode ? '#f9fafb' : '#374151'}; 
+                margin: 0 0 16px 0;
               ">
                 Better things to do right now
               </h2>
               
               <div id="activities-container" style="
-                background: white;
-                border: 1px solid #e5e7eb;
+                background: ${isDarkMode ? '#374151' : 'white'};
+                border: 1px solid ${isDarkMode ? '#4b5563' : '#e5e7eb'};
                 border-radius: 16px;
-                padding: 24px;
-                margin-bottom: 24px;
+                padding: 20px;
+                margin-bottom: 16px;
               ">
                 <!-- Swipe cards will be inserted here -->
               </div>
@@ -207,7 +222,9 @@ if (typeof window.BlockingScreen === 'undefined') {
         </div>
       `;
 
+      // Initialize activity cards for all platforms
       await this.initializeActivityCards();
+      
       this.createActionButtons();
     }
 
@@ -239,6 +256,16 @@ if (typeof window.BlockingScreen === 'undefined') {
         }
 
         // Create swipe cards component
+        if (!window.SwipeCards) {
+          console.error('SwipeCards not available on window');
+          container.innerHTML = `
+            <div style="text-align: center; color: #ef4444; padding: 24px;">
+              SwipeCards component not loaded
+            </div>
+          `;
+          return;
+        }
+
         this.swipeCards = new window.SwipeCards(activities, {
           onSwipeRight: (activity) => this.handleActivityAccepted(activity),
           onSwipeLeft: (activity) => this.handleActivityRejected(activity),
@@ -501,7 +528,7 @@ if (typeof window.BlockingScreen === 'undefined') {
     }
 
     /**
-     * Create action buttons based on current mode
+     * Create action buttons based on current mode (only on iOS)
      */
     createActionButtons() {
       const container = document.getElementById('action-buttons');
@@ -510,6 +537,8 @@ if (typeof window.BlockingScreen === 'undefined') {
       }
 
       container.innerHTML = '';
+
+      // Action buttons available on all platforms now
 
       if (this.currentMode === 'blocked') {
         // Show "Skip Activities" button with subtle green accent

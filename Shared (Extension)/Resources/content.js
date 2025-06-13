@@ -104,6 +104,15 @@ class ScrollStopCoordinator {
       // Store site type for later use
       this.currentSiteType = siteType;
 
+      // Check if user wants to configure activities (from popup)
+      const shouldShowQuestionnaire = localStorage.getItem('scrollstop_show_questionnaire');
+      if (shouldShowQuestionnaire === 'true') {
+        localStorage.removeItem('scrollstop_show_questionnaire');
+        console.log('ScrollStop: User requested questionnaire from popup, showing directly');
+        this.showQuestionnaireConfig();
+        return;
+      }
+
       // Always show choice dialog on every page load (no session persistence)
       console.log('ScrollStop: No session persistence - will show choice dialog');
 
@@ -271,12 +280,14 @@ class ScrollStopCoordinator {
         if (this.currentSiteType && this.currentSiteType.isBlocked) {
           this.startDoomscrollDetection();
         }
+        // Start grayscale filter tracking ONLY for 'continue' choice
+        this.startGrayscaleFilter();
         break;
 
-      case 'timer-only':
-        // Only show timer, no blocking
-        await this.initializeTimerOnly();
-        break;
+      case 'configure':
+        // Show configuration interface
+        this.showQuestionnaireConfig();
+        return; // Don't proceed with normal initialization
 
       case 'block':
         // Initialize timer first, then immediately block the site
@@ -298,6 +309,8 @@ class ScrollStopCoordinator {
         if (this.currentSiteType && this.currentSiteType.isBlocked) {
           this.startDoomscrollDetection();
         }
+        // Start grayscale filter for default case too
+        this.startGrayscaleFilter();
         break;
     }
 
@@ -305,32 +318,8 @@ class ScrollStopCoordinator {
     if (choice !== 'block') {
       this.startPeriodicReminder();
     }
-
-    // Start grayscale filter tracking for all choices (except when immediately blocked)
-    if (choice !== 'block') {
-      this.startGrayscaleFilter();
-    }
   }
 
-  /**
-   * Initialize timer-only mode
-   */
-  async initializeTimerOnly() {
-    try {
-      // Initialize timer but not doomscroll detection
-      if (!this.timerTracker) {
-        this.timerTracker = new TimerTracker();
-        await this.timerTracker.initialize();
-      }
-
-      // Set timer to timer-only mode to prevent hiding
-      if (this.timerTracker.setTimerOnlyMode) {
-        this.timerTracker.setTimerOnlyMode(true);
-      }
-    } catch (error) {
-      console.error('Error initializing timer-only mode:', error);
-    }
-  }
 
   /**
    * Start periodic reminder system (5-minute intervals)
@@ -368,6 +357,32 @@ class ScrollStopCoordinator {
       this.grayscaleFilter.initialize(this.currentSiteType);
     } catch (error) {
       console.error('Error starting grayscale filter:', error);
+    }
+  }
+
+  /**
+   * Show questionnaire configuration interface
+   */
+  showQuestionnaireConfig() {
+    try {
+      console.log('ScrollStop: Showing questionnaire configuration');
+
+      const config = new window.QuestionnaireConfig({
+        onComplete: () => {
+          console.log('ScrollStop: Configuration completed, proceeding with continue mode');
+          this.proceedWithChoice('continue');
+        },
+        onCancel: () => {
+          console.log('ScrollStop: Configuration cancelled, showing choice dialog again');
+          this.showChoiceDialog();
+        },
+      });
+
+      config.render();
+    } catch (error) {
+      console.error('ScrollStop: Error showing questionnaire config:', error);
+      // Fallback to continue mode if config fails
+      this.proceedWithChoice('continue');
     }
   }
 
@@ -428,7 +443,7 @@ class ScrollStopCoordinator {
   }
 
   /**
-   * Handle messages from background script
+   * Handle messages from background script and popup
    */
   handleMessage(message, sender, sendResponse) {
     if (message.action === 'checkBlockedSite') {
@@ -438,6 +453,13 @@ class ScrollStopCoordinator {
         }
       });
       return true; // Indicates async response
+    } else if (message.action === 'showQuestionnaire') {
+      // Show questionnaire configuration directly
+      this.showQuestionnaireConfig();
+      if (sendResponse) {
+        sendResponse({ success: true });
+      }
+      return true;
     }
   }
 }

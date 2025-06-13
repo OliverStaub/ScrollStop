@@ -28,9 +28,12 @@
         "time-manager.js",
         "timer-tracker.js",
         "button.js",
+        "badge.js",
         "dialog.js",
+        "divider.js",
         "swipe-cards.js",
         "activity-timer.js",
+        "questionnaire-config.js",
         "choice-dialog.js",
         "doomscroll-detector.js",
         "doomscroll-animation.js",
@@ -50,7 +53,7 @@
     "default_icon": "images/toolbar-icon.svg"
   },
 
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
   "host_permissions": ["<all_urls>"],
 
   "web_accessible_resources": [
@@ -59,7 +62,9 @@
         "sites.json",
         "doomscroll-animation.css",
         "transition-screen.css",
-        "blocking-screen.css"
+        "blocking-screen.css",
+        "popup.css",
+        "popup.js"
       ],
       "matches": ["<all_urls>"]
     }
