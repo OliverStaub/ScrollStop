@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚨 CRITICAL GIT WORKFLOW RULES 🚨
+
+**BEFORE ANY CODE CHANGES:**
+
+1. ✅ **CHECK CURRENT BRANCH**: Run `git branch --show-current` - MUST NOT be "main"
+2. ✅ **CREATE FEATURE BRANCH**: If on main, run `git checkout -b feature/descriptive-name`
+3. ✅ **VERIFY BRANCH**: Confirm you're on feature branch before any commits
+
+**BEFORE ANY COMMIT:**
+
+1. ✅ **RUN PRECOMMIT**: Always run `npm run precommit` first
+2. ✅ **VERIFY BRANCH**: Run `git branch --show-current` - MUST be feature branch
+3. ✅ **COMMIT & PUSH**: Commit to feature branch, then push
+4. ✅ **CREATE PR**: Use GitHub to create pull request for CI validation
+
+**NEVER COMMIT DIRECTLY TO MAIN BRANCH - This violates the established workflow and bypasses CI validation.**
+
 ## Project Overview
 
 ScrollStop is a Safari Web Extension that prevents doomscrolling and excessive browsing across three categories of sites: social media, news, and adult content. It monitors scroll behavior and implements intelligent blocking mechanisms with category-specific durations.
@@ -119,7 +136,7 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 - **Choice Dialog Feature**: When accessing blocked sites, users see a dialog with 3 options: Continue with ScrollStop (full functionality), Timer Only (no blocking), or Block Now (immediate block). Appears on every page reload.
 - **Adult Sites Blocking**: Third site category with 4-hour block duration (vs 1-hour for social/news). Comprehensive 89+ site blocklist including major platforms, streaming, cam sites, and hentai. Timer tracking and choice dialog work identically to other categories.
 - **Precommit Workflow**: ALWAYS run `npm run precommit` before committing. This automatically formats code with Prettier, then runs full validation (ESLint, tests, manifest validation). Never commit without this.
-- **Feature Branch Workflow**: When working with Claude Code, ALWAYS create feature branches for new development using descriptive names like `fix/reddit-choice-dialog-text-alignment` or `feature/add-system-language-detection`. Create pull requests to trigger CI/CD validation before merging to main. This ensures all tests pass and code quality is maintained. NEVER work directly on main branch. Use feature branches for EVERY bug fix or new feature.
+- **Feature Branch Workflow**: ⚠️ **CRITICAL WORKFLOW RULE** ⚠️ When working with Claude Code, ALWAYS create feature branches for new development using descriptive names like `fix/reddit-choice-dialog-text-alignment` or `feature/add-system-language-detection`. Create pull requests to trigger CI/CD validation before merging to main. This ensures all tests pass and code quality is maintained. **NEVER COMMIT DIRECTLY TO MAIN BRANCH.** Use feature branches for EVERY bug fix or new feature. **BEFORE ANY `git commit` COMMAND, VERIFY YOU ARE ON A FEATURE BRANCH WITH `git branch --show-current`**
 - **npm Caching**: CI pipeline uses comprehensive caching strategy (setup-node + actions/cache) to reduce npm install time from ~5 minutes to ~30 seconds on cache hits.
 - **Dependabot Dependency Management**: Use GitHub Dependabot for automatic dependency updates instead of manual package version management. Prevents CI issues with bleeding-edge versions by using stable, tested version ranges.
 - **Stable Package Versions**: Use tilde (~) for patch version pinning on critical packages like Puppeteer to avoid registry sync issues with brand-new releases.
