@@ -77,33 +77,47 @@ class ChoiceDialog {
       // Create dialog body (empty, no subtitle)
       const body = new HeadlessDialogBody();
 
-      // Create action buttons using HeadlessButton default styling
+      // Create action buttons using HeadlessButton with better visibility
       const continueBtn = new HeadlessButton('Continue with ScrollStop', {
-        color: 'blue',
+        color: 'green',
         onClick: () => this.handleChoice('continue', resolve),
       });
 
-      const timerOnlyBtn = new HeadlessButton('Timer Only', {
+      const bypassBtn = new HeadlessButton('Continue without ScrollStop', {
         color: 'zinc',
         outline: true,
-        onClick: () => this.handleChoice('timer-only', resolve),
+        onClick: () => this.handleChoice('bypass', resolve),
       });
 
       const blockBtn = new HeadlessButton('Block Now', {
         color: 'red',
-        outline: true,
         onClick: () => this.handleChoice('block', resolve),
+      });
+
+      const configureBtn = new HeadlessButton('Configure Activities', {
+        color: 'dark',
+        onClick: () => this.handleChoice('configure', resolve),
       });
 
       console.log('ChoiceDialog: Buttons created, assembling content...');
 
-      // Create simple button container without descriptions
+      // Create button container with divider structure
       const buttonContainer = document.createElement('div');
       buttonContainer.className = 'space-y-3';
 
+      // Main actions (above divider)
       buttonContainer.appendChild(continueBtn.element);
-      buttonContainer.appendChild(timerOnlyBtn.element);
+      buttonContainer.appendChild(bypassBtn.element);
       buttonContainer.appendChild(blockBtn.element);
+
+      // Add divider
+      if (window.HeadlessDivider) {
+        const divider = new window.HeadlessDivider({ soft: true });
+        divider.render(buttonContainer);
+      }
+
+      // Configuration action (below divider)
+      buttonContainer.appendChild(configureBtn.element);
 
       console.log('ChoiceDialog: Adding content to dialog panel...');
 
@@ -231,7 +245,7 @@ class ChoiceDialog {
           appearance: none !important;
           -webkit-appearance: none !important;
         ">Continue with ScrollStop</button>
-        <button id="ss-timer" style="
+        <button id="ss-bypass" style="
           background: rgba(255, 255, 255, 0.1) !important;
           color: white !important;
           border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -263,7 +277,40 @@ class ChoiceDialog {
           text-rendering: auto !important;
           appearance: none !important;
           -webkit-appearance: none !important;
-        ">Timer Only</button>
+        ">Continue without ScrollStop</button>
+        <button id="ss-configure" style="
+          background: rgba(255, 255, 255, 0.1) !important;
+          color: white !important;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
+          padding: 12px 16px !important;
+          border-radius: 12px !important;
+          font-size: 14px !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+          font-weight: normal !important;
+          line-height: 1.2 !important;
+          text-align: center !important;
+          vertical-align: middle !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          width: 100% !important;
+          height: auto !important;
+          min-height: 44px !important;
+          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6) !important;
+          backdrop-filter: blur(8px) !important;
+          transition: all 0.2s ease !important;
+          box-sizing: border-box !important;
+          margin: 0 !important;
+          text-decoration: none !important;
+          text-transform: none !important;
+          letter-spacing: normal !important;
+          word-spacing: normal !important;
+          text-indent: 0 !important;
+          text-rendering: auto !important;
+          appearance: none !important;
+          -webkit-appearance: none !important;
+        ">Configure Activities</button>
         <button id="ss-block" style="
           background: rgba(255, 255, 255, 0.1) !important;
           color: white !important;
@@ -302,7 +349,8 @@ class ChoiceDialog {
 
     // Add event listeners and hover effects
     const continueBtn = dialogBox.querySelector('#ss-continue');
-    const timerBtn = dialogBox.querySelector('#ss-timer');
+    const bypassBtn = dialogBox.querySelector('#ss-bypass');
+    const configureBtn = dialogBox.querySelector('#ss-configure');
     const blockBtn = dialogBox.querySelector('#ss-block');
 
     // Click handlers
@@ -311,9 +359,14 @@ class ChoiceDialog {
       this.handleChoice('continue', resolve);
     });
 
-    timerBtn.addEventListener('click', () => {
+    bypassBtn.addEventListener('click', () => {
       this.cleanupSimpleDialog(overlay);
-      this.handleChoice('timer-only', resolve);
+      this.handleChoice('bypass', resolve);
+    });
+
+    configureBtn.addEventListener('click', () => {
+      this.cleanupSimpleDialog(overlay);
+      this.handleChoice('configure', resolve);
     });
 
     blockBtn.addEventListener('click', () => {
@@ -322,7 +375,7 @@ class ChoiceDialog {
     });
 
     // Hover effects for all buttons with improved alignment preservation
-    [continueBtn, timerBtn, blockBtn].forEach((button) => {
+    [continueBtn, bypassBtn, configureBtn, blockBtn].forEach((button) => {
       button.addEventListener('mouseenter', () => {
         button.style.setProperty('transform', 'scale(1.02)', 'important');
         button.style.setProperty('box-shadow', '0px 6px 20px rgba(0, 0, 0, 0.3)', 'important');

@@ -3,13 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ScrollStop - Blocked Sites</title>
+    <title>ScrollStop</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <div class="container">
+    <div id="popup-container">
       <h2>ScrollStop</h2>
       <p>Die App läuft im Hintergrund 🗣️🗣️🗣️</p>
+
+      <div id="button-container"></div>
     </div>
+
+    <script src="button.js"></script>
+    <script>
+      // Make HeadlessButton available globally for popup
+      if (typeof HeadlessButton !== 'undefined') {
+        window.HeadlessButton = HeadlessButton;
+      }
+    </script>
+    <script src="popup.js"></script>
   </body>
 </html>

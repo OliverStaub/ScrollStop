@@ -100,21 +100,23 @@ ScrollStop monitors three distinct categories of sites with different blocking b
 - Extended 4-hour block duration as stronger deterrent
 - Comprehensive blocklist: Pornhub, OnlyFans, Xvideos, cam sites, etc.
 
-### iOS Welcome Walkthrough
+### Cross-Platform Configuration
 
-The iOS app includes an interactive setup walkthrough that guides users through:
+ScrollStop now features browser-based configuration that works identically on both iOS and macOS:
 
-1. **Welcome screen** - Explains ScrollStop's purpose
-2. **Safari extension setup** - Step-by-step instructions for enabling in Settings
-3. **iOS Shortcuts guidance** - Explains why/how to redirect social media apps to Safari
-4. **Completion screen** - Confirms setup and explains how ScrollStop works
+**Browser-Based Questionnaire:**
+
+1. **Choice Dialog Integration** - "Configure Activities" option in choice dialog
+2. **Multi-Step Setup** - 6 categories: household tasks, hobbies, current tasks, friends, goals, books
+3. **Cross-Platform Storage** - Uses browser.storage.local with localStorage fallback
+4. **Personalized Blocking Screen** - Shows user-specific activity suggestions
 
 **Key Features:**
 
-- Remembers completion state using localStorage
-- Shows simplified version after walkthrough is completed
-- Includes placeholder for YouTube tutorial link
-- Responsive design with dark mode support
+- Identical functionality on iOS and macOS extensions
+- Real-time data persistence during configuration
+- Smart suggestion algorithm prioritizing current tasks
+- Fallback to default suggestions when no personal data available
 
 ### File Structure Notes
 
@@ -130,164 +132,110 @@ The iOS app includes an interactive setup walkthrough that guides users through:
 - The build process flattens all files into one directory, so paths with directories will break
 - Even though files are organized in subdirectories during development, manifest must reference them by filename only
 
-## Memories
+## Component Architecture
 
-- **UI Components Policy**: Only use UIComponentsJS components for all web UI elements. No other UI frameworks or plain HTML/CSS elements. iOS app uses SwiftUI natively.
-- **Choice Dialog Feature**: When accessing blocked sites, users see a dialog with 3 options: Continue with ScrollStop (full functionality), Timer Only (no blocking), or Block Now (immediate block). Appears on every page reload.
-- **Adult Sites Blocking**: Third site category with 4-hour block duration (vs 1-hour for social/news). Comprehensive 89+ site blocklist including major platforms, streaming, cam sites, and hentai. Timer tracking and choice dialog work identically to other categories.
-- **Precommit Workflow**: ALWAYS run `npm run precommit` before committing. This automatically formats code with Prettier, then runs full validation (ESLint, tests, manifest validation). Never commit without this.
-- **Feature Branch Workflow**: ⚠️ **CRITICAL WORKFLOW RULE** ⚠️ When working with Claude Code, ALWAYS create feature branches for new development using descriptive names like `fix/reddit-choice-dialog-text-alignment` or `feature/add-system-language-detection`. Create pull requests to trigger CI/CD validation before merging to main. This ensures all tests pass and code quality is maintained. **NEVER COMMIT DIRECTLY TO MAIN BRANCH.** Use feature branches for EVERY bug fix or new feature. **BEFORE ANY `git commit` COMMAND, VERIFY YOU ARE ON A FEATURE BRANCH WITH `git branch --show-current`**
-- **npm Caching**: CI pipeline uses comprehensive caching strategy (setup-node + actions/cache) to reduce npm install time from ~5 minutes to ~30 seconds on cache hits.
-- **Dependabot Dependency Management**: Use GitHub Dependabot for automatic dependency updates instead of manual package version management. Prevents CI issues with bleeding-edge versions by using stable, tested version ranges.
-- **Stable Package Versions**: Use tilde (~) for patch version pinning on critical packages like Puppeteer to avoid registry sync issues with brand-new releases.
+**CRITICAL RULE: Use only HeadlessButton components for all interactive UI elements.**
 
-### iOS App Personalization Features Implementation (Session Summary)
+### Available Components
 
-**What We Built Today:**
+**Component Locations:**
 
-- **Comprehensive Questionnaire System**: Created QuestionnaireView with 5 detailed categories for personalized recommendations
-- **Bilingual Support**: Full German/English language support with LanguageManager
-- **Personalized Blocking Screen**: Updated blocking screen to show user-specific suggestions based on questionnaire data
-- **iOS UI Improvements**: Removed welcome screen and disabled dark mode for better UX
+- **Primary**: `/Shared (Extension)/Resources/components/` - Extension components
+- **Source**: `/UIComponentsJs/` - Full component library (source of truth)
 
-**Key Features Implemented:**
+**Core Components:**
 
-**1. QuestionnaireView System:**
+- `HeadlessButton` - All buttons must use this component
+- `HeadlessDialog` - Dialog containers with glassmorphism styling
+- `HeadlessDivider` - Section dividers (soft/hard styles)
+- `SwipeCards` - Activity card interface for blocking screen
+- `ActivityTimer` - 5-minute focus timer component
+- `QuestionnaireConfig` - Browser-based configuration interface
 
-- **5 Categories**: Household tasks, hobbies, current tasks, friends, goals, books
-- **Smart Data Management**: Auto-deletion of current tasks after 2 weeks
-- **Progress Tracking**: Visual progress indicator with step-by-step navigation
-- **Real-time Persistence**: Data saved immediately as user adds items
-- **Bilingual Interface**: Complete German/English support throughout
+### Component Usage Policy
 
-**2. Personalized Blocking Screen:**
+```javascript
+// ✅ CORRECT - Use HeadlessButton
+const button = new HeadlessButton('Configure Activities', {
+  color: 'blue',
+  onClick: () => this.handleClick(),
+});
 
-- **Smart Recommendations**: Shows actual user tasks instead of generic suggestions
-- **Priority System**: Current tasks → household → friends → hobbies → books → goals
-- **Randomization**: Picks random items from each category for variety
-- **Fallback System**: Default suggestions when no personal data available
-- **Cross-Platform Data**: Bridge between iOS app and Safari extension storage
+// ❌ WRONG - Never use custom CSS buttons
+<button style="background: red;">Custom Button</button>;
+```
 
-**3. Bilingual Support (LanguageManager):**
+**CRITICAL RULE: If component is not available, make it available - NEVER write custom CSS.**
 
-- **Complete Translation**: All UI elements, placeholders, descriptions in German/English
-- **Auto-Detection**: Detects system language preference
-- **Manual Override**: Users can switch languages in questionnaire
-- **Consistent Keys**: Standardized localization key system
+Examples:
 
-**4. iOS App UX Improvements:**
+- Popup context: Load `button.js` and make `window.HeadlessButton` available
+- Missing component: Copy from `/UIComponentsJs/` to `/components/` and add to manifest.json
+- Always use standard components, never fallback to custom styling
 
-- **Streamlined Walkthrough**: Removed welcome screen, starts directly with extension setup
-- **Light Mode Only**: Disabled dark mode for consistent appearance
-- **Integrated Questionnaire**: Replaced simple ProfileSetupView with comprehensive QuestionnaireView
+### Color Scheme
 
-**Technical Architecture:**
+- **Primary**: `color: 'blue'` (ScrollStop brand green)
+- **Secondary**: `color: 'zinc', outline: true` (gray outline)
+- **Destructive**: `color: 'red'` (delete/cancel actions)
 
-- **Data Bridge**: iOS app stores questionnaire data with `scrollstop_` prefixes for extension access
-- **Storage Strategy**: UserDefaults for iOS, browser.storage.local for extension with localStorage fallback
-- **Async Blocking Screen**: Updated blocking screen to handle async data loading
-- **Smart Suggestions**: Algorithm that prioritizes current tasks and mixes categories
+## Implementation Standards
 
-**User Experience Flow:**
+- **Choice Dialog**: Continue (blue), Configure Activities (zinc outline), Block Now (red outline) with HeadlessDivider separation
+- **Questionnaire**: Add (blue), Previous (zinc outline), Cancel (red outline), Next/Finish (blue) with fallback support
+- **Popup**: Configure Activities (blue) with minimal CSS, HeadlessButton for all interactive elements
+- **Cross-Platform**: Extensions use HeadlessButton, iOS app uses SwiftUI
+- **Adult Sites Blocking**: 4-hour blocks, 89+ sites, timer tracking and choice dialog
+- **Workflow**: Feature branches, `npm run precommit`, PR validation, Dependabot updates
 
-1. **Setup Extension**: User enables Safari extension
-2. **Setup Shortcuts**: User configures iOS shortcuts for social media redirection
-3. **Personal Questionnaire**: User fills out 5 categories of personal data
-4. **Personalized Blocking**: When blocked, sees specific tasks from their questionnaire
-5. **Meaningful Alternatives**: Easy transition from scrolling to productive activities
+## Custom CSS Cleanup
 
-**Data Categories & Examples:**
+**NEVER use custom CSS for buttons.** Files requiring cleanup:
 
-- **Household Tasks**: "Do laundry", "Clean table", "Empty dishwasher"
-- **Hobbies**: "Cycling", "Gym", "Programming", "Guitar"
-- **Current Tasks**: "Study for exam", "Buy groceries" (auto-deleted after 2 weeks)
-- **Friends**: "Sister", "Flavio", "Samu" → becomes "Call Sister"
-- **Goals**: "Be more patient", "Exercise daily" → becomes "Work on: Be more patient"
-- **Books**: "Atomic Habits", "The Lean Startup" → becomes "Read 'Atomic Habits'"
+- `/modules/choice-dialog/choice-dialog.js` - Simple dialog fallback has extensive custom CSS
+- `/modules/blocking-screen/blocking-screen.js` - Custom button styles
+- `/components/activity-timer.js` - Custom button implementations
+- **Always use HeadlessButton components. No fallback strategies needed - if you have a component, you have a component.**
 
-**Implementation Benefits:**
+### Key Features
 
-- **Higher Engagement**: Personal tasks more motivating than generic suggestions
-- **Cultural Support**: German users get native language experience
-- **Smart Prioritization**: Current tasks appear first when user is blocked
-- **Reduced Friction**: Easier to leave social media when you see specific alternatives
-- **Data Persistence**: Questionnaire data survives app updates and device changes
+**Personalized Blocking Screen:**
 
-**Technical Lessons:**
+- Browser-based questionnaire system with 6 categories: household tasks, hobbies, current tasks, friends, goals, books
+- Swipeable activity cards showing user's personal data instead of generic suggestions
+- Cross-platform compatibility - identical on iOS and macOS
+- Smart suggestion algorithm prioritizing current tasks
 
-- **Async Patterns**: Updated blocking screen methods to handle async suggestion generation
-- **Cross-Platform Storage**: Used consistent key prefixes for data sharing between app and extension
-- **Language Management**: Centralized translation system with fallback to keys
-- **State Management**: Proper state handling for multi-step questionnaire flow
+**Modern Blocking Interface:**
 
-**Code Quality Improvements:**
+- Tinder-like swipe cards for activity selection (right = accept, left = reject)
+- 5-minute focus timer for selected activities with completion tracking
+- Choice dialog: "Continue with ScrollStop", "Configure Activities", or "Block Now"
+- Grayscale filter activates after 5 minutes only in "Continue" mode
+- Browser-based configuration system replaces iOS-specific questionnaire
 
-- **Comprehensive Error Handling**: Graceful fallbacks when personal data unavailable
-- **Memory Management**: Proper cleanup of old current tasks
-- **Type Safety**: Strong typing throughout Swift components
-- **Modular Design**: Separate concerns for data management, UI, and storage
+### Technical Notes
 
-**User Impact:**
-The app now transforms from a simple blocking tool into a personalized productivity assistant that knows the user's specific goals, tasks, and relationships, making it much easier to break the scrolling habit by providing meaningful, actionable alternatives.
+**Component Architecture:**
 
-### GitHub Pages Component Integration Lessons (Session Summary)
+- Components in `/components/`, modules in `/modules/`
+- HeadlessButton components must use `window.` prefix in extension context
+- SwipeCards and ActivityTimer components moved to proper folders for build process
 
-**Critical Web Component Styling Rules:**
+**Build Process:**
 
-**NEVER override TailwindUI/HeadlessUI component styles with aggressive CSS:**
+- Xcode flattens directory structure for Safari extension
+- Manifest.json must use flat file names only (no folder paths)
+- Files organized in subdirectories during development but referenced by filename only
 
-- Components have sophisticated built-in dark/light mode styling (e.g., `text-zinc-950 dark:text-white`)
-- Custom CSS with `!important` rules breaks component functionality
-- Components are designed to handle their own theming automatically
+**Recent Changes:**
 
-**Proper Implementation:**
-
-- Let components manage their own styling through their built-in classes
-- Use system dark mode detection: `window.matchMedia('(prefers-color-scheme: dark)')`
-- Apply `dark` class to `document.documentElement` for proper Tailwind dark mode
-- Add minimal custom CSS only for branding (accent colors, fonts)
-- Test components in isolation to verify proper rendering
-
-**Common Mistakes to Avoid:**
-
-- Forcing text colors with `!important` overrides
-- Overriding component `data-slot` attributes with custom styles
-- Fighting component's natural theming system
-- Not testing dark/light mode transitions
-
-**Best Practices:**
-
-- Create test pages to verify component functionality
-- Use component's built-in color and styling options
-- Respect component design systems and let them work as intended
-- Focus custom styling on layout and branding, not core component appearance
-
-### Choice Dialog Reddit Mobile Bug Fix (Session Summary)
-
-**Issue:** Button text in choice dialog was cut off/misaligned on Reddit mobile, showing only half of "Timer Only" text.
-
-**Root Cause:** Reddit's aggressive CSS was interfering with button text positioning and alignment in the fallback simple dialog implementation.
-
-**Solution Applied:**
-
-- Added defensive CSS styling with `!important` declarations for all button properties
-- Used `display: flex !important` with `align-items: center` and `justify-content: center` for proper text centering
-- Added `min-height: 44px` for consistent button height on mobile
-- Reset all potential conflicting properties: `line-height`, `vertical-align`, `text-align`, `text-indent`, etc.
-- Used `setProperty()` with `!important` in hover effects to maintain alignment
-- Added `appearance: none` and `-webkit-appearance: none` to override browser defaults
-
-**Key Defensive Properties:**
-
-- `line-height: 1.2 !important` - Prevents text spacing issues
-- `text-align: center !important` - Centers text horizontally
-- `vertical-align: middle !important` - Centers text vertically
-- `display: flex !important` - Enables proper flexbox centering
-- `align-items: center !important` - Centers content vertically in flex container
-- `justify-content: center !important` - Centers content horizontally in flex container
-- `text-rendering: auto !important` - Prevents text rendering conflicts
-
-**Why This Happened:** Third-party sites like Reddit have CSS that can override extension styles, especially affecting text positioning in buttons. Using `!important` and defensive styling prevents these conflicts.
+- Removed "Timer Only" option from choice dialog - simplified to 2 options
+- Grayscale filter now only activates when user chooses "Continue with ScrollStop"
+- Eliminated timer-only mode logic from coordinator and timer-tracker modules
+- Added ScrollStop branding title to blocking screen
+- Implemented dark mode support for blocking screen
+- Platform-specific features: activities/swipe cards only show on iOS (has companion app), macOS shows clean countdown-only interface
 
 ## Design System
 
@@ -314,55 +262,3 @@ All extension UI elements use consistent glassmorphism styling:
 - Hover: `scale(1.02)` with `box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3)`
 - Border radius: `20px` for dialogs, `12px` for buttons
 - Transitions: `all 0.2s ease`
-
-### Timer Tracker Feature Implementation (Session Summary)
-
-**What We Built Today:**
-
-- **Timer Tracker Feature**: A persistent, draggable timer that tracks cumulative time spent on social media sites
-- **HeadlessButton Integration**: Replaced all HTML buttons with a standardized HeadlessButton component across the iOS app
-- **Glassmorphism Timer Component**: Enhanced existing timer.js with better visibility on bright backgrounds
-
-**Key Features Implemented:**
-
-1. **Persistent Time Tracking**: Timer accumulates time across different social media sites (Instagram → YouTube → Twitter, etc.)
-2. **Daily Reset**: Automatically resets at 12 AM each day
-3. **Click to Hide**: Click timer to hide until next page reload
-4. **Drag & Drop**: Grab and move timer anywhere on screen, position persists
-5. **Smart Dragging**: Prevents accidental hiding during drag operations
-6. **Cross-Browser Storage**: Compatible with Safari extension APIs with localStorage fallback
-7. **Position Reset**: Timer returns to default center-top position on page reload
-
-**Technical Architecture:**
-
-- **timer-tracker.js**: Main module managing timer logic, storage, and UI interactions
-- **StorageWrapper**: Cross-browser storage compatibility layer
-- **Integration**: Added to content.js coordinator and manifest.json loading order
-- **Visual Improvements**: Dark glassmorphism design with white text and strong shadows for visibility
-
-**Button System Overhaul:**
-
-- **Standardized Design**: All iOS app buttons now use HeadlessButton component
-- **Consistent Styling**: Blue primary buttons, outline secondary buttons
-- **Fallback Support**: macOS app includes fallback if HeadlessButton fails to load
-- **Touch Targets**: Enhanced mobile accessibility
-
-**Build Process Notes:**
-
-- **Critical Lesson**: manifest.json must use flat file names only (no folder paths) due to build flattening
-- **File Organization**: Development files in subdirectories, but manifest references by filename only
-- **Xcode Integration**: Remember to add new files to build targets in Xcode
-
-**User Experience:**
-
-- **Awareness Tool**: Continuous visibility of time spent on social media
-- **Non-Intrusive**: Can be hidden with single click, reappears on reload
-- **Customizable Position**: User can drag to preferred screen location
-- **Persistent Data**: Time accumulates across sessions and different sites
-
-**iOS App UI Recommendation:**
-
-- **Issue Identified**: Web-based walkthrough with JavaScript buttons is unreliable on iOS
-- **Recommended Solution**: Replace HTML/CSS/JS walkthrough with native SwiftUI interface
-- **Benefits**: More reliable, better iOS integration, proper native styling, no script loading issues
-- **Implementation**: Create SwiftUI views for welcome, setup steps, and completion screens

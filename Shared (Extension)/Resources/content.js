@@ -7,14 +7,13 @@ class ScrollStopCoordinator {
     this.doomscrollAnimation = null;
     this.transitionScreen = null;
     this.blockingScreen = null;
-    this.timerTracker = null;
     this.choiceDialog = null;
     this.periodicReminder = null;
     this.grayscaleFilter = null;
 
     this.isInitialized = false;
     this.currentHostname = window.location.hostname;
-    this.userChoice = null; // 'continue', 'timer-only', 'block'
+    this.userChoice = null; // 'continue', 'configure', 'block', 'bypass'
 
     // Bind event handlers
     this.handleDoomscrollDetected = this.handleDoomscrollDetected.bind(this);
@@ -52,25 +51,6 @@ class ScrollStopCoordinator {
   }
 
   /**
-   * Initialize timer tracker for all tracked sites (social media and news)
-   */
-  async initializeTimerTracker() {
-    try {
-      // Check if current site is tracked (either blocked or news site)
-      const url = window.location.href;
-      const hostname = window.location.hostname;
-      const siteType = await StorageHelper.getCurrentSiteType(url, hostname);
-
-      if (siteType.isBlocked || siteType.isNews || siteType.isAdult) {
-        this.timerTracker = new TimerTracker();
-        await this.timerTracker.initialize(siteType.isNews);
-      }
-    } catch (error) {
-      console.error('Error initializing timer tracker:', error);
-    }
-  }
-
-  /**
    * Set up event listeners for inter-module communication
    */
   setupEventListeners() {
@@ -103,6 +83,21 @@ class ScrollStopCoordinator {
 
       // Store site type for later use
       this.currentSiteType = siteType;
+
+      // Check if bypass mode is active
+      if (this.checkBypassStatus()) {
+        console.log('ScrollStop: Bypass mode active, not showing dialog');
+        return;
+      }
+
+      // Check if user wants to configure activities (from popup)
+      const shouldShowQuestionnaire = localStorage.getItem('scrollstop_show_questionnaire');
+      if (shouldShowQuestionnaire === 'true') {
+        localStorage.removeItem('scrollstop_show_questionnaire');
+        console.log('ScrollStop: User requested questionnaire from popup, showing directly');
+        this.showQuestionnaireConfig();
+        return;
+      }
 
       // Always show choice dialog on every page load (no session persistence)
       console.log('ScrollStop: No session persistence - will show choice dialog');
@@ -265,22 +260,22 @@ class ScrollStopCoordinator {
   async proceedWithChoice(choice) {
     switch (choice) {
       case 'continue':
-        // Full ScrollStop functionality - initialize timer then start detection
-        await this.initializeTimerTracker();
+        // Full ScrollStop functionality - start detection
         // Only start doomscroll detection for blocked sites, not news sites
         if (this.currentSiteType && this.currentSiteType.isBlocked) {
           this.startDoomscrollDetection();
         }
+        // Start grayscale filter tracking ONLY for 'continue' choice
+        this.startGrayscaleFilter();
         break;
 
-      case 'timer-only':
-        // Only show timer, no blocking
-        await this.initializeTimerOnly();
-        break;
+      case 'configure':
+        // Show configuration interface
+        this.showQuestionnaireConfig();
+        return; // Don't proceed with normal initialization
 
       case 'block':
-        // Initialize timer first, then immediately block the site
-        await this.initializeTimerTracker();
+        // Immediately block the site
         if (this.currentSiteType && this.currentSiteType.isNews) {
           // For news sites, create news time block
           await TimeManager.createNewsTimeBlock();
@@ -291,45 +286,63 @@ class ScrollStopCoordinator {
         this.showBlockingScreen();
         break;
 
+      case 'bypass':
+        // Bypass ScrollStop completely - set a delay before showing choice dialog again
+        this.setBypassMode();
+        break;
+
       default:
         console.warn('Unknown choice:', choice);
         // Default to continue
-        await this.initializeTimerTracker();
         if (this.currentSiteType && this.currentSiteType.isBlocked) {
           this.startDoomscrollDetection();
         }
+        // Start grayscale filter for default case too
+        this.startGrayscaleFilter();
         break;
     }
 
-    // Start periodic reminder for all choices (except when immediately blocked)
-    if (choice !== 'block') {
+    // Start periodic reminder for all choices (except when immediately blocked or bypassed)
+    if (choice !== 'block' && choice !== 'bypass') {
       this.startPeriodicReminder();
-    }
-
-    // Start grayscale filter tracking for all choices (except when immediately blocked)
-    if (choice !== 'block') {
-      this.startGrayscaleFilter();
     }
   }
 
   /**
-   * Initialize timer-only mode
+   * Set bypass mode - extension acts inactive for 5 minutes (same as periodic reminder)
    */
-  async initializeTimerOnly() {
-    try {
-      // Initialize timer but not doomscroll detection
-      if (!this.timerTracker) {
-        this.timerTracker = new TimerTracker();
-        await this.timerTracker.initialize();
-      }
+  setBypassMode() {
+    console.log('ScrollStop: Setting bypass mode for 5 minutes');
 
-      // Set timer to timer-only mode to prevent hiding
-      if (this.timerTracker.setTimerOnlyMode) {
-        this.timerTracker.setTimerOnlyMode(true);
-      }
-    } catch (error) {
-      console.error('Error initializing timer-only mode:', error);
+    // Store bypass timestamp
+    const bypassUntil = Date.now() + 5 * 60 * 1000; // 5 minutes
+    localStorage.setItem('scrollstop_bypass_until', bypassUntil.toString());
+
+    // Clean up any active modules
+    this.cleanup();
+
+    // Set a timer to show choice dialog again after bypass period
+    setTimeout(
+      () => {
+        this.checkBypassStatus();
+      },
+      5 * 60 * 1000
+    ); // 5 minutes
+  }
+
+  /**
+   * Check if bypass mode is still active
+   */
+  checkBypassStatus() {
+    const bypassUntil = localStorage.getItem('scrollstop_bypass_until');
+    if (bypassUntil && Date.now() < parseInt(bypassUntil)) {
+      return true; // Still in bypass mode
     }
+
+    // Bypass expired, remove flag and show choice dialog
+    localStorage.removeItem('scrollstop_bypass_until');
+    this.showChoiceDialog();
+    return false;
   }
 
   /**
@@ -360,7 +373,7 @@ class ScrollStopCoordinator {
 
       if (!this.grayscaleFilter) {
         this.grayscaleFilter = new window.GrayscaleFilter({
-          timeLimit: 5 * 60 * 1000, // 5 minutes
+          timeLimit: 45 * 60 * 1000, // 45 minutes
           filterDuration: 60 * 60 * 1000, // 1 hour
         });
       }
@@ -368,6 +381,32 @@ class ScrollStopCoordinator {
       this.grayscaleFilter.initialize(this.currentSiteType);
     } catch (error) {
       console.error('Error starting grayscale filter:', error);
+    }
+  }
+
+  /**
+   * Show questionnaire configuration interface
+   */
+  showQuestionnaireConfig() {
+    try {
+      console.log('ScrollStop: Showing questionnaire configuration');
+
+      const config = new window.QuestionnaireConfig({
+        onComplete: () => {
+          console.log('ScrollStop: Configuration completed, proceeding with continue mode');
+          this.proceedWithChoice('continue');
+        },
+        onCancel: () => {
+          console.log('ScrollStop: Configuration cancelled, showing choice dialog again');
+          this.showChoiceDialog();
+        },
+      });
+
+      config.render();
+    } catch (error) {
+      console.error('ScrollStop: Error showing questionnaire config:', error);
+      // Fallback to continue mode if config fails
+      this.proceedWithChoice('continue');
     }
   }
 
@@ -394,11 +433,6 @@ class ScrollStopCoordinator {
     if (this.blockingScreen) {
       this.blockingScreen.cleanup();
       this.blockingScreen = null;
-    }
-
-    if (this.timerTracker) {
-      this.timerTracker.cleanup();
-      this.timerTracker = null;
     }
 
     if (this.choiceDialog) {
@@ -428,7 +462,7 @@ class ScrollStopCoordinator {
   }
 
   /**
-   * Handle messages from background script
+   * Handle messages from background script and popup
    */
   handleMessage(message, sender, sendResponse) {
     if (message.action === 'checkBlockedSite') {
@@ -438,6 +472,13 @@ class ScrollStopCoordinator {
         }
       });
       return true; // Indicates async response
+    } else if (message.action === 'showQuestionnaire') {
+      // Show questionnaire configuration directly
+      this.showQuestionnaireConfig();
+      if (sendResponse) {
+        sendResponse({ success: true });
+      }
+      return true;
     }
   }
 }

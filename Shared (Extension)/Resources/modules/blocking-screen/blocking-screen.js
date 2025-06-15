@@ -1,5 +1,5 @@
 // modules/blocking-screen/blocking-screen.js
-// Module for showing the full blocking screen with countdown
+// Modern blocking screen with activity suggestions and timer
 
 if (typeof window.BlockingScreen === 'undefined') {
   class BlockingScreen {
@@ -12,6 +12,10 @@ if (typeof window.BlockingScreen === 'undefined') {
       this.blockingElement = null;
       this.countdownInterval = null;
       this.hostname = window.location.hostname;
+      this.swipeCards = null;
+      this.activityTimer = null;
+      this.currentMode = 'blocked'; // 'blocked', 'activities', 'timer'
+      this.selectedActivity = null;
     }
 
     /**
@@ -48,19 +52,23 @@ if (typeof window.BlockingScreen === 'undefined') {
       this.blockingElement.id = 'time-block-screen';
       this.blockingElement.className = 'blocking-screen';
 
-      this.applyBlockingStyles();
-      await this.updateBlockingContent();
+      this.applyModernStyles();
+      await this.createModernContent();
 
       document.body.appendChild(this.blockingElement);
     }
 
     /**
-     * Apply styles to blocking screen element
+     * Apply modern B&W styles to blocking screen element with dark mode support
      */
-    applyBlockingStyles() {
+    applyModernStyles() {
       if (!this.blockingElement) {
         return;
       }
+
+      // Detect dark mode
+      const isDarkMode =
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
       this.blockingElement.style.cssText = `
         height: 100vh;
@@ -69,66 +77,533 @@ if (typeof window.BlockingScreen === 'undefined') {
         top: 0;
         left: 0;
         z-index: 9999999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        text-align: center;
-        padding: 2rem;
+        background: ${isDarkMode ? '#1f2937' : '#f8fafc'};
+        color: ${isDarkMode ? '#f9fafb' : '#1f2937'};
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        overflow-y: auto;
         box-sizing: border-box;
       `;
     }
 
     /**
-     * Update blocking screen content
+     * Create modern blocking screen content
      */
-    async updateBlockingContent() {
+    async createModernContent() {
       if (!this.blockingElement) {
         return;
       }
 
-      const suggestionsHTML = await this.getSuggestionsHTML();
-
       // Check if this is a news site
       const isNews = await StorageHelper.isCurrentSiteNews(window.location.href, this.hostname);
+      const siteName = this.hostname.replace('www.', '').split('.')[0];
 
-      const emoji = isNews ? '📰' : '🌱';
-      const title = isNews ? 'News Break Time!' : 'Time to Touch Grass!';
-      const message = isNews
-        ? "You've spent 20 minutes reading news today. Take a break for 60 minutes."
-        : "You've been scrolling too much. This site is blocked for 60 minutes.";
+      // Detect dark mode for styling
+      const isDarkMode =
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
       this.blockingElement.innerHTML = `
-        <div style="max-width: 600px; width: 100%;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">${emoji}</div>
-          <h1 style="font-size: 3rem; margin: 0 0 1rem 0; font-weight: 700;">
-            ${title}
-          </h1>
-          <p style="font-size: 1.5rem; margin: 0 0 2rem 0; opacity: 0.9; line-height: 1.4;">
-            ${message}
-          </p>
-          
-          <div id="countdown-display" style="
-            background: rgba(255, 255, 255, 0.2);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-            backdrop-filter: blur(10px);
+        <div style="
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+        ">
+          <div style="
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
           ">
-            <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;" id="time-remaining">
-              Loading...
+            <!-- Header Section -->
+            <div style="margin-bottom: 32px;">
+              <!-- ScrollStop Title -->
+              <div style="
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: ${isDarkMode ? '#34d399' : '#059669'};
+                margin-bottom: 20px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                opacity: 0.9;
+              ">
+                ScrollStop
+              </div>
+              
+              <h1 style="
+                font-size: 2.5rem; 
+                font-weight: 700; 
+                color: ${isDarkMode ? '#f9fafb' : '#1f2937'}; 
+                margin: 0 0 16px 0;
+                line-height: 1.2;
+              ">
+                ${siteName} is blocked
+              </h1>
+              
+              <p style="
+                font-size: 1.2rem; 
+                color: ${isDarkMode ? '#d1d5db' : '#6b7280'}; 
+                margin: 0 0 20px 0;
+                line-height: 1.5;
+              ">
+                ${
+                  isNews
+                    ? "You've reached your 20-minute daily news limit"
+                    : 'Take a break from scrolling and try something productive'
+                }
+              </p>
+
+              <!-- Countdown Timer (replaces the big icon) -->
+              <div id="countdown-container" style="
+                background: ${isDarkMode ? '#374151' : 'white'};
+                border: 1px solid ${isDarkMode ? '#4b5563' : '#e5e7eb'};
+                border-radius: 16px;
+                padding: 20px;
+                margin: 20px 0;
+                text-align: center;
+              ">
+                <div style="
+                  font-size: 3.5rem; 
+                  font-weight: 700; 
+                  color: ${isDarkMode ? '#34d399' : '#059669'};
+                  margin-bottom: 8px;
+                  font-variant-numeric: tabular-nums;
+                " id="time-remaining">
+                  Loading...
+                </div>
+                <div style="
+                  font-size: 0.9rem; 
+                  color: ${isDarkMode ? '#d1d5db' : '#9ca3af'};
+                  text-transform: uppercase;
+                  letter-spacing: 0.05em;
+                ">
+                  Time remaining
+                </div>
+              </div>
             </div>
-            <div style="font-size: 1.2rem; opacity: 0.8;">
-              until you can access ${isNews ? 'news sites' : 'this site'} again
+
+            <!-- Activities Section -->
+            <div id="activities-section" style="margin-top: 20px;">
+              <h2 style="
+                font-size: 1.3rem; 
+                font-weight: 600; 
+                color: ${isDarkMode ? '#f9fafb' : '#374151'}; 
+                margin: 0 0 16px 0;
+              ">
+                Better things to do right now
+              </h2>
+              
+              <div id="activities-container" style="
+                background: ${isDarkMode ? '#374151' : 'white'};
+                border: 1px solid ${isDarkMode ? '#4b5563' : '#e5e7eb'};
+                border-radius: 16px;
+                padding: 20px;
+                margin-bottom: 16px;
+              ">
+                <!-- Swipe cards will be inserted here -->
+              </div>
+            </div>
+
+            <!-- Timer Section (initially hidden) -->
+            <div id="timer-section" style="display: none; margin-top: 32px;">
+              <div id="timer-container">
+                <!-- Activity timer will be inserted here -->
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="action-buttons" style="
+              display: flex;
+              gap: 12px;
+              justify-content: center;
+              margin-top: 32px;
+            ">
+              <!-- Buttons will be added here -->
             </div>
           </div>
-          
-          ${suggestionsHTML}
         </div>
       `;
+
+      // Initialize activity cards for all platforms
+      await this.initializeActivityCards();
+
+      this.createActionButtons();
+    }
+
+    /**
+     * Initialize swipeable activity cards
+     */
+    async initializeActivityCards() {
+      const container = document.getElementById('activities-container');
+      if (!container) {
+        return;
+      }
+
+      try {
+        const personalData = await this.getPersonalData();
+        const activities = this.generateActivityCards(personalData);
+
+        if (activities.length === 0) {
+          container.innerHTML = `
+            <div style="
+              text-align: center;
+              color: #9ca3af;
+              padding: 48px 24px;
+            ">
+              <div style="font-size: 2rem; margin-bottom: 16px; opacity: 0.6;">🎯</div>
+              <p style="margin: 0;">No activities available</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Create swipe cards component
+        if (!window.SwipeCards) {
+          console.error('SwipeCards not available on window');
+          container.innerHTML = `
+            <div style="text-align: center; color: #ef4444; padding: 24px;">
+              SwipeCards component not loaded
+            </div>
+          `;
+          return;
+        }
+
+        this.swipeCards = new window.SwipeCards(activities, {
+          onSwipeRight: (activity) => this.handleActivityAccepted(activity),
+          onSwipeLeft: (activity) => this.handleActivityRejected(activity),
+          onComplete: () => this.handleAllActivitiesCompleted(),
+        });
+
+        this.swipeCards.render(container);
+      } catch (error) {
+        console.error('Error initializing activity cards:', error);
+        container.innerHTML = `
+          <div style="text-align: center; color: #ef4444; padding: 24px;">
+            Error loading activities
+          </div>
+        `;
+      }
+    }
+
+    /**
+     * Generate activity cards from personal data
+     */
+    generateActivityCards(personalData) {
+      const activities = [];
+
+      if (!personalData.hasData) {
+        return this.getDefaultActivityCards();
+      }
+
+      // Add current tasks (highest priority)
+      if (personalData.currentTasks && personalData.currentTasks.length > 0) {
+        personalData.currentTasks.forEach((task) => {
+          activities.push({
+            emoji: '✅',
+            text: task,
+            description: 'Current task to complete',
+            category: 'current',
+          });
+        });
+      }
+
+      // Add household tasks
+      if (personalData.householdTasks && personalData.householdTasks.length > 0) {
+        personalData.householdTasks.forEach((task) => {
+          activities.push({
+            emoji: '🏠',
+            text: task,
+            description: 'Household task',
+            category: 'household',
+          });
+        });
+      }
+
+      // Add friends to contact
+      if (personalData.friends && personalData.friends.length > 0) {
+        personalData.friends.forEach((friend) => {
+          activities.push({
+            emoji: '📞',
+            text: `Call ${friend}`,
+            description: 'Connect with someone you care about',
+            category: 'social',
+          });
+        });
+      }
+
+      // Add hobbies
+      if (personalData.hobbies && personalData.hobbies.length > 0) {
+        personalData.hobbies.forEach((hobby) => {
+          activities.push({
+            emoji: '🎯',
+            text: hobby,
+            description: 'Pursue your interests',
+            category: 'hobby',
+          });
+        });
+      }
+
+      // Add books
+      if (personalData.books && personalData.books.length > 0) {
+        personalData.books.forEach((book) => {
+          activities.push({
+            emoji: '📚',
+            text: `Read "${book}"`,
+            description: 'Expand your mind',
+            category: 'reading',
+          });
+        });
+      }
+
+      // Add goals
+      if (personalData.goals && personalData.goals.length > 0) {
+        personalData.goals.forEach((goal) => {
+          activities.push({
+            emoji: '🎯',
+            text: `Work on: ${goal}`,
+            description: 'Make progress on your goals',
+            category: 'goal',
+          });
+        });
+      }
+
+      // Shuffle activities for variety
+      return this.shuffleArray(activities).slice(0, 10); // Max 10 activities
+    }
+
+    /**
+     * Get default activity cards when no personal data is available
+     */
+    getDefaultActivityCards() {
+      return [
+        {
+          emoji: '🚶‍♂️',
+          text: 'Take a walk outside',
+          description: 'Get some fresh air and movement',
+        },
+        {
+          emoji: '📚',
+          text: 'Read a book',
+          description: 'Engage your mind with something meaningful',
+        },
+        {
+          emoji: '🧘‍♀️',
+          text: 'Meditate for 5 minutes',
+          description: 'Practice mindfulness and calm your thoughts',
+        },
+        {
+          emoji: '💪',
+          text: 'Do some exercise',
+          description: 'Get your body moving and energy flowing',
+        },
+        {
+          emoji: '👥',
+          text: 'Call a friend or family member',
+          description: 'Connect with someone you care about',
+        },
+        {
+          emoji: '🎨',
+          text: 'Be creative',
+          description: 'Draw, write, or make something with your hands',
+        },
+        {
+          emoji: '🧹',
+          text: 'Tidy up your space',
+          description: 'Organize your environment for mental clarity',
+        },
+        {
+          emoji: '💧',
+          text: 'Drink some water',
+          description: 'Hydrate and take care of your body',
+        },
+        {
+          emoji: '🌱',
+          text: 'Do some stretching',
+          description: 'Release tension and improve flexibility',
+        },
+        {
+          emoji: '📝',
+          text: 'Write in a journal',
+          description: 'Reflect on your thoughts and feelings',
+        },
+      ];
+    }
+
+    /**
+     * Shuffle array for randomness
+     */
+    shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    /**
+     * Handle when user swipes right (accepts) an activity
+     */
+    handleActivityAccepted(activity) {
+      console.log('Activity accepted:', activity);
+      this.selectedActivity = activity;
+      this.showActivityTimer();
+    }
+
+    /**
+     * Handle when user swipes left (rejects) an activity
+     */
+    handleActivityRejected(activity) {
+      console.log('Activity rejected:', activity);
+      // Just continue to next card
+    }
+
+    /**
+     * Handle when all activities are completed
+     */
+    handleAllActivitiesCompleted() {
+      const container = document.getElementById('activities-container');
+      if (container) {
+        container.innerHTML = `
+          <div style="
+            text-align: center;
+            color: #6b7280;
+            padding: 48px 24px;
+          ">
+            <div style="font-size: 3rem; margin-bottom: 16px;">🎉</div>
+            <p style="margin: 0; font-size: 1.1rem;">
+              You've seen all available activities!
+            </p>
+          </div>
+        `;
+      }
+    }
+
+    /**
+     * Show the activity timer section
+     */
+    showActivityTimer() {
+      this.currentMode = 'timer';
+
+      // Hide activities section
+      const activitiesSection = document.getElementById('activities-section');
+      if (activitiesSection) {
+        activitiesSection.style.display = 'none';
+      }
+
+      // Show timer section
+      const timerSection = document.getElementById('timer-section');
+      if (timerSection) {
+        timerSection.style.display = 'block';
+      }
+
+      // Create activity timer
+      const timerContainer = document.getElementById('timer-container');
+      if (timerContainer && this.selectedActivity) {
+        this.activityTimer = new window.ActivityTimer({
+          duration: 5 * 60 * 1000, // 5 minutes
+          onComplete: () => this.handleTimerComplete(),
+          onTick: (remaining) => this.handleTimerTick(remaining),
+        });
+
+        this.activityTimer.render(timerContainer);
+        this.activityTimer.setActivity(this.selectedActivity);
+      }
+
+      // Update action buttons
+      this.createActionButtons();
+    }
+
+    /**
+     * Handle timer completion
+     */
+    handleTimerComplete() {
+      console.log('Activity timer completed');
+      // Timer component handles the completion dialog internally
+    }
+
+    /**
+     * Handle timer tick
+     */
+    handleTimerTick(_remaining) {
+      // Optional: Update any global state or UI
+    }
+
+    /**
+     * Create action buttons based on current mode (only on iOS)
+     */
+    createActionButtons() {
+      const container = document.getElementById('action-buttons');
+      if (!container) {
+        return;
+      }
+
+      container.innerHTML = '';
+
+      // Action buttons available on all platforms now
+
+      if (this.currentMode === 'blocked') {
+        // Show "Skip Activities" button with subtle green accent
+        const skipButton = new window.HeadlessButton('Skip activities', {
+          color: 'zinc',
+          outline: true,
+          onClick: () => this.skipActivities(),
+        });
+
+        container.appendChild(skipButton.element);
+      } else if (this.currentMode === 'timer') {
+        // Show "Back to Activities" button
+        const backButton = new window.HeadlessButton('← Back to activities', {
+          color: 'zinc',
+          outline: true,
+          onClick: () => this.backToActivities(),
+        });
+
+        container.appendChild(backButton.element);
+      }
+    }
+
+    /**
+     * Skip activities and just show countdown
+     */
+    skipActivities() {
+      const activitiesSection = document.getElementById('activities-section');
+      const actionButtons = document.getElementById('action-buttons');
+
+      if (activitiesSection) {
+        activitiesSection.style.display = 'none';
+      }
+      if (actionButtons) {
+        actionButtons.style.display = 'none';
+      }
+    }
+
+    /**
+     * Go back to activities from timer
+     */
+    backToActivities() {
+      this.currentMode = 'blocked';
+
+      // Clean up timer
+      if (this.activityTimer) {
+        this.activityTimer.destroy();
+        this.activityTimer = null;
+      }
+
+      // Hide timer section
+      const timerSection = document.getElementById('timer-section');
+      if (timerSection) {
+        timerSection.style.display = 'none';
+      }
+
+      // Show activities section
+      const activitiesSection = document.getElementById('activities-section');
+      if (activitiesSection) {
+        activitiesSection.style.display = 'block';
+      }
+
+      // Update action buttons
+      this.createActionButtons();
     }
 
     /**
@@ -414,10 +889,26 @@ if (typeof window.BlockingScreen === 'undefined') {
     cleanup() {
       this.stopCountdownUpdates();
 
+      // Clean up swipe cards
+      if (this.swipeCards) {
+        this.swipeCards.destroy();
+        this.swipeCards = null;
+      }
+
+      // Clean up activity timer
+      if (this.activityTimer) {
+        this.activityTimer.destroy();
+        this.activityTimer = null;
+      }
+
       if (this.blockingElement && this.blockingElement.parentNode) {
         this.blockingElement.parentNode.removeChild(this.blockingElement);
         this.blockingElement = null;
       }
+
+      // Reset state
+      this.currentMode = 'blocked';
+      this.selectedActivity = null;
     }
 
     /**
