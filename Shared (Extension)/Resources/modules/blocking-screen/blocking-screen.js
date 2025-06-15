@@ -67,8 +67,9 @@ if (typeof window.BlockingScreen === 'undefined') {
       }
 
       // Detect dark mode
-      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
+      const isDarkMode =
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
       this.blockingElement.style.cssText = `
         height: 100vh;
         width: 100vw;
@@ -95,9 +96,10 @@ if (typeof window.BlockingScreen === 'undefined') {
       // Check if this is a news site
       const isNews = await StorageHelper.isCurrentSiteNews(window.location.href, this.hostname);
       const siteName = this.hostname.replace('www.', '').split('.')[0];
-      
+
       // Detect dark mode for styling
-      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDarkMode =
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
       this.blockingElement.innerHTML = `
         <div style="
@@ -224,7 +226,7 @@ if (typeof window.BlockingScreen === 'undefined') {
 
       // Initialize activity cards for all platforms
       await this.initializeActivityCards();
-      
+
       this.createActionButtons();
     }
 

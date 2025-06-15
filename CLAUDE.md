@@ -139,10 +139,12 @@ ScrollStop now features browser-based configuration that works identically on bo
 ### Available Components
 
 **Component Locations:**
+
 - **Primary**: `/Shared (Extension)/Resources/components/` - Extension components
 - **Source**: `/UIComponentsJs/` - Full component library (source of truth)
 
 **Core Components:**
+
 - `HeadlessButton` - All buttons must use this component
 - `HeadlessDialog` - Dialog containers with glassmorphism styling
 - `HeadlessDivider` - Section dividers (soft/hard styles)
@@ -151,25 +153,28 @@ ScrollStop now features browser-based configuration that works identically on bo
 - `QuestionnaireConfig` - Browser-based configuration interface
 
 ### Component Usage Policy
+
 ```javascript
 // ✅ CORRECT - Use HeadlessButton
 const button = new HeadlessButton('Configure Activities', {
   color: 'blue',
-  onClick: () => this.handleClick()
+  onClick: () => this.handleClick(),
 });
 
 // ❌ WRONG - Never use custom CSS buttons
-<button style="background: red;">Custom Button</button>
+<button style="background: red;">Custom Button</button>;
 ```
 
 **CRITICAL RULE: If component is not available, make it available - NEVER write custom CSS.**
 
 Examples:
+
 - Popup context: Load `button.js` and make `window.HeadlessButton` available
 - Missing component: Copy from `/UIComponentsJs/` to `/components/` and add to manifest.json
 - Always use standard components, never fallback to custom styling
 
 ### Color Scheme
+
 - **Primary**: `color: 'blue'` (ScrollStop brand green)
 - **Secondary**: `color: 'zinc', outline: true` (gray outline)
 - **Destructive**: `color: 'red'` (delete/cancel actions)
@@ -178,7 +183,7 @@ Examples:
 
 - **Choice Dialog**: Continue (blue), Configure Activities (zinc outline), Block Now (red outline) with HeadlessDivider separation
 - **Questionnaire**: Add (blue), Previous (zinc outline), Cancel (red outline), Next/Finish (blue) with fallback support
-- **Popup**: Configure Activities (blue) with minimal CSS, HeadlessButton for all interactive elements  
+- **Popup**: Configure Activities (blue) with minimal CSS, HeadlessButton for all interactive elements
 - **Cross-Platform**: Extensions use HeadlessButton, iOS app uses SwiftUI
 - **Adult Sites Blocking**: 4-hour blocks, 89+ sites, timer tracking and choice dialog
 - **Workflow**: Feature branches, `npm run precommit`, PR validation, Dependabot updates
@@ -186,20 +191,23 @@ Examples:
 ## Custom CSS Cleanup
 
 **NEVER use custom CSS for buttons.** Files requiring cleanup:
+
 - `/modules/choice-dialog/choice-dialog.js` - Simple dialog fallback has extensive custom CSS
-- `/modules/blocking-screen/blocking-screen.js` - Custom button styles  
+- `/modules/blocking-screen/blocking-screen.js` - Custom button styles
 - `/components/activity-timer.js` - Custom button implementations
 - **Always use HeadlessButton components. No fallback strategies needed - if you have a component, you have a component.**
 
 ### Key Features
 
 **Personalized Blocking Screen:**
+
 - Browser-based questionnaire system with 6 categories: household tasks, hobbies, current tasks, friends, goals, books
 - Swipeable activity cards showing user's personal data instead of generic suggestions
 - Cross-platform compatibility - identical on iOS and macOS
 - Smart suggestion algorithm prioritizing current tasks
 
 **Modern Blocking Interface:**
+
 - Tinder-like swipe cards for activity selection (right = accept, left = reject)
 - 5-minute focus timer for selected activities with completion tracking
 - Choice dialog: "Continue with ScrollStop", "Configure Activities", or "Block Now"
@@ -209,23 +217,25 @@ Examples:
 ### Technical Notes
 
 **Component Architecture:**
+
 - Components in `/components/`, modules in `/modules/`
 - HeadlessButton components must use `window.` prefix in extension context
 - SwipeCards and ActivityTimer components moved to proper folders for build process
 
 **Build Process:**
+
 - Xcode flattens directory structure for Safari extension
 - Manifest.json must use flat file names only (no folder paths)
 - Files organized in subdirectories during development but referenced by filename only
 
 **Recent Changes:**
+
 - Removed "Timer Only" option from choice dialog - simplified to 2 options
 - Grayscale filter now only activates when user chooses "Continue with ScrollStop"
 - Eliminated timer-only mode logic from coordinator and timer-tracker modules
 - Added ScrollStop branding title to blocking screen
 - Implemented dark mode support for blocking screen
 - Platform-specific features: activities/swipe cards only show on iOS (has companion app), macOS shows clean countdown-only interface
-
 
 ## Design System
 
@@ -252,4 +262,3 @@ All extension UI elements use consistent glassmorphism styling:
 - Hover: `scale(1.02)` with `box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3)`
 - Border radius: `20px` for dialogs, `12px` for buttons
 - Transitions: `all 0.2s ease`
-

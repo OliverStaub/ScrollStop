@@ -23,16 +23,13 @@
   "content_scripts": [
     {
       "js": [
-        "timer.js",
         "storage-helper.js",
         "time-manager.js",
-        "timer-tracker.js",
         "button.js",
         "badge.js",
         "dialog.js",
         "divider.js",
         "swipe-cards.js",
-        "activity-timer.js",
         "questionnaire-config.js",
         "choice-dialog.js",
         "doomscroll-detector.js",

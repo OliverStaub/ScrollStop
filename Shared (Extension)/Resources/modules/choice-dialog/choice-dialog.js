@@ -83,6 +83,12 @@ class ChoiceDialog {
         onClick: () => this.handleChoice('continue', resolve),
       });
 
+      const bypassBtn = new HeadlessButton('Continue without ScrollStop', {
+        color: 'zinc',
+        outline: true,
+        onClick: () => this.handleChoice('bypass', resolve),
+      });
+
       const blockBtn = new HeadlessButton('Block Now', {
         color: 'red',
         onClick: () => this.handleChoice('block', resolve),
@@ -101,6 +107,7 @@ class ChoiceDialog {
 
       // Main actions (above divider)
       buttonContainer.appendChild(continueBtn.element);
+      buttonContainer.appendChild(bypassBtn.element);
       buttonContainer.appendChild(blockBtn.element);
 
       // Add divider
@@ -238,6 +245,39 @@ class ChoiceDialog {
           appearance: none !important;
           -webkit-appearance: none !important;
         ">Continue with ScrollStop</button>
+        <button id="ss-bypass" style="
+          background: rgba(255, 255, 255, 0.1) !important;
+          color: white !important;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
+          padding: 12px 16px !important;
+          border-radius: 12px !important;
+          font-size: 14px !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+          font-weight: normal !important;
+          line-height: 1.2 !important;
+          text-align: center !important;
+          vertical-align: middle !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          width: 100% !important;
+          height: auto !important;
+          min-height: 44px !important;
+          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6) !important;
+          backdrop-filter: blur(8px) !important;
+          transition: all 0.2s ease !important;
+          box-sizing: border-box !important;
+          margin: 0 !important;
+          text-decoration: none !important;
+          text-transform: none !important;
+          letter-spacing: normal !important;
+          word-spacing: normal !important;
+          text-indent: 0 !important;
+          text-rendering: auto !important;
+          appearance: none !important;
+          -webkit-appearance: none !important;
+        ">Continue without ScrollStop</button>
         <button id="ss-configure" style="
           background: rgba(255, 255, 255, 0.1) !important;
           color: white !important;
@@ -309,6 +349,7 @@ class ChoiceDialog {
 
     // Add event listeners and hover effects
     const continueBtn = dialogBox.querySelector('#ss-continue');
+    const bypassBtn = dialogBox.querySelector('#ss-bypass');
     const configureBtn = dialogBox.querySelector('#ss-configure');
     const blockBtn = dialogBox.querySelector('#ss-block');
 
@@ -316,6 +357,11 @@ class ChoiceDialog {
     continueBtn.addEventListener('click', () => {
       this.cleanupSimpleDialog(overlay);
       this.handleChoice('continue', resolve);
+    });
+
+    bypassBtn.addEventListener('click', () => {
+      this.cleanupSimpleDialog(overlay);
+      this.handleChoice('bypass', resolve);
     });
 
     configureBtn.addEventListener('click', () => {
@@ -329,7 +375,7 @@ class ChoiceDialog {
     });
 
     // Hover effects for all buttons with improved alignment preservation
-    [continueBtn, configureBtn, blockBtn].forEach((button) => {
+    [continueBtn, bypassBtn, configureBtn, blockBtn].forEach((button) => {
       button.addEventListener('mouseenter', () => {
         button.style.setProperty('transform', 'scale(1.02)', 'important');
         button.style.setProperty('box-shadow', '0px 6px 20px rgba(0, 0, 0, 0.3)', 'important');

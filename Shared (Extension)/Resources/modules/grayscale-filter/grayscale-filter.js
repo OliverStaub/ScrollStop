@@ -4,7 +4,7 @@
 class GrayscaleFilter {
   constructor(options = {}) {
     this.config = {
-      TIME_LIMIT: options.timeLimit || 5 * 60 * 1000, // 5 minutes in milliseconds
+      TIME_LIMIT: options.timeLimit || 45 * 60 * 1000, // 45 minutes in milliseconds
       FILTER_DURATION: options.filterDuration || 60 * 60 * 1000, // 1 hour in milliseconds
       ...options,
     };
@@ -208,9 +208,9 @@ class GrayscaleFilter {
         'seconds'
       );
 
-      // Check if 5-minute limit exceeded
+      // Check if 45-minute limit exceeded
       if (totalTimeIncludingCurrent >= this.config.TIME_LIMIT) {
-        console.log('GrayscaleFilter: 5-minute limit exceeded! Applying grayscale filter');
+        console.log('GrayscaleFilter: 45-minute limit exceeded! Applying grayscale filter');
         await this.activateGrayscaleFilter();
       }
     } catch (error) {
