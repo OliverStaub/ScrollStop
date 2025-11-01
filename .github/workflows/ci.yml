@@ -248,7 +248,7 @@ jobs:
             CODE_SIGNING_REQUIRED=NO
 
       - name: Archive macOS build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: success()
         with:
           name: macos-build
@@ -286,7 +286,7 @@ jobs:
             CODE_SIGNING_REQUIRED=NO
 
       - name: Archive iOS build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: success()
         with:
           name: ios-build
